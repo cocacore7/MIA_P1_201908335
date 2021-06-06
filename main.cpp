@@ -1,40 +1,34 @@
-#include <QCoreApplication>
-#include "iostream"
-#include <QString>
+#include <iostream>
+#include <sys/stat.h>
+#include <fstream>
+#include <string.h>
 #include <parser.h>
 #include <scanner.h>
-#include <QTextStream>
 using namespace std;
+
 extern int yyparse();
+extern int resultado;
+bool menu = true;
+void leerEntrada(char*);
 
-int menu;
-
-extern int yylineno;
-
-int main(int argc, char *argv[])
+int main()
 {
+    while(menu){
+        cout<<"------------------------------Ingrese Un Comando----------------------------"<<endl;
+        char entrada[500];
+        printf(">> ");
+        fgets(entrada,sizeof(entrada),stdin);
+        leerEntrada(entrada);
+        memset(entrada,0,400);
+    }
+    return 0;
+}
 
-    string menu = "------------------------------Ingrese Un Comando----------------------------";
-
-    QString line;
-    QTextStream in(stdin);
-
-    while(line!="salir"){
-        cout<<menu;
-        in >> line;
-        //line = qtin.readLine();
-        if(line!="salir"){
-            if(line.isEmpty()==false){
-                //YY_BUFFER_STATE buffer = yy_scan_string(line.toUtf8().constData());
-
-                yylineno = 0;
-
-                if(yyparse()==0){
-                    printf("\n\nComando ejecutaro correctamente\n\n");
-                }else{
-                    printf("\n\nHay Errores\n\n");
-                }
-            }
-        }
+void leerEntrada(char entrada[400]){
+    YY_BUFFER_STATE buffer = yy_scan_string(entrada);
+    if(yyparse()==0){
+        cout<<resultado<<endl;
+    }else{
+        cout<<"Hubo Un Error"<<endl;
     }
 }

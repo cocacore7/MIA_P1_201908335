@@ -1,32 +1,26 @@
 %{
-    #include "scanner.h"
-    #include <QString>
-    #include <string>
-    #include "qdebug.h"
     #include <iostream>
+    #include "scanner.h"
     #include "clmkdisk.h"
-    using namespace std;
-    extern int yylineno;
-    extern char *yytext;
+
+    extern int yylex(void);
+    extern int resultado;
 
     int yyerror(const char* mens){
-        std::cout << mens << " " << yytext << std::endl;
+        std::cout << mens << std::endl;
         return 0;
     }
 %}
 
-%defines "parser.h"    
-%output "parser.cpp"
 %error-verbose
-%locations
 
 %union{
-    char TEXT[256];
+    char* TEXT;
     class clmkdisk *mdisk;
 }
 
 %token <TEXT> digito
-%token <TEXT> identificador
+%token <TEXT> ident
 %token <TEXT> cadena
 %token <TEXT> filen
 %token <TEXT> idp
@@ -50,7 +44,6 @@
 %token <TEXT> rem
 %token <TEXT> edit
 %token <TEXT> ren
-%token <TEXT> mkdir
 %token <TEXT> cp
 %token <TEXT> mv
 %token <TEXT> find
@@ -107,3 +100,5 @@ INICIO:     COMANDOS { };
 COMANDOS:   mkdisk COMMKDISK {$2->mostrarDatos($2); printf("Comando MKDISK");};
 
 COMMKDISK: sizee igual digito {int tam=atoi($3); clmkdisk *disco = new clmkdisk(); disco->size=tam; $$=disco;};
+
+%%

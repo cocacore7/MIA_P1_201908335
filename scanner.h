@@ -201,6 +201,8 @@ void *yyalloc ( yy_size_t  );
 void *yyrealloc ( void *, yy_size_t  );
 void yyfree ( void *  );
 
+/* Begin user sect3 */
+
 #define yywrap() (/*CONSTCOND*/1)
 #define YY_SKIP_YYWRAP
 
@@ -214,7 +216,6 @@ extern char *yytext;
 
 #ifdef YY_HEADER_EXPORT_START_CONDITIONS
 #define INITIAL 0
-#define COM 1
 
 #endif
 
@@ -468,8 +469,9 @@ extern int yylex (void);
 #undef yyTABLES_NAME
 #endif
 
-#line 112 "lexico.l"
+#line 98 "lexico.l"
 
-#line 474 "scanner.h"
+
+#line 476 "scanner.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

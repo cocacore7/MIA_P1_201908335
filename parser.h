@@ -46,7 +46,7 @@ extern int yydebug;
   enum yytokentype
   {
     digito = 258,
-    identificador = 259,
+    ident = 259,
     cadena = 260,
     filen = 261,
     idp = 262,
@@ -69,48 +69,47 @@ extern int yydebug;
     rem = 279,
     edit = 280,
     ren = 281,
-    mkdir = 282,
-    cp = 283,
-    mv = 284,
-    find = 285,
-    chownn = 286,
-    chgrp = 287,
-    pausee = 288,
-    igual = 289,
-    dividido = 290,
-    interrogacion = 291,
-    multiplicacion = 292,
-    sizee = 293,
-    f = 294,
-    u = 295,
-    pathh = 296,
-    typee = 297,
-    deletee = 298,
-    namee = 299,
-    addd = 300,
-    id = 301,
-    fs = 302,
-    usr = 303,
-    pwd = 304,
-    grp = 305,
-    ugoo = 306,
-    r = 307,
-    cont = 308,
-    filenn = 309,
-    dest = 310,
-    p = 311,
-    BF = 312,
-    FF = 313,
-    WF = 314,
-    K = 315,
-    M = 316,
-    PP = 317,
-    E = 318,
-    L = 319,
-    FAST = 320,
-    FULL = 321,
-    FS2 = 322,
-    FS3 = 323
+    cp = 282,
+    mv = 283,
+    find = 284,
+    chownn = 285,
+    chgrp = 286,
+    pausee = 287,
+    igual = 288,
+    dividido = 289,
+    interrogacion = 290,
+    multiplicacion = 291,
+    sizee = 292,
+    f = 293,
+    u = 294,
+    pathh = 295,
+    typee = 296,
+    deletee = 297,
+    namee = 298,
+    addd = 299,
+    id = 300,
+    fs = 301,
+    usr = 302,
+    pwd = 303,
+    grp = 304,
+    ugoo = 305,
+    r = 306,
+    cont = 307,
+    filenn = 308,
+    dest = 309,
+    p = 310,
+    BF = 311,
+    FF = 312,
+    WF = 313,
+    K = 314,
+    M = 315,
+    PP = 316,
+    E = 317,
+    L = 318,
+    FAST = 319,
+    FULL = 320,
+    FS2 = 321,
+    FS3 = 322
   };
 #endif
 
@@ -119,12 +118,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 23 "sintactico.y" /* yacc.c:1909  */
+#line 17 "sintactico.y" /* yacc.c:1909  */
 
-    char TEXT[256];
+    char* TEXT;
     class clmkdisk *mdisk;
 
-#line 128 "parser.h" /* yacc.c:1909  */
+#line 127 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -132,23 +131,9 @@ typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-/* Location type.  */
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE YYLTYPE;
-struct YYLTYPE
-{
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
-};
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
-#endif
-
 
 extern YYSTYPE yylval;
-extern YYLTYPE yylloc;
+
 int yyparse (void);
 
 #endif /* !YY_YY_PARSER_H_INCLUDED  */
