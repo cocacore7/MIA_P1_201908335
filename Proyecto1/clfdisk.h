@@ -15,6 +15,7 @@ public:
     QString typee;
     QString deletee;
     QString namee;
+    QString primero;
     int addd;
     void mostrarDatos(clfdisk *disco);
 };
