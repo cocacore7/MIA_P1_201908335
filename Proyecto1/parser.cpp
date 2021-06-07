@@ -1558,7 +1558,7 @@ yyreduce:
 
   case 29:
 #line 152 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="s"}; ffdisco->size=tam; (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="s";} ffdisco->size=tam; (yyval.fdiskk)=ffdisco;}
 #line 1563 "parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1654,19 +1654,19 @@ yyreduce:
 
   case 45:
 #line 168 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam; (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam; (yyval.fdiskk)=ffdisco;}
 #line 1659 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 46:
 #line 169 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam * -1; (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam * -1; (yyval.fdiskk)=ffdisco;}
 #line 1665 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 47:
 #line 170 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="s"}; ffdisco->size=tam; (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="s";} ffdisco->size=tam; (yyval.fdiskk)=ffdisco;}
 #line 1671 "parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1762,13 +1762,13 @@ yyreduce:
 
   case 63:
 #line 186 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam; (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam; (yyval.fdiskk)=ffdisco;}
 #line 1767 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 64:
 #line 187 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam*-1; (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam*-1; (yyval.fdiskk)=ffdisco;}
 #line 1773 "parser.cpp" /* yacc.c:1646  */
     break;
 

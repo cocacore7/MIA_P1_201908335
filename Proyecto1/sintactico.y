@@ -149,7 +149,7 @@ COMRMDISK:  pathh igual cadena COMRMDISK            {rmdisco->path=$3; $$=rmdisc
             |pathh igual cadena                     {rmdisco->path=$3; $$=rmdisco;};
             |pathh igual ruta                       {rmdisco->path=$3; $$=rmdisco;};
 
-COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="s"}; ffdisco->size=tam; $$=ffdisco;};
+COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="s";} ffdisco->size=tam; $$=ffdisco;};
             |u igual K  COMFDISK                    {ffdisco->u=$3; $$=ffdisco;};
             |u igual M  COMFDISK                    {ffdisco->u=$3; $$=ffdisco;};
             |u igual B  COMFDISK                    {ffdisco->u=$3; $$=ffdisco;};
@@ -165,9 +165,9 @@ COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisc
             |deletee igual FULL COMFDISK            {ffdisco->deletee=$3; $$=ffdisco;};
             |namee igual cadena COMFDISK            {ffdisco->namee=$3; $$=ffdisco;};
             |namee igual ident COMFDISK             {ffdisco->namee=$3; $$=ffdisco;};
-            |addd igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam; $$=ffdisco;};
-            |addd igual negativo digito COMFDISK    {int tam=atoi($4); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam * -1; $$=ffdisco;};
-            |sizee igual digito                     {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="s"}; ffdisco->size=tam; $$=ffdisco;};
+            |addd igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam; $$=ffdisco;};
+            |addd igual negativo digito COMFDISK    {int tam=atoi($4); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam * -1; $$=ffdisco;};
+            |sizee igual digito                     {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="s";} ffdisco->size=tam; $$=ffdisco;};
             |u igual K                              {ffdisco->u=$3; $$=ffdisco;};
             |u igual M                              {ffdisco->u=$3; $$=ffdisco;};
             |u igual B                              {ffdisco->u=$3; $$=ffdisco;};
@@ -183,8 +183,8 @@ COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisc
             |deletee igual FULL                     {ffdisco->deletee=$3; $$=ffdisco;};
             |namee igual cadena                     {ffdisco->namee=$3; $$=ffdisco;};
             |namee igual ident                      {ffdisco->namee=$3; $$=ffdisco;};
-            |addd igual digito                      {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam; $$=ffdisco;};
-            |addd igual negativo digito             {int tam=atoi($4); if(ffdisco->primero!=""){ffdisco->primero="a"}; ffdisco->addd=tam*-1; $$=ffdisco;};
+            |addd igual digito                      {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam; $$=ffdisco;};
+            |addd igual negativo digito             {int tam=atoi($4); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam*-1; $$=ffdisco;};
 
 COMMOUNT:   pathh igual cadena COMMOUNT             {modisco->path=$3; $$=modisco;};
             |pathh igual ruta COMMOUNT              {modisco->path=$3; $$=modisco;};

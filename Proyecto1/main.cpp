@@ -19,15 +19,15 @@ int main()
         printf(">> ");
         fgets(entrada,sizeof(entrada),stdin);
         leerEntrada(entrada);
-        memset(entrada,0,400);
+        memset(entrada,0,500);
     }
     return 0;
 }
 
-void leerEntrada(char entrada[400]){
+void leerEntrada(char entrada[500]){
     YY_BUFFER_STATE buffer = yy_scan_string(entrada);
     if(yyparse()==0){
-        cout<<resultado<<endl;
+        //cout<<resultado<<endl;
     }else{
         cout<<"Hubo Un Error"<<endl;
     }
