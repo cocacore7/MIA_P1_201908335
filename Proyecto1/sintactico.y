@@ -8,6 +8,8 @@
     #include "clmount.h"
     #include "clunmount.h"
     #include "clmkfs.h"
+    #include "clexec.h"
+
 
     extern int yylex(void);
     extern int resultado;
@@ -17,6 +19,8 @@
     clmount *modisco = new clmount();
     clunmount *unmdisco = new clunmount();
     clmkfs *mkfsdisco = new clmkfs();
+    clexec *script = new clexec();
+
 
     int yyerror(const char* mens){
         std::cout << mens << std::endl;
@@ -34,6 +38,7 @@
     class clmount *modiskk;
     class clunmount *unmdiskk;
     class clmkfs *mkdiskk;
+    class clexec *archexec;
 }
 
 %token <TEXT> digito
@@ -56,6 +61,7 @@
 %token <TEXT> mkusr
 %token <TEXT> rmusr
 %token <TEXT> mkfile
+%token <TEXT> mkdirr
 %token <TEXT> cat
 %token <TEXT> rem
 %token <TEXT> edit
@@ -65,7 +71,9 @@
 %token <TEXT> find
 %token <TEXT> chownn
 %token <TEXT> chgrp
+%token <TEXT> execc
 %token <TEXT> pausee
+%token <TEXT> comentario
 
 %token <TEXT> igual
 %token <TEXT> dividido
@@ -87,7 +95,7 @@
 %token <TEXT> pwd
 %token <TEXT> grp
 %token <TEXT> ugo
-%token <TEXT> r
+%token <TEXT> rr
 %token <TEXT> cont
 %token <TEXT> filenn
 %token <TEXT> dest
@@ -113,100 +121,108 @@
 %type <modiskk>     COMMOUNT;
 %type <unmdiskk>    COMUNMOUNT;
 %type <mkdiskk>     COMFSDISK;
-
+%type <archexec>    COMEXEC;
 
 %start INICIO
 %%
 
-INICIO:     COMANDOS                        { };
+INICIO:     COMANDOS                                { };
 
-COMANDOS:   mkdisk COMMKDISK                        {$2->mostrarDatos($2); printf("Comando MKDISK");};
-            |rmdisk COMRMDISK                       {$2->mostrarDatos($2); printf("Comando RMDISK");};
-            |fdisk COMFDISK                         {$2->mostrarDatos($2); printf("Comando FDISK");};
-            |mount COMMOUNT                         {$2->mostrarDatos($2); printf("Comando MOUT");};
-            |unmount COMUNMOUNT                     {$2->mostrarDatos($2); printf("Comando UNMOUNT");};
-            |mkfs COMFSDISK                         {$2->mostrarDatos($2); printf("Comando MKFS");};
+COMANDOS:   mkdisk COMMKDISK                        {$2->mostrarDatos($2); cout<<"Comando MKDISK"<<endl;};
+            |rmdisk COMRMDISK                       {$2->mostrarDatos($2); cout<<"Comando RMDISK"<<endl;};
+            |fdisk COMFDISK                         {$2->mostrarDatos($2); cout<<"Comando FDISK"<<endl;};
+            |mount COMMOUNT                         {$2->mostrarDatos($2); cout<<"Comando MOUNT"<<endl;};
+            |unmount COMUNMOUNT                     {$2->mostrarDatos($2); cout<<"Comando UNMOUNT"<<endl;};
+            |mkfs COMFSDISK                         {$2->mostrarDatos($2); cout<<"Comando MKFS"<<endl;};
+            |execc COMEXEC                          {$2->mostrarDatos($2); cout<<"Comando EXEC"<<endl;};
+            |pausee                                 {cout<<"Ingrese una tecla para continuar"<<endl; cin.get();};
+            |comentario                             {};
 
-COMMKDISK:  sizee igual digito COMMKDISK            {int tam=atoi($3); mkdisco->size=tam; $$=mkdisco;};
-            |f igual BF COMMKDISK                   {mkdisco->f=$3; $$=mkdisco;};
-            |f igual FF COMMKDISK                   {mkdisco->f=$3; $$=mkdisco;};
-            |f igual WF COMMKDISK                   {mkdisco->f=$3; $$=mkdisco;};
-            |u igual K  COMMKDISK                   {mkdisco->u=$3; $$=mkdisco;};
-            |u igual M  COMMKDISK                   {mkdisco->u=$3; $$=mkdisco;};
-            |pathh igual cadena COMMKDISK           {mkdisco->path=$3; $$=mkdisco;};
-            |pathh igual ruta COMMKDISK             {mkdisco->path=$3; $$=mkdisco;};
-            |sizee igual digito                     {int tam=atoi($3); mkdisco->size=tam; $$=mkdisco;};
-            |f igual BF                             {mkdisco->f=$3; $$=mkdisco;};
-            |f igual FF                             {mkdisco->f=$3; $$=mkdisco;};
-            |f igual WF                             {mkdisco->f=$3; $$=mkdisco;};
-            |u igual K                              {mkdisco->u=$3; $$=mkdisco;};
-            |u igual M                              {mkdisco->u=$3; $$=mkdisco;};
-            |pathh igual cadena                     {mkdisco->path=$3; $$=mkdisco;};
-            |pathh igual ruta                       {mkdisco->path=$3; $$=mkdisco;};
+COMMKDISK:  sizee igual digito COMMKDISK            {int tam=atoi($3); if(mkdisco->size==0){mkdisco->size=tam;} $$=mkdisco;};
+            |f igual BF COMMKDISK                   {if(mkdisco->f==""){mkdisco->f=$3;} $$=mkdisco;};
+            |f igual FF COMMKDISK                   {if(mkdisco->f==""){mkdisco->f=$3;} $$=mkdisco;};
+            |f igual WF COMMKDISK                   {if(mkdisco->f==""){mkdisco->f=$3;} $$=mkdisco;};
+            |u igual K  COMMKDISK                   {if(mkdisco->u==""){mkdisco->u=$3;} $$=mkdisco;};
+            |u igual M  COMMKDISK                   {if(mkdisco->u==""){mkdisco->u=$3;} $$=mkdisco;};
+            |pathh igual cadena COMMKDISK           {if(mkdisco->path==""){mkdisco->path=$3;} $$=mkdisco;};
+            |pathh igual ruta COMMKDISK             {if(mkdisco->path==""){mkdisco->path=$3;} $$=mkdisco;};
+            |sizee igual digito                     {int tam=atoi($3); if(mkdisco->size!=0){mkdisco->size=tam;} $$=mkdisco;};
+            |f igual BF                             {if(mkdisco->f==""){mkdisco->f=$3;} $$=mkdisco;};
+            |f igual FF                             {if(mkdisco->f==""){mkdisco->f=$3;} $$=mkdisco;};
+            |f igual WF                             {if(mkdisco->f==""){mkdisco->f=$3;} $$=mkdisco;};
+            |u igual K                              {if(mkdisco->u==""){mkdisco->u=$3;} $$=mkdisco;};
+            |u igual M                              {if(mkdisco->u==""){mkdisco->u=$3;} $$=mkdisco;};
+            |pathh igual cadena                     {if(mkdisco->path==""){mkdisco->path=$3;} $$=mkdisco;};
+            |pathh igual ruta                       {if(mkdisco->path==""){mkdisco->path=$3;} $$=mkdisco;};
 
-COMRMDISK:  pathh igual cadena COMRMDISK            {rmdisco->path=$3; $$=rmdisco;};
-            |pathh igual ruta COMRMDISK             {rmdisco->path=$3; $$=rmdisco;};
-            |pathh igual cadena                     {rmdisco->path=$3; $$=rmdisco;};
-            |pathh igual ruta                       {rmdisco->path=$3; $$=rmdisco;};
+COMRMDISK:  pathh igual cadena COMRMDISK            {if(rmdisco->path==""){rmdisco->path=$3;} $$=rmdisco;};
+            |pathh igual ruta COMRMDISK             {if(rmdisco->path==""){rmdisco->path=$3;} $$=rmdisco;};
+            |pathh igual cadena                     {if(rmdisco->path==""){rmdisco->path=$3;} $$=rmdisco;};
+            |pathh igual ruta                       {if(rmdisco->path==""){rmdisco->path=$3;} $$=rmdisco;};
 
-COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="s";} ffdisco->size=tam; $$=ffdisco;};
-            |u igual K  COMFDISK                    {ffdisco->u=$3; $$=ffdisco;};
-            |u igual M  COMFDISK                    {ffdisco->u=$3; $$=ffdisco;};
-            |u igual B  COMFDISK                    {ffdisco->u=$3; $$=ffdisco;};
-            |pathh igual cadena COMFDISK            {ffdisco->path=$3; $$=ffdisco;};
-            |pathh igual ruta COMFDISK              {ffdisco->path=$3; $$=ffdisco;};
-            |typee igual PP COMFDISK                {ffdisco->typee=$3; $$=ffdisco;};
-            |typee igual E  COMFDISK                {ffdisco->typee=$3; $$=ffdisco;};
-            |typee igual L  COMFDISK                {ffdisco->typee=$3; $$=ffdisco;};
-            |f igual BF COMFDISK                    {ffdisco->f=$3; $$=ffdisco;};
-            |f igual FF COMFDISK                    {ffdisco->f=$3; $$=ffdisco;};
-            |f igual WF COMFDISK                    {ffdisco->f=$3; $$=ffdisco;};
-            |deletee igual FAST COMFDISK            {ffdisco->deletee=$3; $$=ffdisco;};
-            |deletee igual FULL COMFDISK            {ffdisco->deletee=$3; $$=ffdisco;};
-            |namee igual cadena COMFDISK            {ffdisco->namee=$3; $$=ffdisco;};
-            |namee igual ident COMFDISK             {ffdisco->namee=$3; $$=ffdisco;};
-            |addd igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam; $$=ffdisco;};
-            |addd igual negativo digito COMFDISK    {int tam=atoi($4); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam * -1; $$=ffdisco;};
-            |sizee igual digito                     {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="s";} ffdisco->size=tam; $$=ffdisco;};
-            |u igual K                              {ffdisco->u=$3; $$=ffdisco;};
-            |u igual M                              {ffdisco->u=$3; $$=ffdisco;};
-            |u igual B                              {ffdisco->u=$3; $$=ffdisco;};
-            |pathh igual cadena                     {ffdisco->path=$3; $$=ffdisco;};
-            |pathh igual ruta                       {ffdisco->path=$3; $$=ffdisco;};
-            |typee igual PP                         {ffdisco->typee=$3; $$=ffdisco;};
-            |typee igual E                          {ffdisco->typee=$3; $$=ffdisco;};
-            |typee igual L                          {ffdisco->typee=$3; $$=ffdisco;};
-            |f igual BF                             {ffdisco->f=$3; $$=ffdisco;};
-            |f igual FF                             {ffdisco->f=$3; $$=ffdisco;};
-            |f igual WF                             {ffdisco->f=$3; $$=ffdisco;};
-            |deletee igual FAST                     {ffdisco->deletee=$3; $$=ffdisco;};
-            |deletee igual FULL                     {ffdisco->deletee=$3; $$=ffdisco;};
-            |namee igual cadena                     {ffdisco->namee=$3; $$=ffdisco;};
-            |namee igual ident                      {ffdisco->namee=$3; $$=ffdisco;};
-            |addd igual digito                      {int tam=atoi($3); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam; $$=ffdisco;};
-            |addd igual negativo digito             {int tam=atoi($4); if(ffdisco->primero!=""){ffdisco->primero="a";} ffdisco->addd=tam*-1; $$=ffdisco;};
+COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size!=0){ffdisco->size=tam;} $$=ffdisco;};
+            |u igual K  COMFDISK                    {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
+            |u igual M  COMFDISK                    {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
+            |u igual B  COMFDISK                    {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
+            |pathh igual cadena COMFDISK            {if(ffdisco->path==""){ffdisco->path=$3;} $$=ffdisco;};
+            |pathh igual ruta COMFDISK              {if(ffdisco->path==""){ffdisco->path=$3;} $$=ffdisco;};
+            |typee igual PP COMFDISK                {if(ffdisco->typee==""){ffdisco->typee=$3;} $$=ffdisco;};
+            |typee igual E  COMFDISK                {if(ffdisco->typee==""){ffdisco->typee=$3;} $$=ffdisco;};
+            |typee igual L  COMFDISK                {if(ffdisco->typee==""){ffdisco->typee=$3;} $$=ffdisco;};
+            |f igual BF COMFDISK                    {if(ffdisco->f==""){ffdisco->f=$3;} $$=ffdisco;};
+            |f igual FF COMFDISK                    {if(ffdisco->f==""){ffdisco->f=$3;} $$=ffdisco;};
+            |f igual WF COMFDISK                    {if(ffdisco->f==""){ffdisco->f=$3;} $$=ffdisco;};
+            |deletee igual FAST COMFDISK            {if(ffdisco->deletee==""){ffdisco->deletee=$3;} $$=ffdisco;};
+            |deletee igual FULL COMFDISK            {if(ffdisco->deletee==""){ffdisco->deletee=$3;} $$=ffdisco;};
+            |namee igual cadena COMFDISK            {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
+            |namee igual ident COMFDISK             {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
+            |addd igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam;} $$=ffdisco;};
+            |addd igual negativo digito COMFDISK    {int tam=atoi($4); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam * -1;} $$=ffdisco;};
+            |sizee igual digito                     {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size!=0){ffdisco->size=tam;} $$=ffdisco;};
+            |u igual K                              {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
+            |u igual M                              {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
+            |u igual B                              {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
+            |pathh igual cadena                     {if(ffdisco->path==""){ffdisco->path=$3;} $$=ffdisco;};
+            |pathh igual ruta                       {if(ffdisco->path==""){ffdisco->path=$3;} $$=ffdisco;};
+            |typee igual PP                         {if(ffdisco->typee==""){ffdisco->typee=$3;} $$=ffdisco;};
+            |typee igual E                          {if(ffdisco->typee==""){ffdisco->typee=$3;} $$=ffdisco;};
+            |typee igual L                          {if(ffdisco->typee==""){ffdisco->typee=$3;} $$=ffdisco;};
+            |f igual BF                             {if(ffdisco->f==""){ffdisco->f=$3;} $$=ffdisco;};
+            |f igual FF                             {if(ffdisco->f==""){ffdisco->f=$3;} $$=ffdisco;};
+            |f igual WF                             {if(ffdisco->f==""){ffdisco->f=$3;} $$=ffdisco;};
+            |deletee igual FAST                     {if(ffdisco->deletee==""){ffdisco->deletee=$3;} $$=ffdisco;};
+            |deletee igual FULL                     {if(ffdisco->deletee==""){ffdisco->deletee=$3;} $$=ffdisco;};
+            |namee igual cadena                     {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
+            |namee igual ident                      {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
+            |addd igual digito                      {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam;} $$=ffdisco;};
+            |addd igual negativo digito             {int tam=atoi($4); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam * -1;} $$=ffdisco;};
 
-COMMOUNT:   pathh igual cadena COMMOUNT             {modisco->path=$3; $$=modisco;};
-            |pathh igual ruta COMMOUNT              {modisco->path=$3; $$=modisco;};
-            |namee igual cadena COMMOUNT            {modisco->namee=$3; $$=modisco;};
-            |namee igual ident COMMOUNT             {modisco->namee=$3; $$=modisco;};
-            |pathh igual cadena                     {modisco->path=$3; $$=modisco;};
-            |pathh igual ruta                       {modisco->path=$3; $$=modisco;};
-            |namee igual cadena                     {modisco->namee=$3; $$=modisco;};
-            |namee igual ident                      {modisco->namee=$3; $$=modisco;};
+COMMOUNT:   pathh igual cadena COMMOUNT             {if(modisco->path==""){modisco->path=$3;} $$=modisco;};
+            |pathh igual ruta COMMOUNT              {if(modisco->path==""){modisco->path=$3;} $$=modisco;};
+            |namee igual cadena COMMOUNT            {if(modisco->namee==""){modisco->namee=$3;} $$=modisco;};
+            |namee igual ident COMMOUNT             {if(modisco->namee==""){modisco->namee=$3;} $$=modisco;};
+            |pathh igual cadena                     {if(modisco->path==""){modisco->path=$3;} $$=modisco;};
+            |pathh igual ruta                       {if(modisco->path==""){modisco->path=$3;} $$=modisco;};
+            |namee igual cadena                     {if(modisco->namee==""){modisco->namee=$3;} $$=modisco;};
+            |namee igual ident                      {if(modisco->namee==""){modisco->namee=$3;} $$=modisco;};
 
-COMUNMOUNT: id igual idp COMUNMOUNT                 {unmdisco->id=$3; $$=unmdisco;};
-            |id igual idp                           {unmdisco->id=$3; $$=unmdisco;};
+COMUNMOUNT: id igual idp COMUNMOUNT                 {if(unmdisco->id==""){unmdisco->id=$3;} $$=unmdisco;};
+            |id igual idp                           {if(unmdisco->id==""){unmdisco->id=$3;} $$=unmdisco;};
 
-COMFSDISK:  id igual idp COMFSDISK                  {mkfsdisco->id=$3; $$=mkfsdisco;};
-            |typee igual FAST COMFSDISK             {mkfsdisco->type=$3; $$=mkfsdisco;};
-            |typee igual FULL  COMFSDISK            {mkfsdisco->type=$3; $$=mkfsdisco;};
-            |fs igual FS2  COMFSDISK                {mkfsdisco->fs=$3; $$=mkfsdisco;};
-            |fs igual FS3  COMFSDISK                {mkfsdisco->fs=$3; $$=mkfsdisco;};
-            |id igual idp                           {mkfsdisco->id=$3; $$=mkfsdisco;};
-            |typee igual FAST                       {mkfsdisco->type=$3; $$=mkfsdisco;};
-            |typee igual FULL                       {mkfsdisco->type=$3; $$=mkfsdisco;};
-            |fs igual FS2                           {mkfsdisco->fs=$3; $$=mkfsdisco;};
-            |fs igual FS3                           {mkfsdisco->fs=$3; $$=mkfsdisco;};
+COMFSDISK:  id igual idp COMFSDISK                  {if(mkfsdisco->id==""){mkfsdisco->id=$3;} $$=mkfsdisco;};
+            |typee igual FAST COMFSDISK             {if(mkfsdisco->type==""){mkfsdisco->type=$3;} $$=mkfsdisco;};
+            |typee igual FULL  COMFSDISK            {if(mkfsdisco->type==""){mkfsdisco->type=$3;} $$=mkfsdisco;};
+            |fs igual FS2  COMFSDISK                {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
+            |fs igual FS3  COMFSDISK                {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
+            |id igual idp                           {if(mkfsdisco->id==""){mkfsdisco->id=$3;} $$=mkfsdisco;};
+            |typee igual FAST                       {if(mkfsdisco->type==""){mkfsdisco->type=$3;} $$=mkfsdisco;};
+            |typee igual FULL                       {if(mkfsdisco->type==""){mkfsdisco->type=$3;} $$=mkfsdisco;};
+            |fs igual FS2                           {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
+            |fs igual FS3                           {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
+
+COMEXEC:    pathh igual cadena COMEXEC              {script->path=$3; $$=script;};
+            |pathh igual ruta COMEXEC               {script->path=$3; $$=script;};
+            |pathh igual cadena                     {script->path=$3; $$=script;};
+            |pathh igual ruta                       {script->path=$3; $$=script;};
 
 %%

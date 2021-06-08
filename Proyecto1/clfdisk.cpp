@@ -9,7 +9,7 @@ clfdisk::clfdisk()
 }
 
 void clfdisk::mostrarDatos(clfdisk *disco){
-    cout<<"-----------------------DATOS---------------------"<<endl;
+    cout<<"-----------------------CrearParticion---------------------"<<endl;
     cout<<"El tamaño es: "<<disco->size<<endl;
     cout<<"El U es: "<<disco->u.toStdString()<<endl;
     cout<<"El Path es: "<<disco->path.toStdString()<<endl;
@@ -78,4 +78,5 @@ void clfdisk::mostrarDatos(clfdisk *disco){
     disco->deletee = "";
     disco->namee = "";
     disco->addd = 0;
+    cout<<"--------------------------------------------------------"<<endl;
 }

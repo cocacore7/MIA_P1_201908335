@@ -40,6 +40,7 @@ ruta ("/"{identificador})+("/"{identificador}"."{identificador})
 "mkusr"         {strcpy(yylval.TEXT,yytext); return(mkusr);}
 "rmusr"         {strcpy(yylval.TEXT,yytext); return(rmusr);}
 "mkfile"        {strcpy(yylval.TEXT,yytext); return(mkfile);}
+"mkdir"         {strcpy(yylval.TEXT,yytext); return(mkdirr);}
 "cat"           {strcpy(yylval.TEXT,yytext); return(cat);}
 "rem"           {strcpy(yylval.TEXT,yytext); return(rem);}
 "edit"          {strcpy(yylval.TEXT,yytext); return(edit);}
@@ -50,6 +51,7 @@ ruta ("/"{identificador})+("/"{identificador}"."{identificador})
 "chown"         {strcpy(yylval.TEXT,yytext); return(chownn);}
 "chgrp"         {strcpy(yylval.TEXT,yytext); return(chgrp);}
 "pause"         {strcpy(yylval.TEXT,yytext); return(pausee);}
+"exec"          {strcpy(yylval.TEXT,yytext); return(execc);}
 
 "="             {strcpy(yylval.TEXT,yytext); return(igual);}
 "/"             {strcpy(yylval.TEXT,yytext); return(dividido);}
@@ -71,7 +73,7 @@ ruta ("/"{identificador})+("/"{identificador}"."{identificador})
 "-pwd"          {strcpy(yylval.TEXT,yytext); return(pwd);}
 "-grp"          {strcpy(yylval.TEXT,yytext); return(grp);}
 "-ugo"          {strcpy(yylval.TEXT,yytext); return(ugo);}
-"-r"            {strcpy(yylval.TEXT,yytext); return(r);}
+"-r"            {strcpy(yylval.TEXT,yytext); return(rr);}
 "-cont"         {strcpy(yylval.TEXT,yytext); return(cont);}
 "-filen"        {strcpy(yylval.TEXT,yytext); return(filenn);}
 "-dest"         {strcpy(yylval.TEXT,yytext); return(dest);}
@@ -92,6 +94,7 @@ ruta ("/"{identificador})+("/"{identificador}"."{identificador})
 "3fs"           {strcpy(yylval.TEXT,yytext); return(FS3);}
 
 [a-zA-Z]+([a-zA-Z]+|[0-9]+|"_")* {strcpy(yylval.TEXT,yytext); return(ident);}
+"#"[^\n]*       {return(comentario);}
 [ \t\r\f\n]      {}
 
 .               {std::cout<<"Error Lexico"<<std::endl;}

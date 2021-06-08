@@ -64,53 +64,56 @@ extern int yydebug;
     mkusr = 274,
     rmusr = 275,
     mkfile = 276,
-    cat = 277,
-    rem = 278,
-    edit = 279,
-    ren = 280,
-    cp = 281,
-    mv = 282,
-    find = 283,
-    chownn = 284,
-    chgrp = 285,
-    pausee = 286,
-    igual = 287,
-    dividido = 288,
-    interrogacion = 289,
-    multiplicacion = 290,
-    negativo = 291,
-    sizee = 292,
-    f = 293,
-    u = 294,
-    pathh = 295,
-    typee = 296,
-    deletee = 297,
-    namee = 298,
-    addd = 299,
-    id = 300,
-    fs = 301,
-    usr = 302,
-    pwd = 303,
-    grp = 304,
-    ugo = 305,
-    r = 306,
-    cont = 307,
-    filenn = 308,
-    dest = 309,
-    p = 310,
-    BF = 311,
-    FF = 312,
-    WF = 313,
-    K = 314,
-    M = 315,
-    B = 316,
-    PP = 317,
-    E = 318,
-    L = 319,
-    FAST = 320,
-    FULL = 321,
-    FS2 = 322,
-    FS3 = 323
+    mkdirr = 277,
+    cat = 278,
+    rem = 279,
+    edit = 280,
+    ren = 281,
+    cp = 282,
+    mv = 283,
+    find = 284,
+    chownn = 285,
+    chgrp = 286,
+    execc = 287,
+    pausee = 288,
+    comentario = 289,
+    igual = 290,
+    dividido = 291,
+    interrogacion = 292,
+    multiplicacion = 293,
+    negativo = 294,
+    sizee = 295,
+    f = 296,
+    u = 297,
+    pathh = 298,
+    typee = 299,
+    deletee = 300,
+    namee = 301,
+    addd = 302,
+    id = 303,
+    fs = 304,
+    usr = 305,
+    pwd = 306,
+    grp = 307,
+    ugo = 308,
+    rr = 309,
+    cont = 310,
+    filenn = 311,
+    dest = 312,
+    p = 313,
+    BF = 314,
+    FF = 315,
+    WF = 316,
+    K = 317,
+    M = 318,
+    B = 319,
+    PP = 320,
+    E = 321,
+    L = 322,
+    FAST = 323,
+    FULL = 324,
+    FS2 = 325,
+    FS3 = 326
   };
 #endif
 
@@ -119,7 +122,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 29 "sintactico.y" /* yacc.c:1909  */
+#line 33 "sintactico.y" /* yacc.c:1909  */
 
     char TEXT[500];
     class clmkdisk *mdisk;
@@ -128,8 +131,9 @@ union YYSTYPE
     class clmount *modiskk;
     class clunmount *unmdiskk;
     class clmkfs *mkdiskk;
+    class clexec *archexec;
 
-#line 133 "parser.h" /* yacc.c:1909  */
+#line 137 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

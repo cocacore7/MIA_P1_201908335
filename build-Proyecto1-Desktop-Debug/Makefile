@@ -50,7 +50,8 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../Proyecto1/clfdisk.cpp \
+SOURCES       = ../Proyecto1/clexec.cpp \
+		../Proyecto1/clfdisk.cpp \
 		../Proyecto1/clmkdisk.cpp \
 		../Proyecto1/clmkfs.cpp \
 		../Proyecto1/clmount.cpp \
@@ -59,7 +60,8 @@ SOURCES       = ../Proyecto1/clfdisk.cpp \
 		../Proyecto1/main.cpp \
 		../Proyecto1/parser.cpp \
 		../Proyecto1/scanner.cpp 
-OBJECTS       = clfdisk.o \
+OBJECTS       = clexec.o \
+		clfdisk.o \
 		clmkdisk.o \
 		clmkfs.o \
 		clmount.o \
@@ -140,7 +142,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../Proyecto1/Proyecto1.pro ../Proyecto1/clfdisk.h \
+		../Proyecto1/Proyecto1.pro ../Proyecto1/clexec.h \
+		../Proyecto1/clfdisk.h \
 		../Proyecto1/clmkdisk.h \
 		../Proyecto1/clmkfs.h \
 		../Proyecto1/clmount.h \
@@ -149,7 +152,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Proyecto1/lexico.l \
 		../Proyecto1/parser.h \
 		../Proyecto1/scanner.h \
-		../Proyecto1/sintactico.y ../Proyecto1/clfdisk.cpp \
+		../Proyecto1/sintactico.y ../Proyecto1/clexec.cpp \
+		../Proyecto1/clfdisk.cpp \
 		../Proyecto1/clmkdisk.cpp \
 		../Proyecto1/clmkfs.cpp \
 		../Proyecto1/clmount.cpp \
@@ -333,8 +337,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Proyecto1/clfdisk.h ../Proyecto1/clmkdisk.h ../Proyecto1/clmkfs.h ../Proyecto1/clmount.h ../Proyecto1/clrmdisk.h ../Proyecto1/clunmount.h ../Proyecto1/lexico.l ../Proyecto1/parser.h ../Proyecto1/scanner.h ../Proyecto1/sintactico.y $(DISTDIR)/
-	$(COPY_FILE) --parents ../Proyecto1/clfdisk.cpp ../Proyecto1/clmkdisk.cpp ../Proyecto1/clmkfs.cpp ../Proyecto1/clmount.cpp ../Proyecto1/clrmdisk.cpp ../Proyecto1/clunmount.cpp ../Proyecto1/main.cpp ../Proyecto1/parser.cpp ../Proyecto1/scanner.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Proyecto1/clexec.h ../Proyecto1/clfdisk.h ../Proyecto1/clmkdisk.h ../Proyecto1/clmkfs.h ../Proyecto1/clmount.h ../Proyecto1/clrmdisk.h ../Proyecto1/clunmount.h ../Proyecto1/lexico.l ../Proyecto1/parser.h ../Proyecto1/scanner.h ../Proyecto1/sintactico.y $(DISTDIR)/
+	$(COPY_FILE) --parents ../Proyecto1/clexec.cpp ../Proyecto1/clfdisk.cpp ../Proyecto1/clmkdisk.cpp ../Proyecto1/clmkfs.cpp ../Proyecto1/clmount.cpp ../Proyecto1/clrmdisk.cpp ../Proyecto1/clunmount.cpp ../Proyecto1/main.cpp ../Proyecto1/parser.cpp ../Proyecto1/scanner.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -380,6 +384,9 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
+clexec.o: ../Proyecto1/clexec.cpp ../Proyecto1/clexec.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clexec.o ../Proyecto1/clexec.cpp
+
 clfdisk.o: ../Proyecto1/clfdisk.cpp ../Proyecto1/clfdisk.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clfdisk.o ../Proyecto1/clfdisk.cpp
 
@@ -399,7 +406,8 @@ clunmount.o: ../Proyecto1/clunmount.cpp ../Proyecto1/clunmount.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clunmount.o ../Proyecto1/clunmount.cpp
 
 main.o: ../Proyecto1/main.cpp ../Proyecto1/parser.h \
-		../Proyecto1/scanner.h
+		../Proyecto1/scanner.h \
+		../Proyecto1/clmkdisk.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Proyecto1/main.cpp
 
 parser.o: ../Proyecto1/parser.cpp ../Proyecto1/scanner.h \
@@ -408,7 +416,8 @@ parser.o: ../Proyecto1/parser.cpp ../Proyecto1/scanner.h \
 		../Proyecto1/clfdisk.h \
 		../Proyecto1/clmount.h \
 		../Proyecto1/clunmount.h \
-		../Proyecto1/clmkfs.h
+		../Proyecto1/clmkfs.h \
+		../Proyecto1/clexec.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o ../Proyecto1/parser.cpp
 
 scanner.o: ../Proyecto1/scanner.cpp ../Proyecto1/parser.h

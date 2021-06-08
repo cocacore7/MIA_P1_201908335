@@ -4,6 +4,7 @@
 #include <string.h>
 #include <parser.h>
 #include <scanner.h>
+#include <clmkdisk.h>
 using namespace std;
 
 extern int yyparse();

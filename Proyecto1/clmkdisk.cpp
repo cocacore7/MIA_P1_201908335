@@ -14,12 +14,8 @@ clmkdisk::clmkdisk()
 
 
 void clmkdisk::mostrarDatos(clmkdisk *disco){
-    cout<<"-----------------------DATOS---------------------"<<endl;
+    cout<<"-----------------------CrearDisco---------------------"<<endl;
     disco->path.remove(QChar('"'), Qt::CaseInsensitive);
-    cout<<"El tamaño es: "<<disco->size<<endl;
-    cout<<"El F es: "<<disco->f.toStdString()<<endl;
-    cout<<"El U es: "<<disco->u.toStdString()<<endl;
-    cout<<"El Path es: "<<disco->path.toStdString()<<endl;
     if(disco->size > 0){
         if(disco->path != ""){
             if(disco->f == ""){
@@ -59,14 +55,32 @@ void clmkdisk::mostrarDatos(clmkdisk *disco){
                     ruta = ruta + "/" + aux;
                 }
                 QFile archivo(ruta);
-                if(archivo.open(QIODevice::WriteOnly | QIODevice::Text)){
-                    cout<<"Abrio El  Archivo"<<endl;
+                if(archivo.exists()){
+                    QByteArray ba = aux.toLocal8Bit();
+                    const char* com = ba.data();
+                    cout<<"El Disco: " << com<< " Ya Existe"<<endl;
+                }else{
+                    //AQUI LLENAMOS EL ARCHIVO FISICO
+                    QString comando="";
+                    if(disco->u == "m" || disco->u == "M"){
+                        comando="dd if=/dev/zero of=\"" + ruta + "\" bs=1048576 count=" + QStringLiteral("%1").arg(disco->size);
+                    }else{
+                        comando="dd if=/dev/zero of=\"" + ruta + "\" bs=1024 count=" + QStringLiteral("%1").arg(disco->size);
+                    }
+                    QByteArray ba = comando.toLocal8Bit();
+                    const char* com = ba.data();
+                    system(com);
+                    FILE *nuevoDisco;
+                    ba = ruta.toLocal8Bit();
+                    com = ba.data();
+                    nuevoDisco=fopen(com,"rb+");
+                    fseek(nuevoDisco,0,SEEK_SET);
+                    fclose(nuevoDisco);
+
+                    ba = aux.toLocal8Bit();
+                    com = ba.data();
+                    cout<<"El Disco: " << com<< " Se Creo Exitosamente :D"<<endl;
                 }
-                archivo.close();
-
-
-                //AQUI LLENAMOS EL ARCHIVO FISICO
-
             }else{
                 cout<<"Extension de Disco incorrecta, no es .dk"<<endl;
             }
@@ -80,4 +94,5 @@ void clmkdisk::mostrarDatos(clmkdisk *disco){
     disco->f = "";
     disco->u = "";
     disco->path = "";
+    cout<<"--------------------------------------------------------"<<endl;
 }

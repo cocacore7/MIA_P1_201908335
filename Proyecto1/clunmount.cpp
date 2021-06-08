@@ -9,7 +9,7 @@ clunmount::clunmount()
 }
 
 void clunmount::mostrarDatos(clunmount *disco){
-    cout<<"-----------------------DATOS---------------------"<<endl;
+    cout<<"-----------------------DesmontarParticion---------------------"<<endl;
     cout<<"El Path es: "<<disco->id.toStdString()<<endl;
     if(disco->id!=""){
         //AQUI VA TODO EL CODIGO UNMOUNT
@@ -17,4 +17,5 @@ void clunmount::mostrarDatos(clunmount *disco){
         cout<<"ID No Ingresada, Incorrecto"<<endl;
     }
     disco->id = "";
+    cout<<"--------------------------------------------------------"<<endl;
 }
