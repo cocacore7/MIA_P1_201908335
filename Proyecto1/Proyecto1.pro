@@ -16,6 +16,7 @@ SOURCES += \
         clrmdisk.cpp \
         clunmount.cpp \
         main.cpp \
+        mbrstruct.cpp \
         parser.cpp \
         scanner.cpp
 
@@ -33,6 +34,7 @@ HEADERS += \
     clrmdisk.h \
     clunmount.h \
     lexico.l \
+    mbrstruct.h \
     parser.h \
     scanner.h \
     sintactico.y

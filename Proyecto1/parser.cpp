@@ -1930,25 +1930,25 @@ yyreduce:
 
   case 88:
 #line 223 "sintactico.y" /* yacc.c:1646  */
-    {script->path=(yyvsp[-1].TEXT); (yyval.archexec)=script;}
+    {if(script->path==""){script->path=(yyvsp[-1].TEXT);} (yyval.archexec)=script;}
 #line 1935 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 89:
 #line 224 "sintactico.y" /* yacc.c:1646  */
-    {script->path=(yyvsp[-1].TEXT); (yyval.archexec)=script;}
+    {if(script->path==""){script->path=(yyvsp[-1].TEXT);} (yyval.archexec)=script;}
 #line 1941 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 90:
 #line 225 "sintactico.y" /* yacc.c:1646  */
-    {script->path=(yyvsp[0].TEXT); (yyval.archexec)=script;}
+    {if(script->path==""){script->path=(yyvsp[0].TEXT);} (yyval.archexec)=script;}
 #line 1947 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 91:
 #line 226 "sintactico.y" /* yacc.c:1646  */
-    {script->path=(yyvsp[0].TEXT); (yyval.archexec)=script;}
+    {if(script->path==""){script->path=(yyvsp[0].TEXT);} (yyval.archexec)=script;}
 #line 1953 "parser.cpp" /* yacc.c:1646  */
     break;
 

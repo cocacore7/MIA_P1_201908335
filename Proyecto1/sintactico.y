@@ -220,9 +220,9 @@ COMFSDISK:  id igual idp COMFSDISK                  {if(mkfsdisco->id==""){mkfsd
             |fs igual FS2                           {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
             |fs igual FS3                           {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
 
-COMEXEC:    pathh igual cadena COMEXEC              {script->path=$3; $$=script;};
-            |pathh igual ruta COMEXEC               {script->path=$3; $$=script;};
-            |pathh igual cadena                     {script->path=$3; $$=script;};
-            |pathh igual ruta                       {script->path=$3; $$=script;};
+COMEXEC:    pathh igual cadena COMEXEC              {if(script->path==""){script->path=$3;} $$=script;};
+            |pathh igual ruta COMEXEC               {if(script->path==""){script->path=$3;} $$=script;};
+            |pathh igual cadena                     {if(script->path==""){script->path=$3;} $$=script;};
+            |pathh igual ruta                       {if(script->path==""){script->path=$3;} $$=script;};
 
 %%
