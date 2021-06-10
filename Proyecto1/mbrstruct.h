@@ -11,15 +11,15 @@ struct particion{
     char    part_name[16];
 };
 
-typedef struct{
+struct MBR{
     int                 mbr_tam;
     time_t              mbr_fecha_creacion;
     int                 mbr_disk_signature;
     char                disk_fit;
-    struct particion    *mbr_partition_1;
-    struct particion    *mbr_partition_2;
-    struct particion    *mbr_partition_3;
-    struct particion    *mbr_partition_4;
-} MBR;
+    struct particion    mbr_partition_1;
+    struct particion    mbr_partition_2;
+    struct particion    mbr_partition_3;
+    struct particion    mbr_partition_4;
+};
 
 #endif // MBRSTRUCT_H

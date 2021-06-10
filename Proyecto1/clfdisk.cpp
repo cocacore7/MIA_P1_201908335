@@ -22,15 +22,8 @@ typedef struct{
 
 void clfdisk::mostrarDatos(clfdisk *disco){
     cout<<"-----------------------CrearParticion---------------------"<<endl;
-    cout<<"El tamaño es: "<<disco->size<<endl;
-    cout<<"El U es: "<<disco->u.toStdString()<<endl;
     cout<<"El Path es: "<<disco->path.toStdString()<<endl;
-    cout<<"El Type es: "<<disco->typee.toStdString()<<endl;
-    cout<<"El F es: "<<disco->f.toStdString()<<endl;
-    cout<<"El Delete es: "<<disco->deletee.toStdString()<<endl;
     cout<<"El Name es: "<<disco->namee.toStdString()<<endl;
-    cout<<"El Typo De Entero es: "<<disco->primero.toStdString()<<endl;
-    cout<<"El Add es: "<<disco->addd<<endl;
 
     disco->path.remove(QChar('"'), Qt::CaseInsensitive);
     if(disco->path!=""){
@@ -38,7 +31,7 @@ void clfdisk::mostrarDatos(clfdisk *disco){
             if(disco->deletee==""){
                 if(disco->primero=="s"){
                     //CREAR PARTICION
-                    if(disco->size<=0){
+                    if(disco->size>0){
                         if(disco->u==""){
                             disco->u="k";
                         }
@@ -82,41 +75,50 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                     fseek(Discoo,0,SEEK_SET);
                                     MBR mbr;
                                     fread(&mbr,sizeof(MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
 
                                     //COMPROBAR TIPO DE PARTICION A CREAR
                                     char extendida[] = {'.','.','.','.'};
+                                    struct particion part1;
+                                    struct particion part2;
+                                    struct particion part3;
+                                    struct particion part4;
+                                    part1 = mbr.mbr_partition_1;
+                                    part2 = mbr.mbr_partition_2;
+                                    part3 = mbr.mbr_partition_3;
+                                    part4 = mbr.mbr_partition_4;
                                     if(disco->typee=="p" || disco->typee=="e" || disco->typee=="P" || disco->typee=="E"){
                                         //COMPROBAR PARTICIONES LIBRES Y NO MAS DE UNA EXTENDIDA
-                                        if(mbr.mbr_partition_1->part_type != *"."){
-                                            if(mbr.mbr_partition_1->part_type == *"e" || mbr.mbr_partition_1->part_type == *"E"){
+                                        if(part1.part_type != '.'){
+                                            if(part1.part_type == 'e' || part1.part_type == 'E'){
                                                    extendida[0] = 'e';
                                             }
-                                            if(mbr.mbr_partition_1->part_type == *"p" || mbr.mbr_partition_1->part_type == *"P"){
+                                            if(part1.part_type == 'p' || part1.part_type == 'P'){
                                                    extendida[0] = 'p';
                                             }
                                         }
-                                        if(mbr.mbr_partition_2->part_type != *"."){
-                                            if(mbr.mbr_partition_2->part_type == *"e" || mbr.mbr_partition_2->part_type == *"E"){
+                                        if(part2.part_type != '.'){
+                                            if(part2.part_type == 'e' || part2.part_type == 'E'){
                                                    extendida[1] = 'e';
                                             }
-                                            if(mbr.mbr_partition_2->part_type == *"p" || mbr.mbr_partition_2->part_type == *"P"){
+                                            if(part2.part_type == 'p' || part2.part_type == 'P'){
                                                    extendida[1] = 'p';
                                             }
                                         }
-                                        if(mbr.mbr_partition_3->part_type != *"."){
-                                            if(mbr.mbr_partition_3->part_type == *"e" || mbr.mbr_partition_3->part_type == *"E"){
+                                        if(part3.part_type !='.'){
+                                            if(part3.part_type == 'e' || part3.part_type == 'E'){
                                                    extendida[2] = 'e';
                                             }
-                                            if(mbr.mbr_partition_3->part_type == *"p" || mbr.mbr_partition_3->part_type == *"P"){
+                                            if(part3.part_type == 'p' || part3.part_type == 'P'){
                                                    extendida[2] = 'p';
                                             }
                                         }
-                                        if(mbr.mbr_partition_4->part_type != *"."){
-                                            if(mbr.mbr_partition_4->part_type == *"e" || mbr.mbr_partition_4->part_type == *"E"){
+                                        if(part4.part_type != '.'){
+                                            if(part4.part_type == 'e' || part4.part_type == 'E'){
                                                    extendida[3] = 'e';
                                             }
-                                            if(mbr.mbr_partition_4->part_type == *"p" || mbr.mbr_partition_4->part_type == *"P"){
+                                            if(part4.part_type == 'p' || part4.part_type == 'P'){
                                                    extendida[3] = 'p';
                                             }
                                         }
@@ -128,7 +130,7 @@ void clfdisk::mostrarDatos(clfdisk *disco){
 
                                         if(disco->typee == "e" || disco->typee == "E"){cantext++;}
 
-                                        if(disco->namee != mbr.mbr_partition_1->part_name && disco->namee != mbr.mbr_partition_2->part_name && disco->namee != mbr.mbr_partition_3->part_name && disco->namee != mbr.mbr_partition_4->part_name){
+                                        if(disco->namee != part1.part_name && disco->namee != part2.part_name && disco->namee != part3.part_name && disco->namee != part4.part_name){
                                             //1 2 3 4
                                             if(extendida[0]!='.' && extendida[1]!='.' && extendida[2]!='.' && extendida[3]!='.'){
                                                 cout<<"No Hay Particiones Libres, 4 PArticiones Creadas"<<endl;
@@ -138,10 +140,9 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     int tamDisco = mbr.mbr_tam;
                                                     int tam_mbr = sizeof(mbr);
                                                     int espsolicitado = 0;
-                                                    int p1 = mbr.mbr_partition_1->part_size;
-                                                    int p2 = mbr.mbr_partition_2->part_size;
-                                                    int p3 = mbr.mbr_partition_3->part_size;
-                                                    int p4 = mbr.mbr_partition_4->part_size;
+                                                    int p1 = part1.part_size;
+                                                    int p2 = part2.part_size;
+                                                    int p3 = part3.part_size;
                                                     if(disco->u == "b" || disco->u == "B"){
                                                         espsolicitado = disco->size;
                                                     }else if(disco->u == "k" || disco->u == "K"){
@@ -151,34 +152,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. . . .
                                                     if(extendida[0]=='.' && extendida[1]=='.' && extendida[2]=='.' && extendida[3]=='.'){
-                                                        if((tamDisco - tam_mbr - p1 - p2 - p3 - p4 - espsolicitado) > 0){
+                                                        if((tamDisco - tam_mbr - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
-                                                            mbr.mbr_partition_1->part_type = disco->typee.toStdString().c_str()[0];
-                                                            if(disco->f=="")
-                                                                if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                    mbr.mbr_partition_1->part_fit = 'F';
-                                                                }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                    mbr.mbr_partition_1->part_fit = 'B';
-                                                                }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                    mbr.mbr_partition_1->part_fit = 'W';
-                                                                }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
+                                                                part1.part_fit = 'F';
+                                                            }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
+                                                                part1.part_fit = 'B';
+                                                            }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
+                                                                part1.part_fit = 'W';
+                                                            }
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -197,30 +215,50 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     else if(extendida[0]!='.' && extendida[1]=='.' && extendida[2]=='.' && extendida[3]=='.'){
                                                         if((tamDisco - tam_mbr - p1 - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_2->part_status = 'N';
+                                                            part2.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_2->part_type = 'E';
+                                                                part2.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_2->part_type = 'P';
+                                                                part2.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_2->part_fit = 'F';
+                                                                part2.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_2->part_fit = 'B';
+                                                                part2.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_2->part_fit = 'W';
+                                                                part2.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_2->part_start = tam_mbr + p1;
-                                                            mbr.mbr_partition_2->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_2->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_2->part_name,disco->namee.toStdString().c_str());
+                                                            part2.part_start = tam_mbr + p1;
+                                                            part2.part_size = espsolicitado;
+                                                            memset(part2.part_name,0,16);
+
+                                                            strcpy(part2.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part2.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part2.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -237,32 +275,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. 2 . .
                                                     else if(extendida[0]=='.' && extendida[1]!='.' && extendida[2]=='.' && extendida[3]=='.'){
-                                                        if((mbr.mbr_partition_2->part_start - tam_mbr) > espsolicitado){
+                                                        if((part2.part_start - tam_mbr) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_1->part_fit = 'F';
+                                                                part1.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_1->part_fit = 'B';
+                                                                part1.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_1->part_fit = 'W';
+                                                                part1.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -276,30 +333,49 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                         }
                                                         else if((tamDisco - tam_mbr - p1 - p2 - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_3->part_status = 'N';
+                                                            part3.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_3->part_type = 'E';
+                                                                part3.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_3->part_type = 'P';
+                                                                part3.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_3->part_fit = 'F';
+                                                                part3.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_3->part_fit = 'B';
+                                                                part3.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_3->part_fit = 'W';
+                                                                part3.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_3->part_start = tam_mbr + p1 + p2;
-                                                            mbr.mbr_partition_3->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_3->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_3->part_name,disco->namee.toStdString().c_str());
+                                                            part3.part_start = tam_mbr + p1 + p2;
+                                                            part3.part_size = espsolicitado;
+                                                            memset(part3.part_name,0,16);
+                                                            strcpy(part3.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part3.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part3.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -316,32 +392,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. . 3 .
                                                     else if(extendida[0]=='.' && extendida[1]=='.' && extendida[2]!='.' && extendida[3]=='.'){
-                                                        if((mbr.mbr_partition_3->part_start - tam_mbr) > espsolicitado){
+                                                        if((part3.part_start - tam_mbr) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_1->part_fit = 'F';
+                                                                part1.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_1->part_fit = 'B';
+                                                                part1.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_1->part_fit = 'W';
+                                                                part1.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -355,30 +450,49 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                         }
                                                         else if((tamDisco - tam_mbr - p1 - p2 - p3 - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_4->part_status = 'N';
+                                                            part4.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_4->part_type = 'E';
+                                                                part4.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_4->part_type = 'P';
+                                                                part4.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_4->part_fit = 'F';
+                                                                part4.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_4->part_fit = 'B';
+                                                                part4.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_4->part_fit = 'W';
+                                                                part4.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_4->part_start = tam_mbr + p1+ p2+ p3;
-                                                            mbr.mbr_partition_4->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_4->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_4->part_name,disco->namee.toStdString().c_str());
+                                                            part4.part_start = tam_mbr + p1+ p2+ p3;
+                                                            part4.part_size = espsolicitado;
+                                                            memset(part4.part_name,0,16);
+                                                            strcpy(part4.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part4.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part4.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -395,32 +509,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. . . 4
                                                     else if(extendida[0]=='.' && extendida[1]=='.' && extendida[2]=='.' && extendida[3]!='.'){
-                                                        if((mbr.mbr_partition_4->part_start - tam_mbr) > espsolicitado){
+                                                        if((part4.part_start - tam_mbr) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_1->part_fit = 'F';
+                                                                part1.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_1->part_fit = 'B';
+                                                                part1.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_1->part_fit = 'W';
+                                                                part1.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -440,30 +573,49 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     else if(extendida[0]!='.' && extendida[1]!='.' && extendida[2]=='.' && extendida[3]=='.'){
                                                         if((tamDisco - tam_mbr - p1 - p2 - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_3->part_status = 'N';
+                                                            part3.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_3->part_type = 'E';
+                                                                part3.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_3->part_type = 'P';
+                                                                part3.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_3->part_fit = 'F';
+                                                                part3.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_3->part_fit = 'B';
+                                                                part3.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_3->part_fit = 'W';
+                                                                part3.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_3->part_start = tam_mbr + p1 + p2;
-                                                            mbr.mbr_partition_3->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_3->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_3->part_name,disco->namee.toStdString().c_str());
+                                                            part3.part_start = tam_mbr + p1 + p2;
+                                                            part3.part_size = espsolicitado;
+                                                            memset(part3.part_name,0,16);
+                                                            strcpy(part3.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part3.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part3.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -480,32 +632,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //1 . 3 .
                                                     else if(extendida[0]!='.' && extendida[1]=='.' && extendida[2]!='.' && extendida[3]=='.'){
-                                                        if((mbr.mbr_partition_3->part_start - tam_mbr -p1) > espsolicitado){
+                                                        if((part3.part_start - tam_mbr -p1) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_2->part_status = 'N';
+                                                            part2.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_2->part_type = 'E';
+                                                                part2.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_2->part_type = 'P';
+                                                                part2.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_2->part_fit = 'F';
+                                                                part2.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_2->part_fit = 'B';
+                                                                part2.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_2->part_fit = 'W';
+                                                                part2.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_2->part_start = tam_mbr + p1;
-                                                            mbr.mbr_partition_2->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_2->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_2->part_name,disco->namee.toStdString().c_str());
+                                                            part2.part_start = tam_mbr + p1;
+                                                            part2.part_size = espsolicitado;
+                                                            memset(part2.part_name,0,16);
+                                                            strcpy(part2.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part2.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part2.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -519,30 +690,49 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                         }
                                                         else if((tamDisco - tam_mbr - p1 - p2 - p3 - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_4->part_status = 'N';
+                                                            part4.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_4->part_type = 'E';
+                                                                part4.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_4->part_type = 'P';
+                                                                part4.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_4->part_fit = 'F';
+                                                                part4.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_4->part_fit = 'B';
+                                                                part4.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_4->part_fit = 'W';
+                                                                part4.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_4->part_start = tam_mbr + p1 + p2 + p3;
-                                                            mbr.mbr_partition_4->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_4->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_4->part_name,disco->namee.toStdString().c_str());
+                                                            part4.part_start = tam_mbr + p1 + p2 + p3;
+                                                            part4.part_size = espsolicitado;
+                                                            memset(part4.part_name,0,16);
+                                                            strcpy(part4.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part4.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part4.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -559,32 +749,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //1 . . 4
                                                     else if(extendida[0]!='.' && extendida[1]=='.' && extendida[2]=='.' && extendida[3]!='.'){
-                                                        if((mbr.mbr_partition_4->part_start - tam_mbr -p1) > espsolicitado){
+                                                        if((part4.part_start - tam_mbr -p1) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_2->part_status = 'N';
+                                                            part2.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_2->part_type = 'E';
+                                                                part2.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_2->part_type = 'P';
+                                                                part2.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_2->part_fit = 'F';
+                                                                part2.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_2->part_fit = 'B';
+                                                                part2.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_2->part_fit = 'W';
+                                                                part2.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_2->part_start = tam_mbr + p1;
-                                                            mbr.mbr_partition_2->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_2->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_2->part_name,disco->namee.toStdString().c_str());
+                                                            part2.part_start = tam_mbr + p1;
+                                                            part2.part_size = espsolicitado;
+                                                            memset(part2.part_name,0,16);
+                                                            strcpy(part2.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part2.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part2.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -602,32 +811,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. 2 3 .
                                                     else if(extendida[0]=='.' && extendida[1]!='.' && extendida[2]!='.' && extendida[3]=='.'){
-                                                        if((mbr.mbr_partition_2->part_start - tam_mbr) > espsolicitado){
+                                                        if((part2.part_start - tam_mbr) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_1->part_fit = 'F';
+                                                                part1.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_1->part_fit = 'B';
+                                                                part1.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_1->part_fit = 'W';
+                                                                part1.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -641,30 +869,49 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                         }
                                                         else if((tamDisco - tam_mbr - p1 - p2 - p3 - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_4->part_status = 'N';
+                                                            part4.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_4->part_type = 'E';
+                                                                part4.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_4->part_type = 'P';
+                                                                part4.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_4->part_fit = 'F';
+                                                                part4.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_4->part_fit = 'B';
+                                                                part4.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_4->part_fit = 'W';
+                                                                part4.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_4->part_start = tam_mbr + p1 + p2 + p3;
-                                                            mbr.mbr_partition_4->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_4->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_4->part_name,disco->namee.toStdString().c_str());
+                                                            part4.part_start = tam_mbr + p1 + p2 + p3;
+                                                            part4.part_size = espsolicitado;
+                                                            memset(part4.part_name,0,16);
+                                                            strcpy(part4.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part4.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part4.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -681,32 +928,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. 2 . 4
                                                     else if(extendida[0]=='.' && extendida[1]!='.' && extendida[2]=='.' && extendida[3]!='.'){
-                                                        if((mbr.mbr_partition_2->part_start - tam_mbr) > espsolicitado){
+                                                        if((part2.part_start - tam_mbr) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_1->part_fit = 'F';
+                                                                part1.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_1->part_fit = 'B';
+                                                                part1.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_1->part_fit = 'W';
+                                                                part1.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -718,32 +984,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                                 cout<<"La Particion Extendida: " << com<< " Se A Creado Con Exito :D"<<endl;
                                                             }
                                                         }
-                                                        else if((mbr.mbr_partition_4->part_start - tam_mbr - p1 - p2) > espsolicitado){
+                                                        else if((part4.part_start - tam_mbr - p1 - p2) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_3->part_status = 'N';
+                                                            part3.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_3->part_type = 'E';
+                                                                part3.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_3->part_type = 'P';
+                                                                part3.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_3->part_fit = 'F';
+                                                                part3.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_3->part_fit = 'B';
+                                                                part3.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_3->part_fit = 'W';
+                                                                part3.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_3->part_start = tam_mbr + p1 + p2;
-                                                            mbr.mbr_partition_3->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_3->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_3->part_name,disco->namee.toStdString().c_str());
+                                                            part3.part_start = tam_mbr + p1 + p2;
+                                                            part3.part_size = espsolicitado;
+                                                            memset(part3.part_name,0,16);
+                                                            strcpy(part3.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part3.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part3.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -760,32 +1045,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. . 3 4
                                                     else if(extendida[0]=='.' && extendida[1]=='.' && extendida[2]!='.' && extendida[3]!='.'){
-                                                        if((mbr.mbr_partition_3->part_start - tam_mbr) > espsolicitado){
+                                                        if((part3.part_start - tam_mbr) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_1->part_fit = 'F';
+                                                                part1.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_1->part_fit = 'B';
+                                                                part1.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_1->part_fit = 'W';
+                                                                part1.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -805,30 +1109,49 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     else if(extendida[0]!='.' && extendida[1]!='.' && extendida[2]!='.' && extendida[3]=='.'){
                                                         if((tamDisco - tam_mbr - p1 - p2 - p3 - espsolicitado) > 0){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_4->part_status = 'N';
+                                                            part4.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_4->part_type = 'E';
+                                                                part4.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_4->part_type = 'P';
+                                                                part4.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_4->part_fit = 'F';
+                                                                part4.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_4->part_fit = 'B';
+                                                                part4.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_4->part_fit = 'W';
+                                                                part4.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_4->part_start = tam_mbr + p1 + p2 + p3;
-                                                            mbr.mbr_partition_4->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_4->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_4->part_name,disco->namee.toStdString().c_str());
+                                                            part4.part_start = tam_mbr + p1 + p2 + p3;
+                                                            part4.part_size = espsolicitado;
+                                                            memset(part4.part_name,0,16);
+                                                            strcpy(part4.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part4.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part4.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -845,32 +1168,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //1 2 . 4
                                                     else if(extendida[0]!='.' && extendida[1]!='.' && extendida[2]=='.' && extendida[3]!='.'){
-                                                        if((mbr.mbr_partition_4->part_start - tam_mbr - p1 - p2) > espsolicitado){
+                                                        if((part4.part_start - tam_mbr - p1 - p2) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_3->part_status = 'N';
+                                                            part3.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_3->part_type = 'E';
+                                                                part3.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_3->part_type = 'P';
+                                                                part3.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_3->part_fit = 'F';
+                                                                part3.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_3->part_fit = 'B';
+                                                                part3.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_3->part_fit = 'W';
+                                                                part3.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_3->part_start = tam_mbr + p1 + p2;
-                                                            mbr.mbr_partition_3->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_3->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_3->part_name,disco->namee.toStdString().c_str());
+                                                            part3.part_start = tam_mbr + p1 + p2;
+                                                            part3.part_size = espsolicitado;
+                                                            memset(part3.part_name,0,16);
+                                                            strcpy(part3.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part3.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part3.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -887,32 +1229,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //1 . 3 4
                                                     else if(extendida[0]!='.' && extendida[1]=='.' && extendida[2]!='.' && extendida[3]!='.'){
-                                                        if((mbr.mbr_partition_3->part_start - tam_mbr - p1) > espsolicitado){
+                                                        if((part3.part_start - tam_mbr - p1) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_2->part_status = 'N';
+                                                            part2.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_2->part_type = 'E';
+                                                                part2.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_2->part_type = 'P';
+                                                                part2.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_2->part_fit = 'F';
+                                                                part2.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_2->part_fit = 'B';
+                                                                part2.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_2->part_fit = 'W';
+                                                                part2.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_2->part_start = tam_mbr + p1;
-                                                            mbr.mbr_partition_2->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_2->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_2->part_name,disco->namee.toStdString().c_str());
+                                                            part2.part_start = tam_mbr + p1;
+                                                            part2.part_size = espsolicitado;
+                                                            memset(part2.part_name,0,16);
+                                                            strcpy(part2.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
+
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part2.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part2.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
 
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
@@ -929,33 +1290,51 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                                     }
                                                     //. 2 3 4
                                                     else if(extendida[0]=='.' && extendida[1]!='.' && extendida[2]!='.' && extendida[3]!='.'){
-                                                        if((mbr.mbr_partition_2->part_start - tam_mbr) > espsolicitado){
+                                                        if((part2.part_start - tam_mbr) > espsolicitado){
                                                             //INGRESAR PARTICION AL ARCHIVO FISICO
-                                                            mbr.mbr_partition_1->part_status = 'N';
+                                                            part1.part_status = 'N';
                                                             if(disco->typee.toStdString().c_str()[0] == 'e' || disco->typee.toStdString().c_str()[0] == 'E'){
-                                                                mbr.mbr_partition_1->part_type = 'E';
+                                                                part1.part_type = 'E';
                                                             }else if(disco->typee.toStdString().c_str()[0] == 'p' || disco->typee.toStdString().c_str()[0] == 'P'){
-                                                                mbr.mbr_partition_1->part_type = 'P';
+                                                                part1.part_type = 'P';
                                                             }
                                                             if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
-                                                                mbr.mbr_partition_1->part_fit = 'F';
+                                                                part1.part_fit = 'F';
                                                             }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
-                                                                mbr.mbr_partition_1->part_fit = 'B';
+                                                                part1.part_fit = 'B';
                                                             }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
-                                                                mbr.mbr_partition_1->part_fit = 'W';
+                                                                part1.part_fit = 'W';
                                                             }
-                                                            mbr.mbr_partition_1->part_start = tam_mbr;
-                                                            mbr.mbr_partition_1->part_size = espsolicitado;
-                                                            memset(mbr.mbr_partition_1->part_name,0,16);
-                                                            strcpy(mbr.mbr_partition_1->part_name,disco->namee.toStdString().c_str());
+                                                            part1.part_start = tam_mbr;
+                                                            part1.part_size = espsolicitado;
+                                                            memset(part1.part_name,0,16);
+                                                            strcpy(part1.part_name,disco->namee.toStdString().c_str());
 
                                                             //EDITAR MBR CON CAMBIOS
+                                                            mbr.mbr_partition_1 = part1;
+                                                            mbr.mbr_partition_2 = part2;
+                                                            mbr.mbr_partition_3 = part3;
+                                                            mbr.mbr_partition_4 = part4;
                                                             Discoo=fopen(com,"rb+");
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fwrite(&mbr,sizeof (MBR),1,Discoo);
                                                             fseek(Discoo,0,SEEK_SET);
                                                             fclose(Discoo);
 
+                                                            //CREAR EBR INICIAL DE EXTENDIDA
+                                                            if(disco->typee=="e" || disco->typee=="E"){
+                                                                EBR ebr;
+                                                                ebr.part_fit ='.';
+                                                                ebr.part_next = -1;
+                                                                ebr.part_size = 0;
+                                                                ebr.part_start = part1.part_start;
+                                                                ebr.part_status = '.';
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                            }
                                                             if(disco->typee=="p" || disco->typee=="P"){
                                                                 ba = disco->namee.toLocal8Bit();
                                                                 com = ba.data();
@@ -978,17 +1357,150 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         }
                                     }else{
                                         //COMPROBAR SI EXISTE PARTICION EXTENDIDA
+                                        bool nombreR = false;
+                                        bool existe=false;
+                                        char ext = '.';
+                                        if(part1.part_type == 'e' || part1.part_type == 'E'){existe = true; ext = '1';}
+                                        else if(part2.part_type == 'e' || part2.part_type == 'E'){existe = true; ext = '2';}
+                                        else if(part3.part_type == 'e' || part3.part_type == 'E'){existe = true; ext = '3';}
+                                        else if(part4.part_type == 'e' || part4.part_type == 'E'){existe = true; ext = '4';}
+                                        if(part1.part_name == disco->namee){nombreR = true;}
+                                        else if(part2.part_name == disco->namee){nombreR = true;}
+                                        else if(part3.part_name == disco->namee){nombreR = true;}
+                                        else if(part4.part_name == disco->namee){nombreR = true;}
+
+                                        if(existe){
+                                            //OBTENER EBR INCIAL Y ESPACIO SOLICITADO
+                                            int ebrnext = 0;
+                                            int tam_Particion = 0;
+                                            int partOcupado = 0;
+                                            int nuevoinicio = 0;
+                                            int espacioSolicitado = 0;
+                                            if(disco->u == "b" || disco->u == "B"){
+                                                espacioSolicitado = disco->size;
+                                            }else if(disco->u == "k" || disco->u == "K"){
+                                                espacioSolicitado = disco->size * 1024;
+                                            }else if(disco->u == "m" || disco->u == "M"){
+                                                espacioSolicitado = disco->size * 1024 * 1024;
+                                            }
+                                            EBR ebr;
+                                            if(ext == '1'){
+                                                nuevoinicio = part1.part_start;
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                ebrnext = ebr.part_next;
+                                                tam_Particion = part1.part_size;
+                                            }else if(ext == '2'){
+                                                nuevoinicio = part2.part_start;
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,part2.part_start,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                ebrnext = ebr.part_next;
+                                                tam_Particion = part2.part_size;
+                                            }else if(ext == '3'){
+                                                nuevoinicio = part3.part_start;
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,part3.part_start,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                ebrnext = ebr.part_next;
+                                                tam_Particion = part3.part_size;
+                                            }else if(ext == '4'){
+                                                nuevoinicio = part4.part_start;
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,part4.part_start,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                ebrnext = ebr.part_next;
+                                                tam_Particion = part4.part_size;
+                                            }
 
 
-                                        //COMPROBAR ESPACIO LIBRE CON CAPACIDAD DE ALMACENAR LOGICA
+                                            //OBTENER ESPACIO OCUPADO Y EBR ACTUAL
 
+                                            int tam_ebr = sizeof(ebr);
+                                            while(ebrnext != -1){
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,nuevoinicio,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                ebrnext = ebr.part_next;
+                                                QString nombreChar(ebr.part_name);
+                                                if(ebrnext != -1){
+                                                    if(disco->namee == nombreChar){
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                    nuevoinicio = ebr.part_next;
+                                                    partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                                }
+                                                if(partOcupado >= tam_Particion){break;}
+                                            }
 
-                                        //INSERTAR PARTICION LOGICA
+                                            if(!nombreR){
+                                                //COMPROBAR ESPARCIO E INSERTAR LOGICA
+                                                if((partOcupado + espacioSolicitado + tam_ebr) <= tam_Particion){
+                                                    //SOBRE ESCRIBIR EBR ACTUAL
+                                                    QByteArray ba2 = disco->namee.toLocal8Bit();
+                                                    const char *com2 = ba2.data();
+                                                    memset(ebr.part_name,0,16);
+                                                    strcpy(ebr.part_name,com2);
+                                                    if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
+                                                        ebr.part_fit = 'F';
+                                                    }else if(disco->f == "BF" || disco->f == "bf" || disco->f == "bF" || disco->f == "Bf"){
+                                                        ebr.part_fit = 'B';
+                                                    }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
+                                                        ebr.part_fit = 'W';
+                                                    }
+                                                    ebr.part_next = ebr.part_start + sizeof(ebr) + espacioSolicitado;
+                                                    ebr.part_size = espacioSolicitado;
+                                                    ebr.part_status = 'N';
+                                                    int inicio = ebr.part_start;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,inicio,SEEK_SET);
+                                                    fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
 
+                                                    //INGRESAR NUEVA EBR SI CABE
+                                                    EBR nueva;
+                                                    nueva.part_fit = '.';
+                                                    nueva.part_next = -1;
+                                                    nueva.part_size = 0;
+                                                    nueva.part_status = '.';
+                                                    nueva.part_start = ebr.part_next;
+                                                    cout<<"La Particion Logica: " << com2<< " Se A Creado Con Exito :D"<<endl;
 
-                                        ba = disco->namee.toLocal8Bit();
-                                        com = ba.data();
-                                        cout<<"La Particion Logica: " << com<< " Se A Creado Con Exito :D"<<endl;
+                                                    inicio = nueva.part_start;
+                                                    if((partOcupado + tam_ebr + ebr.part_size + tam_ebr)<tam_Particion){
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,inicio,SEEK_SET);
+                                                        fwrite(&nueva,sizeof (EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                    }else{
+                                                        cout<<"Esta es la ultima particion logica posible a ingresar"<<endl;
+                                                    }
+                                                }else{
+                                                    ba = disco->namee.toLocal8Bit();
+                                                    com = ba.data();
+                                                    cout<<"Tamaño De Logica, Supera El Tamaño De Extendida: "<<com<<endl;
+                                                }
+                                            }else{
+                                                cout<<"Nombre De Particion Solicitado Ya Existe"<<endl;
+                                            }
+                                        }else{
+                                            cout<<"No existe Una Particion Extendida En Disco"<<endl;
+                                        }
                                     }
                                 }else{
                                     QByteArray ba = aux.toLocal8Bit();

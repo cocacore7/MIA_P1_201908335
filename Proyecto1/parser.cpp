@@ -1594,7 +1594,7 @@ yyreduce:
 
   case 32:
 #line 163 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size!=0){ffdisco->size=tam;} (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size==0){ffdisco->size=tam;} (yyval.fdiskk)=ffdisco;}
 #line 1599 "parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1690,19 +1690,19 @@ yyreduce:
 
   case 48:
 #line 179 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam;} (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam;} (yyval.fdiskk)=ffdisco;}
 #line 1695 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 49:
 #line 180 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam * -1;} (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[-1].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam * -1;} (yyval.fdiskk)=ffdisco;}
 #line 1701 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 50:
 #line 181 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size!=0){ffdisco->size=tam;} (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size==0){ffdisco->size=tam;} (yyval.fdiskk)=ffdisco;}
 #line 1707 "parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1798,13 +1798,13 @@ yyreduce:
 
   case 66:
 #line 197 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam;} (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam;} (yyval.fdiskk)=ffdisco;}
 #line 1803 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 67:
 #line 198 "sintactico.y" /* yacc.c:1646  */
-    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam * -1;} (yyval.fdiskk)=ffdisco;}
+    {int tam=atoi((yyvsp[0].TEXT)); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam * -1;} (yyval.fdiskk)=ffdisco;}
 #line 1809 "parser.cpp" /* yacc.c:1646  */
     break;
 

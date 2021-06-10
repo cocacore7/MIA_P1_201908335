@@ -76,4 +76,5 @@ void clexec::mostrarDatos(clexec *script){
         cout<<"Ruta No Ingresada, Incorrecto"<<endl;
     }
     cout<<"--------------------------------------------------------"<<endl;
+    script->path = "";
 }

@@ -160,7 +160,7 @@ COMRMDISK:  pathh igual cadena COMRMDISK            {if(rmdisco->path==""){rmdis
             |pathh igual cadena                     {if(rmdisco->path==""){rmdisco->path=$3;} $$=rmdisco;};
             |pathh igual ruta                       {if(rmdisco->path==""){rmdisco->path=$3;} $$=rmdisco;};
 
-COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size!=0){ffdisco->size=tam;} $$=ffdisco;};
+COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size==0){ffdisco->size=tam;} $$=ffdisco;};
             |u igual K  COMFDISK                    {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
             |u igual M  COMFDISK                    {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
             |u igual B  COMFDISK                    {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
@@ -176,9 +176,9 @@ COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisc
             |deletee igual FULL COMFDISK            {if(ffdisco->deletee==""){ffdisco->deletee=$3;} $$=ffdisco;};
             |namee igual cadena COMFDISK            {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
             |namee igual ident COMFDISK             {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
-            |addd igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam;} $$=ffdisco;};
-            |addd igual negativo digito COMFDISK    {int tam=atoi($4); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam * -1;} $$=ffdisco;};
-            |sizee igual digito                     {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size!=0){ffdisco->size=tam;} $$=ffdisco;};
+            |addd igual digito COMFDISK             {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam;} $$=ffdisco;};
+            |addd igual negativo digito COMFDISK    {int tam=atoi($4); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam * -1;} $$=ffdisco;};
+            |sizee igual digito                     {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="s";} if(ffdisco->size==0){ffdisco->size=tam;} $$=ffdisco;};
             |u igual K                              {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
             |u igual M                              {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
             |u igual B                              {if(ffdisco->u==""){ffdisco->u=$3;} $$=ffdisco;};
@@ -194,8 +194,8 @@ COMFDISK:   sizee igual digito COMFDISK             {int tam=atoi($3); if(ffdisc
             |deletee igual FULL                     {if(ffdisco->deletee==""){ffdisco->deletee=$3;} $$=ffdisco;};
             |namee igual cadena                     {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
             |namee igual ident                      {if(ffdisco->namee==""){ffdisco->namee=$3;} $$=ffdisco;};
-            |addd igual digito                      {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam;} $$=ffdisco;};
-            |addd igual negativo digito             {int tam=atoi($4); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd!=0){ffdisco->addd=tam * -1;} $$=ffdisco;};
+            |addd igual digito                      {int tam=atoi($3); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam;} $$=ffdisco;};
+            |addd igual negativo digito             {int tam=atoi($4); if(ffdisco->primero==""){ffdisco->primero="a";} if(ffdisco->addd==0){ffdisco->addd=tam * -1;} $$=ffdisco;};
 
 COMMOUNT:   pathh igual cadena COMMOUNT             {if(modisco->path==""){modisco->path=$3;} $$=modisco;};
             |pathh igual ruta COMMOUNT              {if(modisco->path==""){modisco->path=$3;} $$=modisco;};

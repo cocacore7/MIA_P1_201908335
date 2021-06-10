@@ -64,7 +64,7 @@ void clmkdisk::mostrarDatos(clmkdisk *disco){
                 }else{
                     archivo.close();
                     //AQUI LLENAMOS EL ARCHIVO FISICO
-                    MBR nuevo_mbr;
+                    struct MBR nuevo_mbr;
                     nuevo_mbr.mbr_fecha_creacion = time(NULL);
                     nuevo_mbr.mbr_disk_signature = rand();
                     if(disco->f == "FF" || disco->f == "ff" || disco->f == "fF" || disco->f == "Ff"){
@@ -74,18 +74,38 @@ void clmkdisk::mostrarDatos(clmkdisk *disco){
                     }else if(disco->f == "WF" || disco->f == "wf" || disco->f == "wF" || disco->f == "Wf"){
                         nuevo_mbr.disk_fit = 'W';
                     }
-                    nuevo_mbr.mbr_partition_1 = new(struct particion);
-                    nuevo_mbr.mbr_partition_2 = new(struct particion);
-                    nuevo_mbr.mbr_partition_3 = new(struct particion);
-                    nuevo_mbr.mbr_partition_4 = new(struct particion);
-                    nuevo_mbr.mbr_partition_1->part_type = '.';
-                    nuevo_mbr.mbr_partition_2->part_type = '.';
-                    nuevo_mbr.mbr_partition_3->part_type = '.';
-                    nuevo_mbr.mbr_partition_4->part_type = '.';
-                    nuevo_mbr.mbr_partition_1->part_size = 0;
-                    nuevo_mbr.mbr_partition_2->part_size = 0;
-                    nuevo_mbr.mbr_partition_3->part_size = 0;
-                    nuevo_mbr.mbr_partition_4->part_size = 0;
+                    struct particion p1;
+                    struct particion p2;
+                    struct particion p3;
+                    struct particion p4;
+                    p1 = nuevo_mbr.mbr_partition_1;
+                    p2 = nuevo_mbr.mbr_partition_2;
+                    p3 = nuevo_mbr.mbr_partition_3;
+                    p4 = nuevo_mbr.mbr_partition_4;
+                    p1.part_status = '.';
+                    p2.part_status = '.';
+                    p3.part_status = '.';
+                    p4.part_status = '.';
+                    p1.part_type = '.';
+                    p2.part_type = '.';
+                    p3.part_type = '.';
+                    p4.part_type = '.';
+                    p1.part_fit = '.';
+                    p2.part_fit = '.';
+                    p3.part_fit = '.';
+                    p4.part_fit = '.';
+                    p1.part_size = 0;
+                    p2.part_size = 0;
+                    p3.part_size = 0;
+                    p4.part_size = 0;
+                    p1.part_start = 0;
+                    p2.part_start = 0;
+                    p3.part_start = 0;
+                    p4.part_start = 0;
+                    nuevo_mbr.mbr_partition_1 = p1;
+                    nuevo_mbr.mbr_partition_2 = p2;
+                    nuevo_mbr.mbr_partition_3 = p3;
+                    nuevo_mbr.mbr_partition_4 = p4;
 
                     QString comando="";
                     if(disco->u == "m" || disco->u == "M"){
