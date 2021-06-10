@@ -15,6 +15,8 @@ SOURCES += \
         clmount.cpp \
         clrmdisk.cpp \
         clunmount.cpp \
+        ebrstruct.cpp \
+        listamontadas.cpp \
         main.cpp \
         mbrstruct.cpp \
         parser.cpp \
@@ -33,7 +35,9 @@ HEADERS += \
     clmount.h \
     clrmdisk.h \
     clunmount.h \
+    ebrstruct.h \
     lexico.l \
+    listamontadas.h \
     mbrstruct.h \
     parser.h \
     scanner.h \

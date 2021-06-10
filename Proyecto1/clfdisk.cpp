@@ -4,21 +4,13 @@
 #include <QStringList>
 #include <QDir>
 #include <mbrstruct.h>
+#include <ebrstruct.h>
 using namespace std;
 
 clfdisk::clfdisk()
 {
 
 }
-
-typedef struct{
-    char                part_status;
-    char                part_fit;
-    int                 part_start;
-    int                 part_size;
-    int                 part_next;
-    char                part_name[16];
-} EBR;
 
 void clfdisk::mostrarDatos(clfdisk *disco){
     cout<<"-----------------------CrearParticion---------------------"<<endl;
@@ -67,6 +59,7 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                 ruta = ruta + "/" + aux;
                                 QFile archivo(ruta);
                                 if(archivo.exists()){
+                                    archivo.close();
                                     //OBTENER MBR DE DISCO
                                     FILE *Discoo;
                                     QByteArray ba = ruta.toLocal8Bit();
@@ -1521,18 +1514,1383 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                         if(disco->u==""){
                             disco->u="k";
                         }
+                        if(disco->u == 'k' || disco->u == 'K'){
+                            disco->addd = disco->addd * 1024;
+                        }else if(disco->u == 'm' || disco->u == 'M'){
+                            disco->addd = disco->addd * 1024 * 1024;
+                        }
+
+                        QStringList direcciones = disco->path.split("/");
+                        QString ruta = "";
+                        bool NoCarpeta = false;
+                        if(direcciones[1] == "home" && direcciones[2] == "archivos"){
+                            ruta = "/home/oscar/archivos";
+                            for(int x=3;x<(direcciones.length()-1);x++){
+                                ruta = ruta + "/" + direcciones[x];
+                                QDir direc(ruta);
+                                if(!direc.exists()){
+                                    QByteArray ba = direcciones[x].toLocal8Bit();
+                                    const char* com = ba.data();
+                                    cout<<"La carpeta: "<<com<<" No Existe"<<endl;
+                                    NoCarpeta=true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(!NoCarpeta){
+                            QString aux =direcciones[direcciones.length()-1];
+                            QStringList discofisico = aux.split(".");
+                            if(discofisico[1] == "dk"){
+                                ruta = ruta + "/" + aux;
+                                QFile archivo(ruta);
+                                if(archivo.exists()){
+                                    archivo.close();
+                                    //OBTENER MBR DE DISCO
+                                    FILE *Discoo;
+                                    QByteArray ba = ruta.toLocal8Bit();
+                                    const char* com = ba.data();
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    MBR mbr;
+                                    fread(&mbr,sizeof(MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    //COMPROBAR TIPO DE PARTICION A ELIMINAR
+                                    struct particion part1;
+                                    struct particion part2;
+                                    struct particion part3;
+                                    struct particion part4;
+                                    part1 = mbr.mbr_partition_1;
+                                    part2 = mbr.mbr_partition_2;
+                                    part3 = mbr.mbr_partition_3;
+                                    part4 = mbr.mbr_partition_4;
+                                    QString nombre1(part1.part_name);
+                                    QString nombre2(part2.part_name);
+                                    QString nombre3(part3.part_name);
+                                    QString nombre4(part4.part_name);
+                                    if(disco->namee == nombre1){
+                                        if(disco->addd < 0){
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((part1.part_start - disco->addd) > part1.part_start){
+                                                if((part1.part_size - disco->addd)>0){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part1.part_size = part1.part_size - disco->addd;
+                                                    mbr.mbr_partition_1 = part1;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre1.toStdString().c_str()<<" Removido :D"<<endl;
+                                                }else{
+                                                    cout<<"El Tamaño A Disminuis Da Size Negativo"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"Tamaño a Disminuir en: "<<nombre1.toStdString().c_str()<<" Excede El De La Particion"<<endl;
+                                            }
+                                        }else{
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((part2.part_start - part1.part_start - part1.part_size) > 0){
+                                                if((part2.part_start - part1.part_start - part1.part_size) > disco->addd){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part1.part_size = part1.part_size + disco->addd;
+                                                    mbr.mbr_partition_1 = part1;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre1.toStdString().c_str()<<" Aumentado :D"<<endl;
+                                                }else{
+                                                    cout<<"Espacio Libre De: "<<nombre1.toStdString().c_str()<<"Insuficiente Para Aumentar"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"No Espacio Libre En: "<<nombre1.toStdString().c_str()<<endl;
+                                            }
+                                        }
+                                    }else if(disco->namee == nombre2){
+                                        if(disco->addd < 0){
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((part2.part_start - disco->addd) > part2.part_start){
+                                                if((part2.part_size - disco->addd)>0){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part2.part_size = part2.part_size - disco->addd;
+                                                    mbr.mbr_partition_2 = part2;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre2.toStdString().c_str()<<" Removido :D"<<endl;
+                                                }else{
+                                                    cout<<"El Tamaño A Disminuis Da Size Negativo"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"Tamaño a Disminuir en: "<<nombre2.toStdString().c_str()<<" Excede El De La Particion"<<endl;
+                                            }
+                                        }else{
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((part3.part_start - part2.part_start - part2.part_size) > 0){
+                                                if((part3.part_start - part2.part_start - part2.part_size) > disco->addd){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part2.part_size = part2.part_size + disco->addd;
+                                                    mbr.mbr_partition_2 = part2;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre2.toStdString().c_str()<<" Aumentado :D"<<endl;
+                                                }else{
+                                                    cout<<"Espacio Libre De: "<<nombre2.toStdString().c_str()<<"Insuficiente Para Aumentar"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"No Espacio Libre En: "<<nombre2.toStdString().c_str()<<endl;
+                                            }
+                                        }
+                                    }else if(disco->namee == nombre3){
+                                        if(disco->addd < 0){
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((part3.part_start - disco->addd) > part3.part_start){
+                                                if((part3.part_size - disco->addd)>0){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part3.part_size = part3.part_size - disco->addd;
+                                                    mbr.mbr_partition_3 = part3;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre3.toStdString().c_str()<<" Removido :D"<<endl;
+                                                }else{
+                                                    cout<<"El Tamaño A Disminuis Da Size Negativo"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"Tamaño a Disminuir en: "<<nombre3.toStdString().c_str()<<" Excede El De La Particion"<<endl;
+                                            }
+                                        }else{
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((part4.part_start - part3.part_start - part3.part_size) > 0){
+                                                if((part4.part_start - part3.part_start - part3.part_size) > disco->addd){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part3.part_size = part3.part_size + disco->addd;
+                                                    mbr.mbr_partition_3 = part3;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre3.toStdString().c_str()<<" Aumentado :D"<<endl;
+                                                }else{
+                                                    cout<<"Espacio Libre De: "<<nombre3.toStdString().c_str()<<"Insuficiente Para Aumentar"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"No Espacio Libre En: "<<nombre3.toStdString().c_str()<<endl;
+                                            }
+                                        }
+                                    }else if(disco->namee == nombre4){
+                                        if(disco->addd < 0){
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((part4.part_start - disco->addd) > part4.part_start){
+                                                if((part1.part_size - disco->addd)>0){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part4.part_size = part4.part_size - disco->addd;
+                                                    mbr.mbr_partition_4 = part4;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre4.toStdString().c_str()<<" Removido :D"<<endl;
+                                                }else{
+                                                    cout<<"El Tamaño A Disminuis Da Size Negativo"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"Tamaño a Disminuir en: "<<nombre4.toStdString().c_str()<<" Excede El De La Particion"<<endl;
+                                            }
+                                        }else{
+                                            //ANALIZAR ESPACIO LIBRE
+                                            if((mbr.mbr_tam - part4.part_start - part4.part_size) > 0){
+                                                if((mbr.mbr_tam - part4.part_start - part4.part_size) > disco->addd){
+                                                    //ASIGNAR ESPACIO EN MBR
+                                                    part4.part_size = part4.part_size + disco->addd;
+                                                    mbr.mbr_partition_4 = part4;
+                                                    Discoo=fopen(com,"rb+");
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                                    fseek(Discoo,0,SEEK_SET);
+                                                    fclose(Discoo);
+                                                    cout<<"Espacio De Particion: "<<nombre4.toStdString().c_str()<<" Aumentado :D"<<endl;
+                                                }else{
+                                                    cout<<"Espacio Libre De: "<<nombre4.toStdString().c_str()<<"Insuficiente Para Aumentar"<<endl;
+                                                }
+                                            }else{
+                                                cout<<"No Espacio Libre En: "<<nombre4.toStdString().c_str()<<endl;
+                                            }
+                                        }
+                                    }else{
+                                        if(part1.part_type == 'e' || part1.part_type == 'E'){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,part1.part_start,SEEK_SET);
+                                            EBR ebr;
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+
+                                            bool nombreR = false;
+                                            QString nombreebr(ebr.part_name);
+                                            if(nombreebr == disco->namee){
+                                                nombreR = true;
+                                            }
+
+                                            int partOcupado = 0;
+                                            int nuevoinicio = part1.part_start;
+                                            int tam_Particion = part1.part_size;
+                                            int tam_ebr = sizeof (ebr);
+                                            QString nombre = "";
+                                            while(ebr.part_next != -1){
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,nuevoinicio,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                QString nombreChar(ebr.part_name);
+
+                                                if(ebr.part_next != -1){
+                                                    if(disco->namee == nombreChar){
+                                                        nombreR = true;
+                                                        nombre = nombreChar;
+                                                        break;
+                                                    }
+                                                    nuevoinicio = ebr.part_next;
+                                                    partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                                }
+                                                if(partOcupado >= tam_Particion){break;}
+                                            }
+
+                                            if(nombreR){
+                                                if(disco->addd < 0){
+                                                    //ANALIZAR ESPACIO LIBRE
+                                                    if((ebr.part_start - disco->addd) > ebr.part_start){
+                                                        if((ebr.part_size - disco->addd) > 0){
+                                                            ebr.part_size = ebr.part_size - disco->addd;
+                                                            Discoo=fopen(com,"rb+");
+                                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                            fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                            fseek(Discoo,0,SEEK_SET);
+                                                            fclose(Discoo);
+                                                            cout<<"Espacio De Particion: "<<ebr.part_name<<" Removido :D"<<endl;
+                                                        }else{
+                                                            cout<<"Tamaño De Particion No Debe Ser Negativo"<<ebr.part_name<<endl;
+                                                        }
+                                                    }else{
+                                                        cout<<"Tamaño a Disminuir Excede La Particion: "<<ebr.part_name<<endl;
+                                                    }
+                                                }else{
+                                                    EBR sig;
+                                                    if(ebr.part_next == -1){
+                                                        if((part1.part_size - ebr.part_start - ebr.part_size) > 0){
+                                                            if((part1.part_size - ebr.part_start - ebr.part_size) > disco->addd){
+                                                                ebr.part_size = ebr.part_size + disco->addd;
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                                cout<<"Espacio De Particion: "<<ebr.part_name<<" Aumentado :D"<<endl;
+                                                            }else{
+                                                                cout<<"No Hay Suficiente Espacio Para Aumentar"<<endl;
+                                                            }
+                                                        }else{
+                                                            cout<<"No Hay Espacio Libre Para Aumentar"<<endl;
+                                                        }
+                                                    }else{
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_next,SEEK_SET);
+                                                        fwrite(&sig,sizeof (EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                    }
+                                                }
+                                            }else{
+                                                cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                            }
+                                        }else if(part2.part_type == 'e' || part2.part_type == 'E'){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,part2.part_start,SEEK_SET);
+                                            EBR ebr;
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+
+                                            bool nombreR = false;
+                                            QString nombreebr(ebr.part_name);
+                                            if(nombreebr == disco->namee){
+                                                nombreR = true;
+                                            }
 
 
+                                            int partOcupado = 0;
+                                            int nuevoinicio = part2.part_start;
+                                            int tam_Particion = part2.part_size;
+                                            int tam_ebr = sizeof (ebr);
+                                            QString nombre ="";
+                                            while(ebr.part_next != -1){
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,nuevoinicio,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                QString nombreChar(ebr.part_name);
+                                                if(ebr.part_next != -1){
+                                                    if(disco->namee == nombreChar){
+                                                        nombreR = true;
+                                                        nombre = nombreChar;
+                                                        break;
+                                                    }
+                                                    nuevoinicio = ebr.part_next;
+                                                    partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                                }
+                                                if(partOcupado >= tam_Particion){break;}
+                                            }
+
+                                            if(nombreR){
+                                                if(disco->addd < 0){
+                                                    //ANALIZAR ESPACIO LIBRE
+                                                    if((ebr.part_start - disco->addd) > ebr.part_start){
+                                                        if((ebr.part_size - disco->addd) > 0){
+                                                            ebr.part_size = ebr.part_size - disco->addd;
+                                                            Discoo=fopen(com,"rb+");
+                                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                            fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                            fseek(Discoo,0,SEEK_SET);
+                                                            fclose(Discoo);
+                                                            cout<<"Espacio De Particion: "<<ebr.part_name<<" Removido :D"<<endl;
+                                                        }else{
+                                                            cout<<"Tamaño De Particion No Debe Ser Negativo"<<ebr.part_name<<endl;
+                                                        }
+                                                    }else{
+                                                        cout<<"Tamaño a Disminuir Excede La Particion: "<<ebr.part_name<<endl;
+                                                    }
+                                                }else{
+                                                    EBR sig;
+                                                    if(ebr.part_next == -1){
+                                                        if((part2.part_size - ebr.part_start - ebr.part_size) > 0){
+                                                            if((part2.part_size - ebr.part_start - ebr.part_size) > disco->addd){
+                                                                ebr.part_size = ebr.part_size + disco->addd;
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                                cout<<"Espacio De Particion: "<<ebr.part_name<<" Aumentado :D"<<endl;
+                                                            }else{
+                                                                cout<<"No Hay Suficiente Espacio Para Aumentar"<<endl;
+                                                            }
+                                                        }else{
+                                                            cout<<"No Hay Espacio Libre Para Aumentar"<<endl;
+                                                        }
+                                                    }else{
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_next,SEEK_SET);
+                                                        fwrite(&sig,sizeof (EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                    }
+                                                }
+                                            }else{
+                                                cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                            }
+                                        }else if(part3.part_type == 'e' || part3.part_type == 'E'){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,part3.part_start,SEEK_SET);
+                                            EBR ebr;
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+
+                                            bool nombreR = false;
+                                            QString nombreebr(ebr.part_name);
+                                            if(nombreebr == disco->namee){
+                                                nombreR = true;
+                                            }
+
+                                            int partOcupado = 0;
+                                            int nuevoinicio = part3.part_start;
+                                            int tam_Particion = part3.part_size;
+                                            int tam_ebr = sizeof (ebr);
+                                            QString nombre = "";
+                                            while(ebr.part_next != -1){
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,nuevoinicio,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                QString nombreChar(ebr.part_name);
+                                                if(ebr.part_next != -1){
+                                                    if(disco->namee == nombreChar){
+                                                        nombreR = true;
+                                                        nombre = nombreChar;
+                                                        break;
+                                                    }
+                                                    nuevoinicio = ebr.part_next;
+                                                    partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                                }
+                                                if(partOcupado >= tam_Particion){break;}
+                                            }
+
+                                            if(nombreR){
+                                                if(disco->addd < 0){
+                                                    //ANALIZAR ESPACIO LIBRE
+                                                    if((ebr.part_start - disco->addd) > ebr.part_start){
+                                                        if((ebr.part_size - disco->addd) > 0){
+                                                            ebr.part_size = ebr.part_size - disco->addd;
+                                                            Discoo=fopen(com,"rb+");
+                                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                            fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                            fseek(Discoo,0,SEEK_SET);
+                                                            fclose(Discoo);
+                                                            cout<<"Espacio De Particion: "<<ebr.part_name<<" Removido :D"<<endl;
+                                                        }else{
+                                                            cout<<"Tamaño De Particion No Debe Ser Negativo"<<ebr.part_name<<endl;
+                                                        }
+                                                    }else{
+                                                        cout<<"Tamaño a Disminuir Excede La Particion: "<<ebr.part_name<<endl;
+                                                    }
+                                                }else{
+                                                    EBR sig;
+                                                    if(ebr.part_next == -1){
+                                                        if((part3.part_size - ebr.part_start - ebr.part_size) > 0){
+                                                            if((part3.part_size - ebr.part_start - ebr.part_size) > disco->addd){
+                                                                ebr.part_size = ebr.part_size + disco->addd;
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                                cout<<"Espacio De Particion: "<<ebr.part_name<<" Aumentado :D"<<endl;
+                                                            }else{
+                                                                cout<<"No Hay Suficiente Espacio Para Aumentar"<<endl;
+                                                            }
+                                                        }else{
+                                                            cout<<"No Hay Espacio Libre Para Aumentar"<<endl;
+                                                        }
+                                                    }else{
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_next,SEEK_SET);
+                                                        fwrite(&sig,sizeof (EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                    }
+                                                }
+                                            }else{
+                                                cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                            }
+                                        }else if(part4.part_type == 'e' || part4.part_type == 'E'){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,part4.part_start,SEEK_SET);
+                                            EBR ebr;
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+
+                                            bool nombreR = false;
+                                            QString nombreebr(ebr.part_name);
+                                            if(nombreebr == disco->namee){
+                                                nombreR = true;
+                                            }
+
+                                            int partOcupado = 0;
+                                            int nuevoinicio = part4.part_start;
+                                            int tam_Particion = part4.part_size;
+                                            int tam_ebr = sizeof (ebr);
+                                            QString nombre ="";
+                                            while(ebr.part_next != -1){
+                                                Discoo=fopen(com,"rb+");
+                                                fseek(Discoo,nuevoinicio,SEEK_SET);
+                                                fread(&ebr,sizeof(EBR),1,Discoo);
+                                                fseek(Discoo,0,SEEK_SET);
+                                                fclose(Discoo);
+                                                QString nombreChar(ebr.part_name);
+                                                if(ebr.part_next != -1){
+                                                    if(disco->namee == nombreChar){
+                                                        nombreR = true;
+                                                        nombre = nombreChar;
+                                                        break;
+                                                    }
+                                                    nuevoinicio = ebr.part_next;
+                                                    partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                                }
+                                                if(partOcupado >= tam_Particion){break;}
+                                            }
+
+                                            if(nombreR){
+                                                if(disco->addd < 0){
+                                                    //ANALIZAR ESPACIO LIBRE
+                                                    if((ebr.part_start - disco->addd) > ebr.part_start){
+                                                        if((ebr.part_size - disco->addd) > 0){
+                                                            ebr.part_size = ebr.part_size - disco->addd;
+                                                            Discoo=fopen(com,"rb+");
+                                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                            fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                            fseek(Discoo,0,SEEK_SET);
+                                                            fclose(Discoo);
+                                                            cout<<"Espacio De Particion: "<<ebr.part_name<<" Removido :D"<<endl;
+                                                        }else{
+                                                            cout<<"Tamaño De Particion No Debe Ser Negativo"<<ebr.part_name<<endl;
+                                                        }
+                                                    }else{
+                                                        cout<<"Tamaño a Disminuir Excede La Particion: "<<ebr.part_name<<endl;
+                                                    }
+                                                }else{
+                                                    EBR sig;
+                                                    if(ebr.part_next == -1){
+                                                        if((part4.part_size - ebr.part_start - ebr.part_size) > 0){
+                                                            if((part4.part_size - ebr.part_start - ebr.part_size) > disco->addd){
+                                                                ebr.part_size = ebr.part_size + disco->addd;
+                                                                Discoo=fopen(com,"rb+");
+                                                                fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                                fwrite(&ebr,sizeof (EBR),1,Discoo);
+                                                                fseek(Discoo,0,SEEK_SET);
+                                                                fclose(Discoo);
+                                                                cout<<"Espacio De Particion: "<<ebr.part_name<<" Aumentado :D"<<endl;
+                                                            }else{
+                                                                cout<<"No Hay Suficiente Espacio Para Aumentar"<<endl;
+                                                            }
+                                                        }else{
+                                                            cout<<"No Hay Espacio Libre Para Aumentar"<<endl;
+                                                        }
+                                                    }else{
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_next,SEEK_SET);
+                                                        fwrite(&sig,sizeof (EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                    }
+                                                }
+                                            }else{
+                                                cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                            }
+                                        }else{
+                                            cout<<"La particion Que Desea Eliminar No Existe"<<endl;
+                                        }
+                                    }
+                                }else{
+                                    QByteArray ba = aux.toLocal8Bit();
+                                    const char* com = ba.data();
+                                    cout<<"El Disco: " << com<< " No Existe"<<endl;
+                                    archivo.close();
+                                }
+                            }else{
+                                cout<<"Extension de Disco incorrecta, no es .dk"<<endl;
+                            }
+                        }
                     }else{
                         cout<<"Valor a Quitar/Agregar Espacio En Disco No Puede Ser 0, incorrecto"<<endl;
                     }
                 }
             }else{
-                if(disco->deletee=="fast"){
+                if(disco->deletee.toLower()=="fast"){
                     //FORMATEO PARTICION FAST
+                    QStringList direcciones = disco->path.split("/");
+                    QString ruta = "";
+                    bool NoCarpeta = false;
+                    if(direcciones[1] == "home" && direcciones[2] == "archivos"){
+                        ruta = "/home/oscar/archivos";
+                        for(int x=3;x<(direcciones.length()-1);x++){
+                            ruta = ruta + "/" + direcciones[x];
+                            QDir direc(ruta);
+                            if(!direc.exists()){
+                                QByteArray ba = direcciones[x].toLocal8Bit();
+                                const char* com = ba.data();
+                                cout<<"La carpeta: "<<com<<" No Existe"<<endl;
+                                NoCarpeta=true;
+                                break;
+                            }
+                        }
+                    }
 
+                    if(!NoCarpeta){
+                        QString aux =direcciones[direcciones.length()-1];
+                        QStringList discofisico = aux.split(".");
+                        if(discofisico[1] == "dk"){
+                            ruta = ruta + "/" + aux;
+                            QFile archivo(ruta);
+                            if(archivo.exists()){
+                                archivo.close();
+                                //OBTENER MBR DE DISCO
+                                FILE *Discoo;
+                                QByteArray ba = ruta.toLocal8Bit();
+                                const char* com = ba.data();
+                                Discoo=fopen(com,"rb+");
+                                fseek(Discoo,0,SEEK_SET);
+                                MBR mbr;
+                                fread(&mbr,sizeof(MBR),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+
+                                //COMPROBAR TIPO DE PARTICION A ELIMINAR
+                                struct particion part1;
+                                struct particion part2;
+                                struct particion part3;
+                                struct particion part4;
+                                part1 = mbr.mbr_partition_1;
+                                part2 = mbr.mbr_partition_2;
+                                part3 = mbr.mbr_partition_3;
+                                part4 = mbr.mbr_partition_4;
+                                QString nombre1(part1.part_name);
+                                QString nombre2(part2.part_name);
+                                QString nombre3(part3.part_name);
+                                QString nombre4(part4.part_name);
+                                if(disco->namee == nombre1){
+                                    part1.part_fit = '.';
+                                    memset(part1.part_name,0,16);
+                                    part1.part_status = '.';
+                                    part1.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre1.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                }else if(disco->namee == nombre2){
+                                    part2.part_fit = '.';
+                                    memset(part2.part_name,0,16);
+                                    part2.part_status = '.';
+                                    part2.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre2.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                }else if(disco->namee == nombre3){
+                                    part3.part_fit = '.';
+                                    memset(part3.part_name,0,16);
+                                    part3.part_status = '.';
+                                    part3.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre3.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                }else if(disco->namee == nombre4){
+                                    part4.part_fit = '.';
+                                    memset(part4.part_name,0,16);
+                                    part4.part_status = '.';
+                                    part4.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre4.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                }else{
+                                    if(part1.part_type == 'e' || part1.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part1.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part1.part_start;
+                                        int tam_Particion = part1.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        QString nombre = "";
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    nombre = nombreChar;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombre.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else if(part2.part_type == 'e' || part2.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part2.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part2.part_start;
+                                        int tam_Particion = part2.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        QString nombre ="";
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    nombre = nombreChar;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombre.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else if(part3.part_type == 'e' || part3.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part3.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part3.part_start;
+                                        int tam_Particion = part3.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        QString nombre = "";
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    nombre = nombreChar;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombre.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else if(part4.part_type == 'e' || part4.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part4.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part4.part_start;
+                                        int tam_Particion = part4.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        QString nombre ="";
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    nombre = nombreChar;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            ebr.part_fit = '.';
+                                            memset(ebr.part_name,0,16);
+                                            ebr.part_size =0;
+                                            ebr.part_status = '.';
+
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombre.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else{
+                                        cout<<"La particion Que Desea Eliminar No Existe"<<endl;
+                                    }
+                                }
+                            }else{
+                                QByteArray ba = aux.toLocal8Bit();
+                                const char* com = ba.data();
+                                cout<<"El Disco: " << com<< " No Existe"<<endl;
+                                archivo.close();
+                            }
+                        }else{
+                            cout<<"Extension de Disco incorrecta, no es .dk"<<endl;
+                        }
+                    }
                 }else{
                     //FORMATEO PARTICION FULL
+                    QStringList direcciones = disco->path.split("/");
+                    QString ruta = "";
+                    bool NoCarpeta = false;
+                    if(direcciones[1] == "home" && direcciones[2] == "archivos"){
+                        ruta = "/home/oscar/archivos";
+                        for(int x=3;x<(direcciones.length()-1);x++){
+                            ruta = ruta + "/" + direcciones[x];
+                            QDir direc(ruta);
+                            if(!direc.exists()){
+                                QByteArray ba = direcciones[x].toLocal8Bit();
+                                const char* com = ba.data();
+                                cout<<"La carpeta: "<<com<<" No Existe"<<endl;
+                                NoCarpeta=true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(!NoCarpeta){
+                        QString aux =direcciones[direcciones.length()-1];
+                        QStringList discofisico = aux.split(".");
+                        if(discofisico[1] == "dk"){
+                            ruta = ruta + "/" + aux;
+                            QFile archivo(ruta);
+                            if(archivo.exists()){
+                                archivo.close();
+                                //OBTENER MBR DE DISCO
+                                FILE *Discoo;
+                                QByteArray ba = ruta.toLocal8Bit();
+                                const char* com = ba.data();
+                                Discoo=fopen(com,"rb+");
+                                fseek(Discoo,0,SEEK_SET);
+                                MBR mbr;
+                                fread(&mbr,sizeof(MBR),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+
+                                //COMPROBAR TIPO DE PARTICION A ELIMINAR
+                                struct particion part1;
+                                struct particion part2;
+                                struct particion part3;
+                                struct particion part4;
+                                part1 = mbr.mbr_partition_1;
+                                part2 = mbr.mbr_partition_2;
+                                part3 = mbr.mbr_partition_3;
+                                part4 = mbr.mbr_partition_4;
+                                QString nombre1(part1.part_name);
+                                QString nombre2(part2.part_name);
+                                QString nombre3(part3.part_name);
+                                QString nombre4(part4.part_name);
+                                if(disco->namee == nombre1){
+                                    part1.part_fit = '.';
+                                    memset(part1.part_name,0,16);
+                                    part1.part_status = '.';
+                                    part1.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    //RELLENAR DE VACIOS
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,part1.part_start,SEEK_SET);
+                                    char vacio = '\0';
+                                    for(int x =0;x<part1.part_size;x++){
+                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                    }
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre1.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                }else if(disco->namee == nombre2){
+                                    part2.part_fit = '.';
+                                    memset(part2.part_name,0,16);
+                                    part2.part_status = '.';
+                                    part2.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    //RELLENAR DE VACIOS
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,part2.part_start,SEEK_SET);
+                                    char vacio = '\0';
+                                    for(int x =0;x<part2.part_size;x++){
+                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                    }
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre2.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                }else if(disco->namee == nombre3){
+                                    part3.part_fit = '.';
+                                    memset(part3.part_name,0,16);
+                                    part3.part_status = '.';
+                                    part3.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    //RELLENAR DE VACIOS
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,part3.part_start,SEEK_SET);
+                                    char vacio = '\0';
+                                    for(int x =0;x<part3.part_size;x++){
+                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                    }
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre3.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                }else if(disco->namee == nombre4){
+                                    part4.part_fit = '.';
+                                    memset(part4.part_name,0,16);
+                                    part4.part_status = '.';
+                                    part4.part_type ='.';
+
+                                    //Guardamos MBR
+                                    mbr.mbr_partition_1 = part1;
+                                    mbr.mbr_partition_2 = part2;
+                                    mbr.mbr_partition_3 = part3;
+                                    mbr.mbr_partition_4 = part4;
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    //RELLENAR DE VACIOS
+                                    Discoo=fopen(com,"rb+");
+                                    fseek(Discoo,part4.part_start,SEEK_SET);
+                                    char vacio = '\0';
+                                    for(int x =0;x<part4.part_size;x++){
+                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                    }
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+                                    cout<<"Particion: "<<nombre4.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                }else{
+                                    if(part1.part_type == 'e' || part1.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part1.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part1.part_start;
+                                        int tam_Particion = part1.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        QString nombre = "";
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    nombre = nombreChar;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombre.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else if(part2.part_type == 'e' || part2.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part2.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part2.part_start;
+                                        int tam_Particion = part2.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        QString nombre = "";
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    nombre = nombreChar;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<nombre.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else if(part3.part_type == 'e' || part3.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part3.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part3.part_start;
+                                        int tam_Particion = part3.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else if(part4.part_type == 'e' || part4.part_type == 'E'){
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part4.part_start,SEEK_SET);
+                                        EBR ebr;
+                                        fread(&ebr,sizeof(EBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+
+                                        QString nombreebr(ebr.part_name);
+                                        if(nombreebr == disco->namee){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
+                                        }
+
+                                        bool nombreR = false;
+                                        int partOcupado = 0;
+                                        int nuevoinicio = part4.part_start;
+                                        int tam_Particion = part4.part_size;
+                                        int tam_ebr = sizeof (ebr);
+                                        while(ebr.part_next != -1){
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,nuevoinicio,SEEK_SET);
+                                            fread(&ebr,sizeof(EBR),1,Discoo);
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            QString nombreChar(ebr.part_name);
+                                            if(ebr.part_next != -1){
+                                                if(disco->namee == nombreChar){
+                                                    nombreR = true;
+                                                    break;
+                                                }
+                                                nuevoinicio = ebr.part_next;
+                                                partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                                            }
+                                            if(partOcupado >= tam_Particion){break;}
+                                        }
+
+                                        if(nombreR){
+                                            //RELLENAR DE VACIOS
+                                            Discoo=fopen(com,"rb+");
+                                            fseek(Discoo,ebr.part_start,SEEK_SET);
+                                            char vacio = '\0';
+                                            for(int x =0;x<ebr.part_size;x++){
+                                                fwrite(&vacio,sizeof (char),1,Discoo);
+                                            }
+                                            fseek(Discoo,0,SEEK_SET);
+                                            fclose(Discoo);
+                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
+                                        }else{
+                                            cout<<"El nombre No Existe En Ninguna Particion"<<endl;
+                                        }
+                                    }else{
+                                        cout<<"La particion Que Desea Eliminar No Existe"<<endl;
+                                    }
+                                }
+                            }else{
+                                QByteArray ba = aux.toLocal8Bit();
+                                const char* com = ba.data();
+                                cout<<"El Disco: " << com<< " No Existe"<<endl;
+                                archivo.close();
+                            }
+                        }else{
+                            cout<<"Extension de Disco incorrecta, no es .dk"<<endl;
+                        }
+                    }
 
                 }
             }
@@ -1551,5 +2909,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
     disco->deletee = "";
     disco->namee = "";
     disco->addd = 0;
+    disco->primero ="";
     cout<<"--------------------------------------------------------"<<endl;
 }
