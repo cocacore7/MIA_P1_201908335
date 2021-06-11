@@ -80,7 +80,7 @@ void clmount::mostrarDatos(clmount *disco){
                             QString tipo(part1.part_type);
                             QString fit(part1.part_fit);
                             QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part1.part_start,part1.part_size,0);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P1",tipo,fit,"A",part1.part_start,part1.part_size,0);
 
                             part1.part_status = 'A';
                             mbr.mbr_partition_1 = part1;
@@ -95,7 +95,7 @@ void clmount::mostrarDatos(clmount *disco){
                             QString tipo(part2.part_type);
                             QString fit(part2.part_fit);
                             QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part2.part_start,part2.part_size,0);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P2",tipo,fit,"A",part2.part_start,part2.part_size,0);
 
                             part2.part_status = 'A';
                             mbr.mbr_partition_2 = part2;
@@ -110,7 +110,7 @@ void clmount::mostrarDatos(clmount *disco){
                             QString tipo(part3.part_type);
                             QString fit(part3.part_fit);
                             QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part3.part_start,part3.part_size,0);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P3",tipo,fit,"A",part3.part_start,part3.part_size,0);
 
                             part3.part_status = 'A';
                             mbr.mbr_partition_3 = part3;
@@ -125,7 +125,7 @@ void clmount::mostrarDatos(clmount *disco){
                             QString tipo(part4.part_type);
                             QString fit(part4.part_fit);
                             QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part4.part_start,part4.part_size,0);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P4",tipo,fit,"A",part4.part_start,part4.part_size,0);
 
                             part4.part_status = 'A';
                             mbr.mbr_partition_4 = part4;
@@ -179,7 +179,7 @@ void clmount::mostrarDatos(clmount *disco){
                                     QString nombreP(ebr.part_name);
                                     QString fit(ebr.part_fit);
                                     QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P1","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");
@@ -234,7 +234,7 @@ void clmount::mostrarDatos(clmount *disco){
                                     QString nombreP(ebr.part_name);
                                     QString fit(ebr.part_fit);
                                     QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P2","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");
@@ -288,7 +288,7 @@ void clmount::mostrarDatos(clmount *disco){
                                     QString nombreP(ebr.part_name);
                                     QString fit(ebr.part_fit);
                                     QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P3","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");
@@ -342,7 +342,7 @@ void clmount::mostrarDatos(clmount *disco){
                                     QString nombreP(ebr.part_name);
                                     QString fit(ebr.part_fit);
                                     QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
-                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P4","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");

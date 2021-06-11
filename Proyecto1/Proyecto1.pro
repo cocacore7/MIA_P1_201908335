@@ -15,6 +15,7 @@ SOURCES += \
         clmkfs.cpp \
         clmontada.cpp \
         clmount.cpp \
+        clreportes.cpp \
         clrmdisk.cpp \
         clunmount.cpp \
         ebrstruct.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     clmkfs.h \
     clmontada.h \
     clmount.h \
+    clreportes.h \
     clrmdisk.h \
     clunmount.h \
     ebrstruct.h \

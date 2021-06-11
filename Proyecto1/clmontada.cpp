@@ -8,12 +8,14 @@ clMontada::clMontada()
 
 }
 
-void clMontada::insertarNodo(ListaM &lista, QString id, QString nombreP, QString nombreD, QString tipo, QString fit, QString estado, int inicio, int tamanio, int nextL ){
+void clMontada::insertarNodo(ListaM &lista, QString id, QString nombreP, QString nombreD,QString ruta,QString particion, QString tipo, QString fit, QString estado, int inicio, int tamanio, int nextL ){
     ListaM t,q = new(struct nodo);
 
     q->id = id;
     q->nombreP = nombreP;
     q->nombreD = nombreD;
+    q->ruta = ruta;
+    q->particion = particion;
     q->tipo = tipo;
     q->fit = fit;
     q->estado = estado;
@@ -34,22 +36,27 @@ void clMontada::insertarNodo(ListaM &lista, QString id, QString nombreP, QString
     cout<<"Particion: "<<id.toStdString().c_str()<<" Montada :D"<<endl;
 }
 
-void clMontada::eliminarNodo(ListaM &lista, QString id){
+QString clMontada::eliminarNodo(ListaM &lista, QString id){
     ListaM p,ant;
     p=lista;
     bool eliminada = false;
-
+    QString retorno = "";
     if(lista!=NULL){
         while (p!=NULL) {
             if(p->id == id){
-                if(p==lista)
+                if(p==lista){
+                    QString n = QStringLiteral("%1").arg(lista->inicio);
+                    retorno = lista->ruta + "," +lista->tipo + "," +lista->particion + "," +n + "," +lista->nombreP;
                     lista = lista->sig;
-                else
+                }
+                else{
+                    QString n = QStringLiteral("%1").arg(p->inicio);
+                    retorno = p->ruta + "," +p->tipo + "," +p->particion + "," +n + "," +p->nombreP;
                     ant->sig = p->sig;
-
+                }
                 delete (p);
                 cout<<"Particion con id: "<<id.toStdString().c_str()<<" Eliminada"<<endl;
-                return;
+                return retorno;
             }
             ant = p;
             p = p->sig;
@@ -58,6 +65,7 @@ void clMontada::eliminarNodo(ListaM &lista, QString id){
             cout<<"Error, No Hay Montada Particion Con ID: "<<id.toStdString().c_str()<<endl;
         }
     }else{cout<<"No Hay Particiones Montadas"<<endl;}
+    return retorno;
 }
 
 void clMontada::imprimirLista(ListaM lista){
@@ -111,6 +119,7 @@ QString clMontada::obtenerId(ListaM lista, QString nombreD, QString nombreP){
 
         if(discoE){
             char nuevaletra = 'a';
+            bool entremedias = false;
             for(int x=0;x<letra.length();x++){
                 if((x+1) < letra.length()){
                     char m1 = letra[x].toStdString().c_str()[0];
@@ -118,10 +127,19 @@ QString clMontada::obtenerId(ListaM lista, QString nombreD, QString nombreP){
                     int m3 = m1;
                     int m4 = m2;
                     if((m4 -m3) > 1 ){
-                        nuevaletra = m3 + 1;
+                        nuevaletra = m3;
+                        entremedias = true;
                         break;
                     }
                 }
+            }
+            if(entremedias){
+                int numl = nuevaletra;
+                nuevaletra = numl +1;
+            }else{
+                nuevaletra = letra.takeLast().toStdString().c_str()[0];
+                int numl = nuevaletra + 1;
+                nuevaletra = numl;
             }
             QString l(nuevaletra);
             QString n = QStringLiteral("%1").arg(num);
@@ -147,4 +165,12 @@ QString clMontada::obtenerId(ListaM lista, QString nombreD, QString nombreP){
     return nuevo;
 }
 
-
+bool clMontada::comprobarId(ListaM lista, QString id){
+    while (lista!=NULL) {
+        if(id == lista->id){
+            return true;
+        }
+        lista = lista->sig;
+    }
+    return false;
+}

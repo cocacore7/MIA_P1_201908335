@@ -77,43 +77,44 @@ extern int yydebug;
     execc = 287,
     pausee = 288,
     comentario = 289,
-    igual = 290,
-    dividido = 291,
-    interrogacion = 292,
-    multiplicacion = 293,
-    negativo = 294,
-    sizee = 295,
-    f = 296,
-    u = 297,
-    pathh = 298,
-    typee = 299,
-    deletee = 300,
-    namee = 301,
-    addd = 302,
-    id = 303,
-    fs = 304,
-    usr = 305,
-    pwd = 306,
-    grp = 307,
-    ugo = 308,
-    rr = 309,
-    cont = 310,
-    filenn = 311,
-    dest = 312,
-    p = 313,
-    BF = 314,
-    FF = 315,
-    WF = 316,
-    K = 317,
-    M = 318,
-    B = 319,
-    PP = 320,
-    E = 321,
-    L = 322,
-    FAST = 323,
-    FULL = 324,
-    FS2 = 325,
-    FS3 = 326
+    rep = 290,
+    igual = 291,
+    dividido = 292,
+    interrogacion = 293,
+    multiplicacion = 294,
+    negativo = 295,
+    sizee = 296,
+    f = 297,
+    u = 298,
+    pathh = 299,
+    typee = 300,
+    deletee = 301,
+    namee = 302,
+    addd = 303,
+    id = 304,
+    fs = 305,
+    usr = 306,
+    pwd = 307,
+    grp = 308,
+    ugo = 309,
+    rr = 310,
+    cont = 311,
+    filenn = 312,
+    dest = 313,
+    p = 314,
+    BF = 315,
+    FF = 316,
+    WF = 317,
+    K = 318,
+    M = 319,
+    B = 320,
+    PP = 321,
+    E = 322,
+    L = 323,
+    FAST = 324,
+    FULL = 325,
+    FS2 = 326,
+    FS3 = 327
   };
 #endif
 
@@ -122,7 +123,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 33 "sintactico.y" /* yacc.c:1909  */
+#line 35 "sintactico.y" /* yacc.c:1909  */
 
     char TEXT[500];
     class clmkdisk *mdisk;
@@ -132,8 +133,9 @@ union YYSTYPE
     class clunmount *unmdiskk;
     class clmkfs *mkdiskk;
     class clexec *archexec;
+    class clReportes *creporte;
 
-#line 137 "parser.h" /* yacc.c:1909  */
+#line 139 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

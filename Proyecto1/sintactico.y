@@ -9,6 +9,7 @@
     #include "clunmount.h"
     #include "clmkfs.h"
     #include "clexec.h"
+    #include "clreportes.h"
 
 
     extern int yylex(void);
@@ -20,6 +21,7 @@
     clunmount *unmdisco = new clunmount();
     clmkfs *mkfsdisco = new clmkfs();
     clexec *script = new clexec();
+    clReportes *reporte = new clReportes();
 
 
     int yyerror(const char* mens){
@@ -39,6 +41,7 @@
     class clunmount *unmdiskk;
     class clmkfs *mkdiskk;
     class clexec *archexec;
+    class clReportes *creporte;
 }
 
 %token <TEXT> digito
@@ -74,6 +77,7 @@
 %token <TEXT> execc
 %token <TEXT> pausee
 %token <TEXT> comentario
+%token <TEXT> rep
 
 %token <TEXT> igual
 %token <TEXT> dividido
@@ -122,6 +126,7 @@
 %type <unmdiskk>    COMUNMOUNT;
 %type <mkdiskk>     COMFSDISK;
 %type <archexec>    COMEXEC;
+%type <creporte>    COMREPORTE;
 
 %start INICIO
 %%
@@ -135,6 +140,7 @@ COMANDOS:   mkdisk COMMKDISK                        {$2->mostrarDatos($2); cout<
             |unmount COMUNMOUNT                     {$2->mostrarDatos($2); cout<<"Comando UNMOUNT"<<endl;};
             |mkfs COMFSDISK                         {$2->mostrarDatos($2); cout<<"Comando MKFS"<<endl;};
             |execc COMEXEC                          {$2->mostrarDatos($2); cout<<"Comando EXEC"<<endl;};
+            |rep COMREPORTE                         {$2->mostrarDatos($2); cout<<"Comando REPORTE"<<endl;};
             |pausee                                 {cout<<"Ingrese una tecla para continuar"<<endl; cin.get();};
             |comentario                             {};
 
@@ -224,5 +230,16 @@ COMEXEC:    pathh igual cadena COMEXEC              {if(script->path==""){script
             |pathh igual ruta COMEXEC               {if(script->path==""){script->path=$3;} $$=script;};
             |pathh igual cadena                     {if(script->path==""){script->path=$3;} $$=script;};
             |pathh igual ruta                       {if(script->path==""){script->path=$3;} $$=script;};
+
+COMREPORTE: pathh igual cadena COMREPORTE           {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |pathh igual ruta COMREPORTE            {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |namee igual cadena COMREPORTE          {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |namee igual ident COMREPORTE           {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |id igual idp COMREPORTE                {if(reporte->id==""){reporte->id=$3;} $$=reporte;};
+            |pathh igual cadena                     {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |pathh igual ruta                       {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |namee igual cadena                     {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |namee igual ident                      {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |id igual idp                           {if(reporte->id==""){reporte->id=$3;} $$=reporte;};
 
 %%

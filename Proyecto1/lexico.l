@@ -52,6 +52,7 @@ ruta ("/"{identificador})+("/"{identificador}"."{identificador})
 "chgrp"         {strcpy(yylval.TEXT,yytext); return(chgrp);}
 "pause"         {strcpy(yylval.TEXT,yytext); return(pausee);}
 "exec"          {strcpy(yylval.TEXT,yytext); return(execc);}
+"rep"           {strcpy(yylval.TEXT,yytext); return(rep);}
 
 "="             {strcpy(yylval.TEXT,yytext); return(igual);}
 "/"             {strcpy(yylval.TEXT,yytext); return(dividido);}

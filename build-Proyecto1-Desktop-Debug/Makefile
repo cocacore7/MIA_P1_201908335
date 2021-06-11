@@ -57,6 +57,7 @@ SOURCES       = ../Proyecto1/cabeceramontadas.cpp \
 		../Proyecto1/clmkfs.cpp \
 		../Proyecto1/clmontada.cpp \
 		../Proyecto1/clmount.cpp \
+		../Proyecto1/clreportes.cpp \
 		../Proyecto1/clrmdisk.cpp \
 		../Proyecto1/clunmount.cpp \
 		../Proyecto1/ebrstruct.cpp \
@@ -71,6 +72,7 @@ OBJECTS       = cabeceramontadas.o \
 		clmkfs.o \
 		clmontada.o \
 		clmount.o \
+		clreportes.o \
 		clrmdisk.o \
 		clunmount.o \
 		ebrstruct.o \
@@ -157,6 +159,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Proyecto1/clmkfs.h \
 		../Proyecto1/clmontada.h \
 		../Proyecto1/clmount.h \
+		../Proyecto1/clreportes.h \
 		../Proyecto1/clrmdisk.h \
 		../Proyecto1/clunmount.h \
 		../Proyecto1/ebrstruct.h \
@@ -171,6 +174,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Proyecto1/clmkfs.cpp \
 		../Proyecto1/clmontada.cpp \
 		../Proyecto1/clmount.cpp \
+		../Proyecto1/clreportes.cpp \
 		../Proyecto1/clrmdisk.cpp \
 		../Proyecto1/clunmount.cpp \
 		../Proyecto1/ebrstruct.cpp \
@@ -353,8 +357,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Proyecto1/cabeceramontadas.h ../Proyecto1/clexec.h ../Proyecto1/clfdisk.h ../Proyecto1/clmkdisk.h ../Proyecto1/clmkfs.h ../Proyecto1/clmontada.h ../Proyecto1/clmount.h ../Proyecto1/clrmdisk.h ../Proyecto1/clunmount.h ../Proyecto1/ebrstruct.h ../Proyecto1/lexico.l ../Proyecto1/mbrstruct.h ../Proyecto1/parser.h ../Proyecto1/scanner.h ../Proyecto1/sintactico.y $(DISTDIR)/
-	$(COPY_FILE) --parents ../Proyecto1/cabeceramontadas.cpp ../Proyecto1/clexec.cpp ../Proyecto1/clfdisk.cpp ../Proyecto1/clmkdisk.cpp ../Proyecto1/clmkfs.cpp ../Proyecto1/clmontada.cpp ../Proyecto1/clmount.cpp ../Proyecto1/clrmdisk.cpp ../Proyecto1/clunmount.cpp ../Proyecto1/ebrstruct.cpp ../Proyecto1/main.cpp ../Proyecto1/mbrstruct.cpp ../Proyecto1/parser.cpp ../Proyecto1/scanner.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Proyecto1/cabeceramontadas.h ../Proyecto1/clexec.h ../Proyecto1/clfdisk.h ../Proyecto1/clmkdisk.h ../Proyecto1/clmkfs.h ../Proyecto1/clmontada.h ../Proyecto1/clmount.h ../Proyecto1/clreportes.h ../Proyecto1/clrmdisk.h ../Proyecto1/clunmount.h ../Proyecto1/ebrstruct.h ../Proyecto1/lexico.l ../Proyecto1/mbrstruct.h ../Proyecto1/parser.h ../Proyecto1/scanner.h ../Proyecto1/sintactico.y $(DISTDIR)/
+	$(COPY_FILE) --parents ../Proyecto1/cabeceramontadas.cpp ../Proyecto1/clexec.cpp ../Proyecto1/clfdisk.cpp ../Proyecto1/clmkdisk.cpp ../Proyecto1/clmkfs.cpp ../Proyecto1/clmontada.cpp ../Proyecto1/clmount.cpp ../Proyecto1/clreportes.cpp ../Proyecto1/clrmdisk.cpp ../Proyecto1/clunmount.cpp ../Proyecto1/ebrstruct.cpp ../Proyecto1/main.cpp ../Proyecto1/mbrstruct.cpp ../Proyecto1/parser.cpp ../Proyecto1/scanner.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -406,7 +410,9 @@ cabeceramontadas.o: ../Proyecto1/cabeceramontadas.cpp ../Proyecto1/cabeceramonta
 
 clexec.o: ../Proyecto1/clexec.cpp ../Proyecto1/clexec.h \
 		../Proyecto1/parser.h \
-		../Proyecto1/scanner.h
+		../Proyecto1/scanner.h \
+		../Proyecto1/clmontada.h \
+		../Proyecto1/cabeceramontadas.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clexec.o ../Proyecto1/clexec.cpp
 
 clfdisk.o: ../Proyecto1/clfdisk.cpp ../Proyecto1/clfdisk.h \
@@ -427,13 +433,23 @@ clmontada.o: ../Proyecto1/clmontada.cpp ../Proyecto1/clmontada.h
 clmount.o: ../Proyecto1/clmount.cpp ../Proyecto1/clmount.h \
 		../Proyecto1/mbrstruct.h \
 		../Proyecto1/ebrstruct.h \
-		../Proyecto1/clmontada.h
+		../Proyecto1/clmontada.h \
+		../Proyecto1/cabeceramontadas.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clmount.o ../Proyecto1/clmount.cpp
+
+clreportes.o: ../Proyecto1/clreportes.cpp ../Proyecto1/clreportes.h \
+		../Proyecto1/clmontada.h \
+		../Proyecto1/cabeceramontadas.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clreportes.o ../Proyecto1/clreportes.cpp
 
 clrmdisk.o: ../Proyecto1/clrmdisk.cpp ../Proyecto1/clrmdisk.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clrmdisk.o ../Proyecto1/clrmdisk.cpp
 
-clunmount.o: ../Proyecto1/clunmount.cpp ../Proyecto1/clunmount.h
+clunmount.o: ../Proyecto1/clunmount.cpp ../Proyecto1/clunmount.h \
+		../Proyecto1/mbrstruct.h \
+		../Proyecto1/ebrstruct.h \
+		../Proyecto1/clmontada.h \
+		../Proyecto1/cabeceramontadas.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clunmount.o ../Proyecto1/clunmount.cpp
 
 ebrstruct.o: ../Proyecto1/ebrstruct.cpp ../Proyecto1/ebrstruct.h
@@ -454,7 +470,8 @@ parser.o: ../Proyecto1/parser.cpp ../Proyecto1/scanner.h \
 		../Proyecto1/clmount.h \
 		../Proyecto1/clunmount.h \
 		../Proyecto1/clmkfs.h \
-		../Proyecto1/clexec.h
+		../Proyecto1/clexec.h \
+		../Proyecto1/clreportes.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o ../Proyecto1/parser.cpp
 
 scanner.o: ../Proyecto1/scanner.cpp ../Proyecto1/parser.h
