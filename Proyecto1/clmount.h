@@ -3,7 +3,6 @@
 #include <QString>
 using namespace std;
 
-
 class clmount
 {
 public:

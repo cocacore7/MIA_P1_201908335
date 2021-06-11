@@ -8,6 +8,10 @@
 #include <qtextstream.h>
 #include <parser.h>
 #include <scanner.h>
+//Necesario Para Usar Montada --------------
+#include <clmontada.h>
+#include <cabeceramontadas.h>
+//-------------------------------------------
 using namespace std;
 extern int yyparse();
 
@@ -77,4 +81,5 @@ void clexec::mostrarDatos(clexec *script){
     }
     cout<<"--------------------------------------------------------"<<endl;
     script->path = "";
+    lista.imprimirLista(lista.lista);
 }

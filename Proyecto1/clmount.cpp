@@ -5,6 +5,10 @@
 #include <fstream>
 #include <mbrstruct.h>
 #include <ebrstruct.h>
+//Necesario Para Usar Montada --------------
+#include <clmontada.h>
+#include <cabeceramontadas.h>
+//-------------------------------------------
 using namespace std;
 
 clmount::clmount()
@@ -72,12 +76,64 @@ void clmount::mostrarDatos(clmount *disco){
                         QString nombre4(part4.part_name);
                         if(disco->namee == nombre1){
                             //GENERAR ID Y MONTAR PARTICION 1
+                            QString nombreP(part1.part_name);
+                            QString tipo(part1.part_type);
+                            QString fit(part1.part_fit);
+                            QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part1.part_start,part1.part_size,0);
+
+                            part1.part_status = 'A';
+                            mbr.mbr_partition_1 = part1;
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,0,SEEK_SET);
+                            fwrite(&mbr,sizeof(MBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
                         }else if(disco->namee == nombre2){
                             //GENERAR ID Y MONTAR PARTICION 2
+                            QString nombreP(part2.part_name);
+                            QString tipo(part2.part_type);
+                            QString fit(part2.part_fit);
+                            QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part2.part_start,part2.part_size,0);
+
+                            part2.part_status = 'A';
+                            mbr.mbr_partition_2 = part2;
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,0,SEEK_SET);
+                            fwrite(&mbr,sizeof(MBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
                         }else if(disco->namee == nombre3){
                             //GENERAR ID Y MONTAR PARTICION 3
+                            QString nombreP(part3.part_name);
+                            QString tipo(part3.part_type);
+                            QString fit(part3.part_fit);
+                            QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part3.part_start,part3.part_size,0);
+
+                            part3.part_status = 'A';
+                            mbr.mbr_partition_3 = part3;
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,0,SEEK_SET);
+                            fwrite(&mbr,sizeof(MBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
                         }else if(disco->namee == nombre4){
                             //GENERAR ID Y MONTAR PARTICION 4
+                            QString nombreP(part4.part_name);
+                            QString tipo(part4.part_type);
+                            QString fit(part4.part_fit);
+                            QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                            lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],tipo,fit,"A",part4.part_start,part4.part_size,0);
+
+                            part4.part_status = 'A';
+                            mbr.mbr_partition_4 = part4;
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,0,SEEK_SET);
+                            fwrite(&mbr,sizeof(MBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
                         }else{
                             if(part1.part_type == 'e' || part1.part_type == 'E'){
                                 Discoo=fopen(com,"rb+");
@@ -120,6 +176,17 @@ void clmount::mostrarDatos(clmount *disco){
 
                                 if(nombreR){
                                     //GENERAR ID Y MONTAR LOGICA
+                                    QString nombreP(ebr.part_name);
+                                    QString fit(ebr.part_fit);
+                                    QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+
+                                    ebr.part_status = 'A';
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start,SEEK_SET);
+                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }
@@ -164,6 +231,17 @@ void clmount::mostrarDatos(clmount *disco){
 
                                 if(nombreR){
                                     //GENERAR ID Y MONTAR LOGICA
+                                    QString nombreP(ebr.part_name);
+                                    QString fit(ebr.part_fit);
+                                    QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+
+                                    ebr.part_status = 'A';
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start,SEEK_SET);
+                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }
@@ -207,6 +285,17 @@ void clmount::mostrarDatos(clmount *disco){
 
                                 if(nombreR){
                                     //GENERAR ID Y MONTAR LOGICA
+                                    QString nombreP(ebr.part_name);
+                                    QString fit(ebr.part_fit);
+                                    QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+
+                                    ebr.part_status = 'A';
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start,SEEK_SET);
+                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }
@@ -250,6 +339,17 @@ void clmount::mostrarDatos(clmount *disco){
 
                                 if(nombreR){
                                     //GENERAR ID Y MONTAR LOGICA
+                                    QString nombreP(ebr.part_name);
+                                    QString fit(ebr.part_fit);
+                                    QString id = lista.obtenerId(lista.lista,discofisico[0],nombreP);
+                                    lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],"L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
+
+                                    ebr.part_status = 'A';
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start,SEEK_SET);
+                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }
