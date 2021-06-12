@@ -147,11 +147,19 @@ void clReportes::mostrarDatos(clReportes *reporte){
             StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+size1+"</TD>\n";
             StringReporte += "</TR>\n";
 
-            QString name1(part1.part_name);
-            StringReporte += "<TR>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_1</TD>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name1+"</TD>\n";
-            StringReporte += "</TR>\n";
+            if(fit1 != "."){
+                QString name1(part1.part_name);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_1</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name1+"</TD>\n";
+                StringReporte += "</TR>\n";
+            }else{
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_1</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">.</TD>\n";
+                StringReporte += "</TR>\n";
+            }
+
             if(part1.part_type == 'e' || part1.part_type == 'E'){
                 EBR ebr;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
@@ -205,10 +213,17 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         StringReporte += "</TR>\n";
 
                         QString nameebr(ebr.part_name);
-                        StringReporte += "<TR>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_1</TD>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
-                        StringReporte += "</TR>\n";
+                        if(fitebr != "."){
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_1</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }else{
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_1</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">.</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }
                     }
                     primera = true;
 
@@ -258,11 +273,19 @@ void clReportes::mostrarDatos(clReportes *reporte){
             StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+size2+"</TD>\n";
             StringReporte += "</TR>\n";
 
-            QString name2(part2.part_name);
-            StringReporte += "<TR>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_2</TD>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name2+"</TD>\n";
-            StringReporte += "</TR>\n";
+            if(fit2 != "."){
+                QString name2(part2.part_name);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_2</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name2+"</TD>\n";
+                StringReporte += "</TR>\n";
+            }else{
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_2</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">.</TD>\n";
+                StringReporte += "</TR>\n";
+            }
+
             if(part2.part_type == 'e' || part2.part_type == 'E'){
                 EBR ebr;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
@@ -315,11 +338,19 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nextebr+"</TD>\n";
                         StringReporte += "</TR>\n";
 
-                        QString nameebr(ebr.part_name);
-                        StringReporte += "<TR>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_2</TD>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
-                        StringReporte += "</TR>\n";
+                        if(fitebr != "."){
+                            QString nameebr(ebr.part_name);
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_2</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }else{
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_2</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">.</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }
+
                     }
                     primera = true;
 
@@ -369,11 +400,19 @@ void clReportes::mostrarDatos(clReportes *reporte){
             StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+size3+"</TD>\n";
             StringReporte += "</TR>\n";
 
-            QString name3(part3.part_name);
-            StringReporte += "<TR>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_3</TD>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name3+"</TD>\n";
-            StringReporte += "</TR>\n";
+            if(fit3 != "."){
+                QString name3(part3.part_name);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_3</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name3+"</TD>\n";
+                StringReporte += "</TR>\n";
+            }else{
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_3</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">.</TD>\n";
+                StringReporte += "</TR>\n";
+            }
+
             if(part3.part_type == 'e' || part3.part_type == 'E'){
                 EBR ebr;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
@@ -426,11 +465,19 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nextebr+"</TD>\n";
                         StringReporte += "</TR>\n";
 
-                        QString nameebr(ebr.part_name);
-                        StringReporte += "<TR>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_3</TD>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
-                        StringReporte += "</TR>\n";
+                        if(fitebr !="."){
+                            QString nameebr(ebr.part_name);
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_3</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }else{
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_3</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">.</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }
+
                     }
                     primera = true;
 
@@ -480,11 +527,19 @@ void clReportes::mostrarDatos(clReportes *reporte){
             StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+size4+"</TD>\n";
             StringReporte += "</TR>\n";
 
-            QString name4(part4.part_name);
-            StringReporte += "<TR>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_4</TD>\n";
-            StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name4+"</TD>\n";
-            StringReporte += "</TR>\n";
+            if(fit4 != "."){
+                QString name4(part4.part_name);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_4</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">"+name4+"</TD>\n";
+                StringReporte += "</TR>\n";
+            }else{
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">part_name_4</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"blue:red\">.</TD>\n";
+                StringReporte += "</TR>\n";
+            }
+
             if(part4.part_type == 'e' || part4.part_type == 'E'){
                 EBR ebr;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
@@ -537,11 +592,19 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nextebr+"</TD>\n";
                         StringReporte += "</TR>\n";
 
-                        QString nameebr(ebr.part_name);
-                        StringReporte += "<TR>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_4</TD>\n";
-                        StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
-                        StringReporte += "</TR>\n";
+                        if(fitebr != "."){
+                            QString nameebr(ebr.part_name);
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_4</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">"+nameebr+"</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }else{
+                            StringReporte += "<TR>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">part_name_4</TD>\n";
+                            StringReporte += "<TD border=\"3\"  bgcolor=\"red:gray\">.</TD>\n";
+                            StringReporte += "</TR>\n";
+                        }
+
                     }
                     primera = true;
 
@@ -795,7 +858,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }else{
                 iniN = contN;
                 if(part2.part_fit != '.'){
-                    if((part2.part_start - - part1.part_start - part1.part_size) == 0){
+                    if((part2.part_start - part1.part_start - part1.part_size) == 0){
                         bytes = QStringLiteral("%1").arg(part2.part_size);
                         StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
@@ -1027,10 +1090,32 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }
 
             if((mbr.mbr_tam - part4.part_start - part4.part_size) != 0){
-                bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part4.part_start - part4.part_size);
-                StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                contN++;
-                n = QStringLiteral("%1").arg(contN);
+                if(part4.part_start != 0){
+                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part4.part_start - part4.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                    contN++;
+                    n = QStringLiteral("%1").arg(contN);
+                }else if(part3.part_start != 0){
+                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part3.part_start - part3.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                    contN++;
+                    n = QStringLiteral("%1").arg(contN);
+                }else if(part2.part_start != 0){
+                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part2.part_start - part2.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                    contN++;
+                    n = QStringLiteral("%1").arg(contN);
+                }else if(part1.part_start != 0){
+                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part1.part_start - part1.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                    contN++;
+                    n = QStringLiteral("%1").arg(contN);
+                }else{
+                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                    contN++;
+                    n = QStringLiteral("%1").arg(contN);
+                }
             }
 
             StringReporte += "}\n";
