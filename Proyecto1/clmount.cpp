@@ -160,9 +160,8 @@ void clmount::mostrarDatos(clmount *disco){
                                     fread(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
-                                    QString nombreChar(ebr.part_name);
-
                                     if(ebr.part_next != -1){
+                                        QString nombreChar(ebr.part_name);
                                         if(disco->namee == nombreChar){
                                             nombreR = true;
                                             nombre = nombreChar;
@@ -216,8 +215,9 @@ void clmount::mostrarDatos(clmount *disco){
                                     fread(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
-                                    QString nombreChar(ebr.part_name);
+
                                     if(ebr.part_next != -1){
+                                        QString nombreChar(ebr.part_name);
                                         if(disco->namee == nombreChar){
                                             nombreR = true;
                                             nombre = nombreChar;
@@ -270,8 +270,9 @@ void clmount::mostrarDatos(clmount *disco){
                                     fread(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
-                                    QString nombreChar(ebr.part_name);
+
                                     if(ebr.part_next != -1){
+                                        QString nombreChar(ebr.part_name);
                                         if(disco->namee == nombreChar){
                                             nombreR = true;
                                             nombre = nombreChar;
@@ -324,8 +325,9 @@ void clmount::mostrarDatos(clmount *disco){
                                     fread(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
-                                    QString nombreChar(ebr.part_name);
+
                                     if(ebr.part_next != -1){
+                                        QString nombreChar(ebr.part_name);
                                         if(disco->namee == nombreChar){
                                             nombreR = true;
                                             nombre = nombreChar;

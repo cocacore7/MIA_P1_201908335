@@ -2152,9 +2152,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
 
                                     //Guardamos MBR
                                     mbr.mbr_partition_1 = part1;
-                                    mbr.mbr_partition_2 = part2;
-                                    mbr.mbr_partition_3 = part3;
-                                    mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
                                     fwrite(&mbr,sizeof (MBR),1,Discoo);
@@ -2168,10 +2165,7 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                     part2.part_type ='.';
 
                                     //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
                                     mbr.mbr_partition_2 = part2;
-                                    mbr.mbr_partition_3 = part3;
-                                    mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
                                     fwrite(&mbr,sizeof (MBR),1,Discoo);
@@ -2185,10 +2179,7 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                     part3.part_type ='.';
 
                                     //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
-                                    mbr.mbr_partition_2 = part2;
                                     mbr.mbr_partition_3 = part3;
-                                    mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
                                     fwrite(&mbr,sizeof (MBR),1,Discoo);
@@ -2202,9 +2193,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                     part4.part_type ='.';
 
                                     //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
-                                    mbr.mbr_partition_2 = part2;
-                                    mbr.mbr_partition_3 = part3;
                                     mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
@@ -2220,22 +2208,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fread(&ebr,sizeof(EBR),1,Discoo);
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
-
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            ebr.part_fit = '.';
-                                            memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
-                                            ebr.part_status = '.';
-
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part1.part_start;
@@ -2248,9 +2220,8 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
-
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     nombre = nombreChar;
@@ -2265,7 +2236,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         if(nombreR){
                                             ebr.part_fit = '.';
                                             memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
                                             ebr.part_status = '.';
 
                                             Discoo=fopen(com,"rb+");
@@ -2284,22 +2254,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fread(&ebr,sizeof(EBR),1,Discoo);
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
-
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            ebr.part_fit = '.';
-                                            memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
-                                            ebr.part_status = '.';
-
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part2.part_start;
@@ -2312,8 +2266,8 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     nombre = nombreChar;
@@ -2328,7 +2282,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         if(nombreR){
                                             ebr.part_fit = '.';
                                             memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
                                             ebr.part_status = '.';
 
                                             Discoo=fopen(com,"rb+");
@@ -2347,22 +2300,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fread(&ebr,sizeof(EBR),1,Discoo);
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
-
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            ebr.part_fit = '.';
-                                            memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
-                                            ebr.part_status = '.';
-
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part3.part_start;
@@ -2375,8 +2312,9 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
+
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     nombre = nombreChar;
@@ -2391,7 +2329,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         if(nombreR){
                                             ebr.part_fit = '.';
                                             memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
                                             ebr.part_status = '.';
 
                                             Discoo=fopen(com,"rb+");
@@ -2411,21 +2348,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
 
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            ebr.part_fit = '.';
-                                            memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
-                                            ebr.part_status = '.';
-
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<nombreebr.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part4.part_start;
@@ -2438,8 +2360,8 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     nombre = nombreChar;
@@ -2454,7 +2376,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         if(nombreR){
                                             ebr.part_fit = '.';
                                             memset(ebr.part_name,0,16);
-                                            ebr.part_size =0;
                                             ebr.part_status = '.';
 
                                             Discoo=fopen(com,"rb+");
@@ -2540,9 +2461,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
 
                                     //Guardamos MBR
                                     mbr.mbr_partition_1 = part1;
-                                    mbr.mbr_partition_2 = part2;
-                                    mbr.mbr_partition_3 = part3;
-                                    mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
                                     fwrite(&mbr,sizeof (MBR),1,Discoo);
@@ -2565,10 +2483,7 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                     part2.part_type ='.';
 
                                     //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
                                     mbr.mbr_partition_2 = part2;
-                                    mbr.mbr_partition_3 = part3;
-                                    mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
                                     fwrite(&mbr,sizeof (MBR),1,Discoo);
@@ -2591,10 +2506,7 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                     part3.part_type ='.';
 
                                     //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
-                                    mbr.mbr_partition_2 = part2;
                                     mbr.mbr_partition_3 = part3;
-                                    mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
                                     fwrite(&mbr,sizeof (MBR),1,Discoo);
@@ -2617,9 +2529,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                     part4.part_type ='.';
 
                                     //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
-                                    mbr.mbr_partition_2 = part2;
-                                    mbr.mbr_partition_3 = part3;
                                     mbr.mbr_partition_4 = part4;
                                     Discoo=fopen(com,"rb+");
                                     fseek(Discoo,0,SEEK_SET);
@@ -2644,21 +2553,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fread(&ebr,sizeof(EBR),1,Discoo);
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
-
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            //RELLENAR DE VACIOS
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            char vacio = '\0';
-                                            for(int x =0;x<ebr.part_size;x++){
-                                                fwrite(&vacio,sizeof (char),1,Discoo);
-                                            }
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part1.part_start;
@@ -2671,8 +2565,9 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
+
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     nombre = nombreChar;
@@ -2705,21 +2600,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fread(&ebr,sizeof(EBR),1,Discoo);
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
-
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            //RELLENAR DE VACIOS
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            char vacio = '\0';
-                                            for(int x =0;x<ebr.part_size;x++){
-                                                fwrite(&vacio,sizeof (char),1,Discoo);
-                                            }
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part2.part_start;
@@ -2732,8 +2612,8 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     nombre = nombreChar;
@@ -2766,21 +2646,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fread(&ebr,sizeof(EBR),1,Discoo);
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
-
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            //RELLENAR DE VACIOS
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            char vacio = '\0';
-                                            for(int x =0;x<ebr.part_size;x++){
-                                                fwrite(&vacio,sizeof (char),1,Discoo);
-                                            }
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part3.part_start;
@@ -2792,8 +2657,9 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
+
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     break;
@@ -2825,21 +2691,6 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                         fread(&ebr,sizeof(EBR),1,Discoo);
                                         fseek(Discoo,0,SEEK_SET);
                                         fclose(Discoo);
-
-                                        QString nombreebr(ebr.part_name);
-                                        if(nombreebr == disco->namee){
-                                            //RELLENAR DE VACIOS
-                                            Discoo=fopen(com,"rb+");
-                                            fseek(Discoo,ebr.part_start,SEEK_SET);
-                                            char vacio = '\0';
-                                            for(int x =0;x<ebr.part_size;x++){
-                                                fwrite(&vacio,sizeof (char),1,Discoo);
-                                            }
-                                            fseek(Discoo,0,SEEK_SET);
-                                            fclose(Discoo);
-                                            cout<<"Particion: "<<ebr.part_name<<" Se a Eliminado FULL :D"<<endl;
-                                        }
-
                                         bool nombreR = false;
                                         int partOcupado = 0;
                                         int nuevoinicio = part4.part_start;
@@ -2851,8 +2702,9 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fread(&ebr,sizeof(EBR),1,Discoo);
                                             fseek(Discoo,0,SEEK_SET);
                                             fclose(Discoo);
-                                            QString nombreChar(ebr.part_name);
+
                                             if(ebr.part_next != -1){
+                                                QString nombreChar(ebr.part_name);
                                                 if(disco->namee == nombreChar){
                                                     nombreR = true;
                                                     break;

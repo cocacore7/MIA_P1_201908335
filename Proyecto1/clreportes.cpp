@@ -612,26 +612,34 @@ void clReportes::mostrarDatos(clReportes *reporte){
         }else if(reporte->namee.toLower() == "disk"){
             cout<<"-----------------------ReporteDISK---------------------"<<endl;
             QString nodoExt = "";
+            QString iniExt = "";
             int iniN = 1;
             int contN = 1;
+            int nuevoinicio = 0;
+            int tam_Particion = 0;
             QString n = QStringLiteral("%1").arg(contN);
+            QString bytes;
             EBR ebr;
             StringReporte = "digraph G{\n";
             StringReporte += "compound=true;\n";
             StringReporte += "subgraph cluster0{\n";
 
             if(part1.part_type == 'e' || part1.part_type == 'E'){
+                nuevoinicio = part1.part_start;
+                tam_Particion = part1.part_size;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
-                fseek(Debr,part1.part_start,SEEK_SET);
+                fseek(Debr,nuevoinicio,SEEK_SET);
                 fread(&ebr,sizeof(EBR),1,Debr);
                 fseek(Debr,0,SEEK_SET);
                 fclose(Debr);
                 if(part1.part_fit != '.'){
                     if((part1.part_start - sizeof(mbr)) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR\"];\n";
+                        bytes = QStringLiteral("%1").arg(sizeof (mbr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part1.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -642,13 +650,16 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR\"];\n";
+                        bytes = QStringLiteral("%1").arg(sizeof (mbr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part1.part_start - sizeof(mbr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part1.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -660,10 +671,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR\"];\n";
+                    bytes = QStringLiteral("%1").arg(sizeof (mbr));
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part1.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -676,10 +689,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }else{
                 if(part1.part_fit != '.'){
                     if((part1.part_start - sizeof(mbr)) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR\"];\n";
+                        bytes = QStringLiteral("%1").arg(sizeof (mbr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part1.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -689,13 +704,16 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR\"];\n";
+                        bytes = QStringLiteral("%1").arg(sizeof (mbr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part1.part_start - sizeof(mbr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part1.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -706,10 +724,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR\"];\n";
+                    bytes = QStringLiteral("%1").arg(sizeof (mbr));
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"MBR | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part1.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -722,6 +742,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }
 
             if(part2.part_type == 'e' || part2.part_type == 'E'){
+                nuevoinicio = part2.part_start;
+                tam_Particion = part2.part_size;
                 iniN = contN;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
                 fseek(Debr,part2.part_start,SEEK_SET);
@@ -730,7 +752,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 fclose(Debr);
                 if(part2.part_fit != '.'){
                     if((part2.part_start - part1.part_start - part1.part_size) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part2.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -741,10 +764,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part2.part_start - part1.part_start - part1.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part2.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -756,7 +781,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part2.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -770,7 +796,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 iniN = contN;
                 if(part2.part_fit != '.'){
                     if((part2.part_start - - part1.part_start - part1.part_size) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part2.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -780,10 +807,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part2.part_start - part1.part_start - part1.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part2.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -794,7 +823,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part2.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -807,6 +837,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }
 
             if(part3.part_type == 'e' || part3.part_type == 'E'){
+                nuevoinicio = part3.part_start;
+                tam_Particion = part3.part_size;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
                 fseek(Debr,part3.part_start,SEEK_SET);
                 fread(&ebr,sizeof(EBR),1,Debr);
@@ -815,7 +847,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 iniN = contN;
                 if(part3.part_fit != '.'){
                     if((part3.part_start - part2.part_start - part2.part_size) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part3.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -826,10 +859,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part3.part_start - part2.part_start - part2.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part3.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -841,7 +876,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part3.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -855,7 +891,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 iniN = contN;
                 if(part3.part_fit != '.'){
                     if((part3.part_start - part2.part_start - part2.part_size) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part3.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -865,10 +902,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part3.part_start - part2.part_start - part2.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part3.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -879,7 +918,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part3.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -892,6 +932,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }
 
             if(part4.part_type == 'e' || part4.part_type == 'E'){
+                nuevoinicio = part4.part_start;
+                tam_Particion = part4.part_size;
                 FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
                 fseek(Debr,part4.part_start,SEEK_SET);
                 fread(&ebr,sizeof(EBR),1,Debr);
@@ -900,7 +942,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 iniN = contN;
                 if(part4.part_fit != '.'){
                     if((part4.part_start - part3.part_start - part3.part_size) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part4.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -911,10 +954,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part4.part_start - part3.part_start - part3.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part4.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EXTENDIDA | " + bytes + "\"];\n";
                         nodoExt = "n" + n;
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
@@ -926,7 +971,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part4.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -940,7 +986,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 iniN = contN;
                 if(part4.part_fit != '.'){
                     if((part4.part_start - part3.part_start - part3.part_size) == 0){
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part4.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -950,10 +997,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }else {
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                        bytes = QStringLiteral("%1").arg(part4.part_start - part3.part_start - part3.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
-                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA\"];\n";
+                        bytes = QStringLiteral("%1").arg(part4.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"PRIMARIA | " + bytes + "\"];\n";
                         contN++;
                         n = QStringLiteral("%1").arg(contN);
 
@@ -964,7 +1013,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         }
                     }
                 }else{
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                    bytes = QStringLiteral("%1").arg(part4.part_size);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
                     n = QStringLiteral("%1").arg(contN);
 
@@ -977,15 +1027,62 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }
 
             if((mbr.mbr_tam - part4.part_start - part4.part_size) != 0){
-                StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE\"];\n";
+                bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part4.part_start - part4.part_size);
+                StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                 contN++;
                 n = QStringLiteral("%1").arg(contN);
             }
 
             StringReporte += "}\n";
-            StringReporte += "subgraph cluster1{\n";
+            if(nodoExt != ""){
+                StringReporte += "subgraph cluster1{\n";
+                int partOcupado = 0;
+                int tam_ebr = sizeof (ebr);
+                int cantEbr = 0;
+                bool segundo = false;
+                iniExt = "n" + n;
+                while(ebr.part_next != -1){
+                    if(segundo){
+                        iniN = contN;
+                        bytes = QStringLiteral("%1").arg(sizeof (ebr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"EBR | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                        bytes = QStringLiteral("%1").arg(ebr.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"ESPACIO_EBR | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
 
-            StringReporte += "}}\n";
+                        for(int x = iniN;x<contN;x++){
+                            QString n1 = QStringLiteral("%1").arg(x);
+                            QString n2 = QStringLiteral("%1").arg(x + 1);
+                            StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
+                        }
+                    }
+                    segundo = true;
+
+                    FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                    fseek(Debr,nuevoinicio,SEEK_SET);
+                    fread(&ebr,sizeof(EBR),1,Debr);
+                    fseek(Debr,0,SEEK_SET);
+                    fclose(Debr);
+
+                    if(ebr.part_next != -1){
+                        nuevoinicio = ebr.part_next;
+                        partOcupado = partOcupado + tam_ebr + ebr.part_size;
+                        cantEbr++;
+                    }
+                    if(partOcupado >= tam_Particion){break;}
+                }
+                if((tam_Particion - partOcupado)>0){
+                    bytes = QStringLiteral("%1").arg(tam_Particion - partOcupado);
+                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                }
+                StringReporte += "}\n";
+                StringReporte += nodoExt + " ->" + iniExt + " \n";
+
+            }
+            StringReporte += "}\n";
 
             //INGRESAMOS AL REPORTE LAS EBR DE LA EXTENDIDA
 
