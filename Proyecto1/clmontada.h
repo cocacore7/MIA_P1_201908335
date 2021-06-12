@@ -35,6 +35,7 @@ public:
     void imprimirLista(ListaM lista);
     QString obtenerId(ListaM lista, QString nombreD, QString nombreP);
     bool comprobarId(ListaM lista, QString id);
+    ListaM obtenerNodo(ListaM lista, QString id);
 };
 
 #endif // CLMONTADA_H

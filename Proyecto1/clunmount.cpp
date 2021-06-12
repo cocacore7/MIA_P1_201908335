@@ -72,10 +72,6 @@ void clunmount::mostrarDatos(clunmount *disco){
                         part2 = mbr.mbr_partition_2;
                         part3 = mbr.mbr_partition_3;
                         part4 = mbr.mbr_partition_4;
-                        QString nombre1(part1.part_name);
-                        QString nombre2(part2.part_name);
-                        QString nombre3(part3.part_name);
-                        QString nombre4(part4.part_name);
                         if(part == "P1"){
                             //CAMBIAR ESTADO MBR A "N"
                             part1.part_status = 'N';

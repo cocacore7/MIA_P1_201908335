@@ -174,3 +174,13 @@ bool clMontada::comprobarId(ListaM lista, QString id){
     }
     return false;
 }
+
+ListaM clMontada::obtenerNodo(ListaM lista, QString id){
+    while (lista!=NULL) {
+        if(id == lista->id){
+            return lista;
+        }
+        lista = lista->sig;
+    }
+    return NULL;
+}
