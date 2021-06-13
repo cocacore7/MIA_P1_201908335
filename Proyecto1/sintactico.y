@@ -2,19 +2,37 @@
     #include <iostream>
     #include <QString>
     #include "scanner.h"
+
     #include "clmkdisk.h"
     #include "clrmdisk.h"
     #include "clfdisk.h"
     #include "clmount.h"
     #include "clunmount.h"
     #include "clmkfs.h"
-    #include "clexec.h"
-    #include "clreportes.h"
+
     #include "cllogin.h"
     #include "clmkgrp.h"
     #include "clrmgrp.h"
     #include "clmkuser.h"
     #include "clrmuser.h"
+
+    #include "clchmmod.h"
+    #include "clmkfile.h"
+    #include "clcat.h"
+    #include "clrem.h"
+    #include "cledit.h"
+    #include "clren.h"
+    #include "clmkdir.h"
+    #include "clcp.h"
+    #include "clmv.h"
+    #include "clfind.h"
+    #include "clchown.h"
+    #include "clchgrp.h"
+
+    #include "clexec.h"
+    #include "clreportes.h"
+    #include "clrecovery.h"
+    #include "clloss.h"
 
 
     extern int yylex(void);
@@ -32,8 +50,23 @@
     clmkuser *mkuserr = new clmkuser();
     clrmuser *rmuserr = new clrmuser();
 
+    clchmmod *chmmodd = new clchmmod();
+    clmkfile *mkfilee = new clmkfile();
+    clcat *catt = new clcat();
+    clrem *remm = new clrem();
+    cledit *editt = new cledit();
+    clRen *renn = new clRen();
+    clmkdir *cmkdirr = new clmkdir();
+    clcp *cpp = new clcp();
+    clmv *mvv = new clmv();
+    clfind *findd = new clfind();
+    clchown *cchownn = new clchown();
+    clchgrp *chgrpp = new clchgrp();
+
     clexec *script = new clexec();
     clReportes *reporte = new clReportes();
+    clrecovery *recuperar = new clrecovery();
+    clloss *perdida = new clloss();
 
 
     int yyerror(const char* mens){
@@ -59,8 +92,23 @@
     class clmkuser *cmkuser;
     class clrmuser *crmuser;
 
+    class clchmmod *cchmmod;
+    class clmkfile *cmkfile;
+    class clcat *ccat;
+    class clrem *crem;
+    class cledit *cedit;
+    class clRen *cren;
+    class clmkdir *cmkdir;
+    class clcp *ccp;
+    class clmv *cmv;
+    class clfind *cfind;
+    class clchown *cchown;
+    class clchgrp *cchgrp;
+
     class clexec *archexec;
     class clReportes *creporte;
+    class clrecovery *crecup;
+    class clloss *cperd;
 }
 
 %token <TEXT> digito
@@ -68,6 +116,9 @@
 %token <TEXT> cadena
 %token <TEXT> filen
 %token <TEXT> idp
+%token <TEXT> rutaelim
+%token <TEXT> rutaarch
+%token <TEXT> rutacat
 %token <TEXT> ruta
 
 %token <TEXT> mkdisk
@@ -76,27 +127,33 @@
 %token <TEXT> mount
 %token <TEXT> unmount
 %token <TEXT> mkfs
+
 %token <TEXT> login
 %token <clogin> logout
 %token <TEXT> mkgrp
 %token <TEXT> rmgrp
 %token <TEXT> mkusr
 %token <TEXT> rmusr
+
+%token <TEXT> chmoddd
 %token <TEXT> mkfile
-%token <TEXT> mkdirr
 %token <TEXT> cat
 %token <TEXT> rem
 %token <TEXT> edit
 %token <TEXT> ren
+%token <TEXT> mkdirr
 %token <TEXT> cp
 %token <TEXT> mv
 %token <TEXT> find
 %token <TEXT> chownn
 %token <TEXT> chgrp
+
 %token <TEXT> execc
 %token <TEXT> pausee
 %token <TEXT> comentario
 %token <TEXT> rep
+%token <TEXT> recovery
+%token <TEXT> loss
 
 %token <TEXT> igual
 %token <TEXT> dividido
@@ -120,9 +177,9 @@
 %token <TEXT> ugo
 %token <TEXT> rr
 %token <TEXT> cont
-%token <TEXT> filenn
 %token <TEXT> dest
 %token <TEXT> p
+%token <TEXT> file
 
 %token <TEXT> BF
 %token <TEXT> FF
@@ -151,8 +208,23 @@
 %type <cmkuser>     COMMKUSER;
 %type <crmuser>     COMRMUSER;
 
+%type <cchmmod>     COMCHMOD;
+%type <cmkfile>     COMKFILE;
+%type <ccat>        COMCAT;
+%type <crem>        COMREM;
+%type <cedit>       COMEDIT;
+%type <cren>        COMREN;
+%type <cmkdir>      COMMKDIR;
+%type <ccp>         COMCP;
+%type <cmv>         COMMV;
+%type <cfind>       COMFIND;
+%type <cchown>      COMCHOWN;
+%type <cchgrp>      COMCHGRP;
+
 %type <archexec>    COMEXEC;
 %type <creporte>    COMREPORTE;
+%type <crecup>      COMRECUP;
+%type <cperd>       COMPERD;
 
 %start INICIO
 %%
@@ -172,8 +244,23 @@ COMANDOS:   mkdisk COMMKDISK                        {$2->mostrarDatos($2); cout<
             |mkusr COMMKUSER                        {$2->mostrarDatos($2); cout<<"Comando MKUSER"<<endl;};
             |rmusr COMRMUSER                        {$2->mostrarDatos($2); cout<<"Comando RMUSER"<<endl;};
 
+            |chmoddd COMCHMOD                       {$2->mostrarDatos($2); cout<<"Comando CHMOD"<<endl;};
+            |mkfile COMKFILE                        {$2->mostrarDatos($2); cout<<"Comando MKFILE"<<endl;};
+            |cat COMCAT                             {$2->mostrarDatos($2); cout<<"Comando CAT"<<endl;};
+            |rem COMREM                             {$2->mostrarDatos($2); cout<<"Comando REM"<<endl;};
+            |edit COMEDIT                           {$2->mostrarDatos($2); cout<<"Comando EDIT"<<endl;};
+            |ren COMREN                             {$2->mostrarDatos($2); cout<<"Comando REN"<<endl;};
+            |mkdirr COMMKDIR                        {$2->mostrarDatos($2); cout<<"Comando MKDIR"<<endl;};
+            |cp COMCP                               {$2->mostrarDatos($2); cout<<"Comando CP"<<endl;};
+            |mv COMMV                               {$2->mostrarDatos($2); cout<<"Comando MV"<<endl;};
+            |find COMFIND                           {$2->mostrarDatos($2); cout<<"Comando FIND"<<endl;};
+            |chownn COMCHOWN                        {$2->mostrarDatos($2); cout<<"Comando CHOWN"<<endl;};
+            |chgrp COMCHGRP                         {$2->mostrarDatos($2); cout<<"Comando CHGRP"<<endl;};
+
             |execc COMEXEC                          {$2->mostrarDatos($2); cout<<"Comando EXEC"<<endl;};
             |rep COMREPORTE                         {$2->mostrarDatos($2); cout<<"Comando REPORTE"<<endl;};
+            |recovery COMRECUP                      {$2->mostrarDatos($2); cout<<"Comando RECOVERY"<<endl;};
+            |loss COMPERD                           {$2->mostrarDatos($2); cout<<"Comando LOSS"<<endl;};
             |logout                                 {$1->salir();          cout<<"Comando LOGOUT"<<endl;};
             |pausee                                 {cout<<"Ingrese una tecla para continuar"<<endl; cin.get();};
             |comentario                             {};
@@ -260,33 +347,17 @@ COMFSDISK:  id igual idp COMFSDISK                  {if(mkfsdisco->id==""){mkfsd
             |fs igual FS2                           {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
             |fs igual FS3                           {if(mkfsdisco->fs==""){mkfsdisco->fs=$3;} $$=mkfsdisco;};
 
-COMEXEC:    pathh igual cadena COMEXEC              {if(script->path==""){script->path=$3;} $$=script;};
-            |pathh igual ruta COMEXEC               {if(script->path==""){script->path=$3;} $$=script;};
-            |pathh igual cadena                     {if(script->path==""){script->path=$3;} $$=script;};
-            |pathh igual ruta                       {if(script->path==""){script->path=$3;} $$=script;};
-
-COMREPORTE: pathh igual cadena COMREPORTE           {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
-            |pathh igual ruta COMREPORTE            {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
-            |namee igual cadena COMREPORTE          {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
-            |namee igual ident COMREPORTE           {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
-            |id igual idp COMREPORTE                {if(reporte->id==""){reporte->id=$3;} $$=reporte;};
-            |pathh igual cadena                     {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
-            |pathh igual ruta                       {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
-            |namee igual cadena                     {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
-            |namee igual ident                      {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
-            |id igual idp                           {if(reporte->id==""){reporte->id=$3;} $$=reporte;};
-
 COMLOGIN:   usr igual cadena COMLOGIN               {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
             |usr igual ident COMLOGIN               {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
+            |pwd igual digito COMLOGIN              {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
             |pwd igual cadena COMLOGIN              {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
             |pwd igual ident COMLOGIN               {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
-            |pwd igual digito COMLOGIN              {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
             |id igual idp COMLOGIN                  {if(loginn->id==""){loginn->id=$3;} $$=loginn;};
             |usr igual cadena                       {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
             |usr igual ident                        {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
+            |pwd igual digito                       {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
             |pwd igual cadena                       {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
             |pwd igual ident                        {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
-            |pwd igual digito                       {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
             |id igual idp                           {if(loginn->id==""){loginn->id=$3;} $$=loginn;};
 
 COMMKGRP:   namee igual cadena COMMKGRP             {if(mkgrpp->name==""){mkgrpp->name=$3;} $$=mkgrpp;};
@@ -308,9 +379,9 @@ COMMKUSER:  usr igual cadena COMMKUSER              {if(mkuserr->usr==""){mkuser
             |grp igual ident COMMKUSER              {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
             |usr igual cadena                       {if(mkuserr->usr==""){mkuserr->usr=$3;} $$=mkuserr;};
             |usr igual ident                        {if(mkuserr->usr==""){mkuserr->usr=$3;} $$=mkuserr;};
+            |pwd igual digito                       {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
             |pwd igual cadena                       {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
             |pwd igual ident                        {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
-            |pwd igual digito                        {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
             |grp igual cadena                       {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
             |grp igual ident                        {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
 
@@ -318,6 +389,148 @@ COMRMUSER:  usr igual cadena COMRMUSER              {if(rmuserr->usr==""){rmuser
             |usr igual ident COMRMUSER              {if(rmuserr->usr==""){rmuserr->usr=$3;} $$=rmuserr;};
             |usr igual cadena                       {if(rmuserr->usr==""){rmuserr->usr=$3;} $$=rmuserr;};
             |usr igual ident                        {if(rmuserr->usr==""){rmuserr->usr=$3;} $$=rmuserr;};
+
+COMCHMOD:   pathh igual cadena COMCHMOD             {if(chmmodd->path==""){chmmodd->path=$3;} $$=chmmodd;};
+            |pathh igual ruta COMCHMOD              {if(chmmodd->path==""){chmmodd->path=$3;} $$=chmmodd;};
+            |ugo igual digito COMCHMOD              {int tam=atoi($3); if(chmmodd->ugo==0){chmmodd->ugo=tam;} $$=chmmodd;};
+            |rr COMCHMOD                            {if(chmmodd->R==""){chmmodd->R=$1;} $$=chmmodd;};
+            |pathh igual cadena                     {if(chmmodd->path==""){chmmodd->path=$3;} $$=chmmodd;};
+            |pathh igual ruta                       {if(chmmodd->path==""){chmmodd->path=$3;} $$=chmmodd;};
+            |ugo igual digito                       {int tam=atoi($3); if(chmmodd->ugo==0){chmmodd->ugo=tam;} $$=chmmodd;};
+            |rr                                     {if(chmmodd->R==""){chmmodd->R=$1;} $$=chmmodd;};
+
+COMKFILE:   pathh igual cadena COMKFILE             {if(mkfilee->path==""){mkfilee->path=$3;} $$=mkfilee;};
+            |pathh igual ruta COMKFILE              {if(mkfilee->path==""){mkfilee->path=$3;} $$=mkfilee;};
+            |sizee igual digito COMKFILE            {int tam=atoi($3); if(mkfilee->size==0){mkfilee->size=tam;} $$=mkfilee;};
+            |sizee igual negativo digito COMKFILE   {int tam=atoi($3); if(mkfilee->size==0){mkfilee->size=tam * -1;} $$=mkfilee;};
+            |rr COMKFILE                            {if(mkfilee->R==""){mkfilee->R=$1;} $$=mkfilee;};
+            |p COMKFILE                             {if(mkfilee->P==""){mkfilee->P=$1;} $$=mkfilee;};
+            |cont igual cadena COMKFILE             {if(mkfilee->cont==""){mkfilee->cont=$3;} $$=mkfilee;};
+            |cont igual ruta COMKFILE               {if(mkfilee->cont==""){mkfilee->cont=$3;} $$=mkfilee;};
+            |pathh igual cadena                     {if(mkfilee->path==""){mkfilee->path=$3;} $$=mkfilee;};
+            |pathh igual ruta                       {if(mkfilee->path==""){mkfilee->path=$3;} $$=mkfilee;};
+            |sizee igual digito                     {int tam=atoi($3); if(mkfilee->size==0){mkfilee->size=tam;} $$=mkfilee;};
+            |sizee igual negativo digito            {int tam=atoi($3); if(mkfilee->size==0){mkfilee->size=tam * -1;} $$=mkfilee;};
+            |rr                                     {if(mkfilee->R==""){mkfilee->R=$1;} $$=mkfilee;};
+            |p                                      {if(mkfilee->P==""){mkfilee->P=$1;} $$=mkfilee;};
+            |cont igual cadena                      {if(mkfilee->cont==""){mkfilee->cont=$3;} $$=mkfilee;};
+            |cont igual ruta                        {if(mkfilee->cont==""){mkfilee->cont=$3;} $$=mkfilee;};
+
+COMCAT:     filen igual cadena COMCAT               {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |filen igual ruta COMCAT                {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |filen igual rutacat COMCAT             {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |file igual cadena COMCAT               {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |file igual ruta COMCAT                 {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |file igual rutacat COMCAT              {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |filen igual cadena                     {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |filen igual ruta                       {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |filen igual rutacat                    {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |file igual cadena                      {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |file igual ruta                        {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+            |file igual rutacat                     {if(catt->filen==""){catt->filen=$3;} $$=catt;};
+
+COMREM:     pathh igual cadena COMREM               {if(remm->path==""){remm->path=$3;} $$=remm;};
+            |pathh igual rutaelim COMREM            {if(remm->path==""){remm->path=$3;} $$=remm;};
+            |pathh igual ruta COMREM                {if(remm->path==""){remm->path=$3;} $$=remm;};
+            |pathh igual cadena                     {if(remm->path==""){remm->path=$3;} $$=remm;};
+            |pathh igual rutaelim                   {if(remm->path==""){remm->path=$3;} $$=remm;};
+            |pathh igual ruta                       {if(remm->path==""){remm->path=$3;} $$=remm;};
+
+COMEDIT:    pathh igual cadena COMEDIT              {if(editt->path==""){editt->path=$3;} $$=editt;};
+            |pathh igual ruta COMEDIT               {if(editt->path==""){editt->path=$3;} $$=editt;};
+            |cont igual cadena COMEDIT              {if(editt->cont==""){editt->cont=$3;} $$=editt;};
+            |cont igual ruta COMEDIT                {if(editt->cont==""){editt->cont=$3;} $$=editt;};
+            |pathh igual cadena                     {if(editt->path==""){editt->path=$3;} $$=editt;};
+            |pathh igual ruta                       {if(editt->path==""){editt->path=$3;} $$=editt;};
+            |cont igual cadena                      {if(editt->cont==""){editt->cont=$3;} $$=editt;};
+            |cont igual ruta                        {if(editt->cont==""){editt->cont=$3;} $$=editt;};
+
+COMREN:     pathh igual cadena COMREN               {if(renn->path==""){renn->path=$3;} $$=renn;};
+            |pathh igual ruta COMREN                {if(renn->path==""){renn->path=$3;} $$=renn;};
+            |namee igual rutaarch COMREN            {if(renn->path==""){renn->path=$3;} $$=renn;};
+            |pathh igual cadena                     {if(renn->path==""){renn->path=$3;} $$=renn;};
+            |pathh igual ruta                       {if(renn->path==""){renn->path=$3;} $$=renn;};
+            |namee igual rutaarch                   {if(renn->path==""){renn->path=$3;} $$=renn;};
+
+COMMKDIR:   pathh igual cadena COMMKDIR             {if(cmkdirr->path==""){cmkdirr->path=$3;} $$=cmkdirr;};
+            |pathh igual rutaelim COMMKDIR          {if(cmkdirr->path==""){cmkdirr->path=$3;} $$=cmkdirr;};
+            |p COMMKDIR                             {if(cmkdirr->P==""){cmkdirr->P=$1;} $$=cmkdirr;};
+            |pathh igual cadena                     {if(cmkdirr->path==""){cmkdirr->path=$3;} $$=cmkdirr;};
+            |pathh igual rutaelim                   {if(cmkdirr->path==""){cmkdirr->path=$3;} $$=cmkdirr;};
+            |p                                      {if(cmkdirr->P==""){cmkdirr->P=$1;} $$=cmkdirr;};
+
+COMCP:      pathh igual cadena COMCP                {if(cpp->path==""){cpp->path=$3;} $$=cpp;};
+            |pathh igual rutaelim COMCP             {if(cpp->path==""){cpp->path=$3;} $$=cpp;};
+            |pathh igual ruta COMCP                 {if(cpp->path==""){cpp->path=$3;} $$=cpp;};
+            |dest igual cadena COMCP                {if(cpp->dest==""){cpp->dest=$3;} $$=cpp;};
+            |dest igual rutaelim COMCP              {if(cpp->dest==""){cpp->dest=$3;} $$=cpp;};
+            |dest igual ruta COMCP                  {if(cpp->dest==""){cpp->dest=$3;} $$=cpp;};
+            |pathh igual cadena                     {if(cpp->path==""){cpp->path=$3;} $$=cpp;};
+            |pathh igual rutaelim                   {if(cpp->path==""){cpp->path=$3;} $$=cpp;};
+            |pathh igual ruta                       {if(cpp->path==""){cpp->path=$3;} $$=cpp;};
+            |dest igual cadena                      {if(cpp->dest==""){cpp->dest=$3;} $$=cpp;};
+            |dest igual rutaelim                    {if(cpp->dest==""){cpp->dest=$3;} $$=cpp;};
+            |dest igual ruta                        {if(cpp->dest==""){cpp->dest=$3;} $$=cpp;};
+
+COMMV:      pathh igual cadena COMMV                {if(mvv->path==""){mvv->path=$3;} $$=mvv;};
+            |pathh igual rutaelim COMMV             {if(mvv->path==""){mvv->path=$3;} $$=mvv;};
+            |pathh igual ruta COMMV                 {if(mvv->path==""){mvv->path=$3;} $$=mvv;};
+            |dest igual cadena COMMV                {if(mvv->dest==""){mvv->dest=$3;} $$=mvv;};
+            |dest igual rutaelim COMMV              {if(mvv->dest==""){mvv->dest=$3;} $$=mvv;};
+            |dest igual ruta COMMV                  {if(mvv->dest==""){mvv->dest=$3;} $$=mvv;};
+            |pathh igual cadena                     {if(mvv->path==""){mvv->path=$3;} $$=mvv;};
+            |pathh igual rutaelim                   {if(mvv->path==""){mvv->path=$3;} $$=mvv;};
+            |pathh igual ruta                       {if(mvv->path==""){mvv->path=$3;} $$=mvv;};
+            |dest igual cadena                      {if(mvv->dest==""){mvv->dest=$3;} $$=mvv;};
+            |dest igual rutaelim                    {if(mvv->dest==""){mvv->dest=$3;} $$=mvv;};
+            |dest igual ruta                        {if(mvv->dest==""){mvv->dest=$3;} $$=mvv;};
+
+COMFIND:    pathh igual cadena COMFIND              {if(findd->path==""){findd->path=$3;} $$=findd;};
+            |pathh igual ruta COMFIND               {if(findd->path==""){findd->path=$3;} $$=findd;};
+            |namee igual dividido COMFIND           {if(findd->namee==""){findd->namee=$3;} $$=findd;};
+            |namee igual interrogacion COMFIND      {if(findd->namee==""){findd->namee=$3;} $$=findd;};
+            |namee igual cadena COMFIND             {if(findd->namee==""){findd->namee=$3;} $$=findd;};
+            |pathh igual cadena                     {if(findd->path==""){findd->path=$3;} $$=findd;};
+            |pathh igual ruta                       {if(findd->path==""){findd->path=$3;} $$=findd;};
+            |namee igual dividido                   {if(findd->namee==""){findd->namee=$3;} $$=findd;};
+            |namee igual interrogacion              {if(findd->namee==""){findd->namee=$3;} $$=findd;};
+            |namee igual cadena                     {if(findd->namee==""){findd->namee=$3;} $$=findd;};
+
+COMCHOWN:    pathh igual cadena COMCHOWN            {if(cchownn->path==""){cchownn->path=$3;} $$=cchownn;};
+            |pathh igual rutaelim COMCHOWN          {if(cchownn->path==""){cchownn->path=$3;} $$=cchownn;};
+            |rr COMCHOWN                            {if(cchownn->R==""){cchownn->R=$1;} $$=cchownn;};
+            |usr igual ident COMCHOWN               {if(cchownn->usr==""){cchownn->usr=$3;} $$=cchownn;};
+            |pathh igual cadena                     {if(cchownn->path==""){cchownn->path=$3;} $$=cchownn;};
+            |pathh igual rutaelim                   {if(cchownn->path==""){cchownn->path=$3;} $$=cchownn;};
+            |rr                                     {if(cchownn->R==""){cchownn->R=$1;} $$=cchownn;};
+            |usr igual ident                        {if(cchownn->usr==""){cchownn->usr=$3;} $$=cchownn;};
+
+COMCHGRP:   usr igual ident COMCHGRP                {if(chgrpp->usr==""){chgrpp->usr=$3;} $$=chgrpp;};
+            |grp igual ident COMCHGRP               {if(chgrpp->grp==""){chgrpp->grp=$3;} $$=chgrpp;};
+            |usr igual ident                        {if(chgrpp->usr==""){chgrpp->usr=$3;} $$=chgrpp;};
+            |grp igual ident                        {if(chgrpp->grp==""){chgrpp->grp=$3;} $$=chgrpp;};
+
+COMEXEC:    pathh igual cadena COMEXEC              {if(script->path==""){script->path=$3;} $$=script;};
+            |pathh igual ruta COMEXEC               {if(script->path==""){script->path=$3;} $$=script;};
+            |pathh igual cadena                     {if(script->path==""){script->path=$3;} $$=script;};
+            |pathh igual ruta                       {if(script->path==""){script->path=$3;} $$=script;};
+
+COMREPORTE: pathh igual cadena COMREPORTE           {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |pathh igual ruta COMREPORTE            {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |namee igual cadena COMREPORTE          {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |namee igual ident COMREPORTE           {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |id igual idp COMREPORTE                {if(reporte->id==""){reporte->id=$3;} $$=reporte;};
+            |pathh igual cadena                     {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |pathh igual ruta                       {if(reporte->path==""){reporte->path=$3;} $$=reporte;};
+            |namee igual cadena                     {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |namee igual ident                      {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
+            |id igual idp                           {if(reporte->id==""){reporte->id=$3;} $$=reporte;};
+
+COMRECUP:   id igual idp COMRECUP                   {if(recuperar->id==""){recuperar->id=$3;} $$=recuperar;};
+            |id igual idp                           {if(recuperar->id==""){recuperar->id=$3;} $$=recuperar;};
+
+COMPERD:    id igual idp COMPERD                    {if(perdida->id==""){perdida->id=$3;} $$=perdida;};
+            |id igual idp                           {if(perdida->id==""){perdida->id=$3;} $$=perdida;};
 
 
 %%

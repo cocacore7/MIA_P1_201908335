@@ -54,15 +54,29 @@ SOURCES       = ../Proyecto1/bloquesapstruct.cpp \
 		../Proyecto1/bloquesarstruct.cpp \
 		../Proyecto1/bloquescastruct.cpp \
 		../Proyecto1/cabeceramontadas.cpp \
+		../Proyecto1/clcat.cpp \
+		../Proyecto1/clchgrp.cpp \
+		../Proyecto1/clchmmod.cpp \
+		../Proyecto1/clchown.cpp \
+		../Proyecto1/clcp.cpp \
+		../Proyecto1/cledit.cpp \
 		../Proyecto1/clexec.cpp \
 		../Proyecto1/clfdisk.cpp \
+		../Proyecto1/clfind.cpp \
 		../Proyecto1/cllogin.cpp \
+		../Proyecto1/clloss.cpp \
+		../Proyecto1/clmkdir.cpp \
 		../Proyecto1/clmkdisk.cpp \
+		../Proyecto1/clmkfile.cpp \
 		../Proyecto1/clmkfs.cpp \
 		../Proyecto1/clmkgrp.cpp \
 		../Proyecto1/clmkuser.cpp \
 		../Proyecto1/clmontada.cpp \
 		../Proyecto1/clmount.cpp \
+		../Proyecto1/clmv.cpp \
+		../Proyecto1/clrecovery.cpp \
+		../Proyecto1/clrem.cpp \
+		../Proyecto1/clren.cpp \
 		../Proyecto1/clreportes.cpp \
 		../Proyecto1/clrmdisk.cpp \
 		../Proyecto1/clrmgrp.cpp \
@@ -81,15 +95,29 @@ OBJECTS       = bloquesapstruct.o \
 		bloquesarstruct.o \
 		bloquescastruct.o \
 		cabeceramontadas.o \
+		clcat.o \
+		clchgrp.o \
+		clchmmod.o \
+		clchown.o \
+		clcp.o \
+		cledit.o \
 		clexec.o \
 		clfdisk.o \
+		clfind.o \
 		cllogin.o \
+		clloss.o \
+		clmkdir.o \
 		clmkdisk.o \
+		clmkfile.o \
 		clmkfs.o \
 		clmkgrp.o \
 		clmkuser.o \
 		clmontada.o \
 		clmount.o \
+		clmv.o \
+		clrecovery.o \
+		clrem.o \
+		clren.o \
 		clreportes.o \
 		clrmdisk.o \
 		clrmgrp.o \
@@ -180,15 +208,29 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Proyecto1/bloquesarstruct.h \
 		../Proyecto1/bloquescastruct.h \
 		../Proyecto1/cabeceramontadas.h \
+		../Proyecto1/clcat.h \
+		../Proyecto1/clchgrp.h \
+		../Proyecto1/clchmmod.h \
+		../Proyecto1/clchown.h \
+		../Proyecto1/clcp.h \
+		../Proyecto1/cledit.h \
 		../Proyecto1/clexec.h \
 		../Proyecto1/clfdisk.h \
+		../Proyecto1/clfind.h \
 		../Proyecto1/cllogin.h \
+		../Proyecto1/clloss.h \
+		../Proyecto1/clmkdir.h \
 		../Proyecto1/clmkdisk.h \
+		../Proyecto1/clmkfile.h \
 		../Proyecto1/clmkfs.h \
 		../Proyecto1/clmkgrp.h \
 		../Proyecto1/clmkuser.h \
 		../Proyecto1/clmontada.h \
 		../Proyecto1/clmount.h \
+		../Proyecto1/clmv.h \
+		../Proyecto1/clrecovery.h \
+		../Proyecto1/clrem.h \
+		../Proyecto1/clren.h \
 		../Proyecto1/clreportes.h \
 		../Proyecto1/clrmdisk.h \
 		../Proyecto1/clrmgrp.h \
@@ -207,15 +249,29 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Proyecto1/bloquesarstruct.cpp \
 		../Proyecto1/bloquescastruct.cpp \
 		../Proyecto1/cabeceramontadas.cpp \
+		../Proyecto1/clcat.cpp \
+		../Proyecto1/clchgrp.cpp \
+		../Proyecto1/clchmmod.cpp \
+		../Proyecto1/clchown.cpp \
+		../Proyecto1/clcp.cpp \
+		../Proyecto1/cledit.cpp \
 		../Proyecto1/clexec.cpp \
 		../Proyecto1/clfdisk.cpp \
+		../Proyecto1/clfind.cpp \
 		../Proyecto1/cllogin.cpp \
+		../Proyecto1/clloss.cpp \
+		../Proyecto1/clmkdir.cpp \
 		../Proyecto1/clmkdisk.cpp \
+		../Proyecto1/clmkfile.cpp \
 		../Proyecto1/clmkfs.cpp \
 		../Proyecto1/clmkgrp.cpp \
 		../Proyecto1/clmkuser.cpp \
 		../Proyecto1/clmontada.cpp \
 		../Proyecto1/clmount.cpp \
+		../Proyecto1/clmv.cpp \
+		../Proyecto1/clrecovery.cpp \
+		../Proyecto1/clrem.cpp \
+		../Proyecto1/clren.cpp \
 		../Proyecto1/clreportes.cpp \
 		../Proyecto1/clrmdisk.cpp \
 		../Proyecto1/clrmgrp.cpp \
@@ -405,8 +461,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Proyecto1/bloquesapstruct.h ../Proyecto1/bloquesarstruct.h ../Proyecto1/bloquescastruct.h ../Proyecto1/cabeceramontadas.h ../Proyecto1/clexec.h ../Proyecto1/clfdisk.h ../Proyecto1/cllogin.h ../Proyecto1/clmkdisk.h ../Proyecto1/clmkfs.h ../Proyecto1/clmkgrp.h ../Proyecto1/clmkuser.h ../Proyecto1/clmontada.h ../Proyecto1/clmount.h ../Proyecto1/clreportes.h ../Proyecto1/clrmdisk.h ../Proyecto1/clrmgrp.h ../Proyecto1/clrmuser.h ../Proyecto1/clsesion.h ../Proyecto1/clunmount.h ../Proyecto1/ebrstruct.h ../Proyecto1/lexico.l ../Proyecto1/mbrstruct.h ../Proyecto1/parser.h ../Proyecto1/sbstruct.h ../Proyecto1/scanner.h ../Proyecto1/sintactico.y ../Proyecto1/tinodosstruct.h ../Proyecto1/usuariostruct.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Proyecto1/bloquesapstruct.cpp ../Proyecto1/bloquesarstruct.cpp ../Proyecto1/bloquescastruct.cpp ../Proyecto1/cabeceramontadas.cpp ../Proyecto1/clexec.cpp ../Proyecto1/clfdisk.cpp ../Proyecto1/cllogin.cpp ../Proyecto1/clmkdisk.cpp ../Proyecto1/clmkfs.cpp ../Proyecto1/clmkgrp.cpp ../Proyecto1/clmkuser.cpp ../Proyecto1/clmontada.cpp ../Proyecto1/clmount.cpp ../Proyecto1/clreportes.cpp ../Proyecto1/clrmdisk.cpp ../Proyecto1/clrmgrp.cpp ../Proyecto1/clrmuser.cpp ../Proyecto1/clsesion.cpp ../Proyecto1/clunmount.cpp ../Proyecto1/ebrstruct.cpp ../Proyecto1/main.cpp ../Proyecto1/mbrstruct.cpp ../Proyecto1/parser.cpp ../Proyecto1/sbstruct.cpp ../Proyecto1/scanner.cpp ../Proyecto1/tinodosstruct.cpp ../Proyecto1/usuariostruct.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Proyecto1/bloquesapstruct.h ../Proyecto1/bloquesarstruct.h ../Proyecto1/bloquescastruct.h ../Proyecto1/cabeceramontadas.h ../Proyecto1/clcat.h ../Proyecto1/clchgrp.h ../Proyecto1/clchmmod.h ../Proyecto1/clchown.h ../Proyecto1/clcp.h ../Proyecto1/cledit.h ../Proyecto1/clexec.h ../Proyecto1/clfdisk.h ../Proyecto1/clfind.h ../Proyecto1/cllogin.h ../Proyecto1/clloss.h ../Proyecto1/clmkdir.h ../Proyecto1/clmkdisk.h ../Proyecto1/clmkfile.h ../Proyecto1/clmkfs.h ../Proyecto1/clmkgrp.h ../Proyecto1/clmkuser.h ../Proyecto1/clmontada.h ../Proyecto1/clmount.h ../Proyecto1/clmv.h ../Proyecto1/clrecovery.h ../Proyecto1/clrem.h ../Proyecto1/clren.h ../Proyecto1/clreportes.h ../Proyecto1/clrmdisk.h ../Proyecto1/clrmgrp.h ../Proyecto1/clrmuser.h ../Proyecto1/clsesion.h ../Proyecto1/clunmount.h ../Proyecto1/ebrstruct.h ../Proyecto1/lexico.l ../Proyecto1/mbrstruct.h ../Proyecto1/parser.h ../Proyecto1/sbstruct.h ../Proyecto1/scanner.h ../Proyecto1/sintactico.y ../Proyecto1/tinodosstruct.h ../Proyecto1/usuariostruct.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Proyecto1/bloquesapstruct.cpp ../Proyecto1/bloquesarstruct.cpp ../Proyecto1/bloquescastruct.cpp ../Proyecto1/cabeceramontadas.cpp ../Proyecto1/clcat.cpp ../Proyecto1/clchgrp.cpp ../Proyecto1/clchmmod.cpp ../Proyecto1/clchown.cpp ../Proyecto1/clcp.cpp ../Proyecto1/cledit.cpp ../Proyecto1/clexec.cpp ../Proyecto1/clfdisk.cpp ../Proyecto1/clfind.cpp ../Proyecto1/cllogin.cpp ../Proyecto1/clloss.cpp ../Proyecto1/clmkdir.cpp ../Proyecto1/clmkdisk.cpp ../Proyecto1/clmkfile.cpp ../Proyecto1/clmkfs.cpp ../Proyecto1/clmkgrp.cpp ../Proyecto1/clmkuser.cpp ../Proyecto1/clmontada.cpp ../Proyecto1/clmount.cpp ../Proyecto1/clmv.cpp ../Proyecto1/clrecovery.cpp ../Proyecto1/clrem.cpp ../Proyecto1/clren.cpp ../Proyecto1/clreportes.cpp ../Proyecto1/clrmdisk.cpp ../Proyecto1/clrmgrp.cpp ../Proyecto1/clrmuser.cpp ../Proyecto1/clsesion.cpp ../Proyecto1/clunmount.cpp ../Proyecto1/ebrstruct.cpp ../Proyecto1/main.cpp ../Proyecto1/mbrstruct.cpp ../Proyecto1/parser.cpp ../Proyecto1/sbstruct.cpp ../Proyecto1/scanner.cpp ../Proyecto1/tinodosstruct.cpp ../Proyecto1/usuariostruct.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -466,6 +522,24 @@ cabeceramontadas.o: ../Proyecto1/cabeceramontadas.cpp ../Proyecto1/cabeceramonta
 		../Proyecto1/clsesion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cabeceramontadas.o ../Proyecto1/cabeceramontadas.cpp
 
+clcat.o: ../Proyecto1/clcat.cpp ../Proyecto1/clcat.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clcat.o ../Proyecto1/clcat.cpp
+
+clchgrp.o: ../Proyecto1/clchgrp.cpp ../Proyecto1/clchgrp.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clchgrp.o ../Proyecto1/clchgrp.cpp
+
+clchmmod.o: ../Proyecto1/clchmmod.cpp ../Proyecto1/clchmmod.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clchmmod.o ../Proyecto1/clchmmod.cpp
+
+clchown.o: ../Proyecto1/clchown.cpp ../Proyecto1/clchown.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clchown.o ../Proyecto1/clchown.cpp
+
+clcp.o: ../Proyecto1/clcp.cpp ../Proyecto1/clcp.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clcp.o ../Proyecto1/clcp.cpp
+
+cledit.o: ../Proyecto1/cledit.cpp ../Proyecto1/cledit.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cledit.o ../Proyecto1/cledit.cpp
+
 clexec.o: ../Proyecto1/clexec.cpp ../Proyecto1/clexec.h \
 		../Proyecto1/parser.h \
 		../Proyecto1/scanner.h \
@@ -478,6 +552,9 @@ clfdisk.o: ../Proyecto1/clfdisk.cpp ../Proyecto1/clfdisk.h \
 		../Proyecto1/ebrstruct.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clfdisk.o ../Proyecto1/clfdisk.cpp
 
+clfind.o: ../Proyecto1/clfind.cpp ../Proyecto1/clfind.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clfind.o ../Proyecto1/clfind.cpp
+
 cllogin.o: ../Proyecto1/cllogin.cpp ../Proyecto1/cllogin.h \
 		../Proyecto1/mbrstruct.h \
 		../Proyecto1/ebrstruct.h \
@@ -486,9 +563,18 @@ cllogin.o: ../Proyecto1/cllogin.cpp ../Proyecto1/cllogin.h \
 		../Proyecto1/clsesion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cllogin.o ../Proyecto1/cllogin.cpp
 
+clloss.o: ../Proyecto1/clloss.cpp ../Proyecto1/clloss.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clloss.o ../Proyecto1/clloss.cpp
+
+clmkdir.o: ../Proyecto1/clmkdir.cpp ../Proyecto1/clmkdir.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clmkdir.o ../Proyecto1/clmkdir.cpp
+
 clmkdisk.o: ../Proyecto1/clmkdisk.cpp ../Proyecto1/clmkdisk.h \
 		../Proyecto1/mbrstruct.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clmkdisk.o ../Proyecto1/clmkdisk.cpp
+
+clmkfile.o: ../Proyecto1/clmkfile.cpp ../Proyecto1/clmkfile.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clmkfile.o ../Proyecto1/clmkfile.cpp
 
 clmkfs.o: ../Proyecto1/clmkfs.cpp ../Proyecto1/clmkfs.h \
 		../Proyecto1/mbrstruct.h \
@@ -512,6 +598,18 @@ clmount.o: ../Proyecto1/clmount.cpp ../Proyecto1/clmount.h \
 		../Proyecto1/clmontada.h \
 		../Proyecto1/cabeceramontadas.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clmount.o ../Proyecto1/clmount.cpp
+
+clmv.o: ../Proyecto1/clmv.cpp ../Proyecto1/clmv.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clmv.o ../Proyecto1/clmv.cpp
+
+clrecovery.o: ../Proyecto1/clrecovery.cpp ../Proyecto1/clrecovery.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clrecovery.o ../Proyecto1/clrecovery.cpp
+
+clrem.o: ../Proyecto1/clrem.cpp ../Proyecto1/clrem.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clrem.o ../Proyecto1/clrem.cpp
+
+clren.o: ../Proyecto1/clren.cpp ../Proyecto1/clren.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clren.o ../Proyecto1/clren.cpp
 
 clreportes.o: ../Proyecto1/clreportes.cpp ../Proyecto1/clreportes.h \
 		../Proyecto1/mbrstruct.h \
@@ -560,7 +658,11 @@ parser.o: ../Proyecto1/parser.cpp ../Proyecto1/scanner.h \
 		../Proyecto1/clmkfs.h \
 		../Proyecto1/clexec.h \
 		../Proyecto1/clreportes.h \
-		../Proyecto1/cllogin.h
+		../Proyecto1/cllogin.h \
+		../Proyecto1/clmkgrp.h \
+		../Proyecto1/clrmgrp.h \
+		../Proyecto1/clmkuser.h \
+		../Proyecto1/clrmuser.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o ../Proyecto1/parser.cpp
 
 sbstruct.o: ../Proyecto1/sbstruct.cpp ../Proyecto1/sbstruct.h

@@ -12,15 +12,29 @@ SOURCES += \
         bloquesarstruct.cpp \
         bloquescastruct.cpp \
         cabeceramontadas.cpp \
+        clcat.cpp \
+        clchgrp.cpp \
+        clchmmod.cpp \
+        clchown.cpp \
+        clcp.cpp \
+        cledit.cpp \
         clexec.cpp \
         clfdisk.cpp \
+        clfind.cpp \
         cllogin.cpp \
+        clloss.cpp \
+        clmkdir.cpp \
         clmkdisk.cpp \
+        clmkfile.cpp \
         clmkfs.cpp \
         clmkgrp.cpp \
         clmkuser.cpp \
         clmontada.cpp \
         clmount.cpp \
+        clmv.cpp \
+        clrecovery.cpp \
+        clrem.cpp \
+        clren.cpp \
         clreportes.cpp \
         clrmdisk.cpp \
         clrmgrp.cpp \
@@ -46,15 +60,29 @@ HEADERS += \
     bloquesarstruct.h \
     bloquescastruct.h \
     cabeceramontadas.h \
+    clcat.h \
+    clchgrp.h \
+    clchmmod.h \
+    clchown.h \
+    clcp.h \
+    cledit.h \
     clexec.h \
     clfdisk.h \
+    clfind.h \
     cllogin.h \
+    clloss.h \
+    clmkdir.h \
     clmkdisk.h \
+    clmkfile.h \
     clmkfs.h \
     clmkgrp.h \
     clmkuser.h \
     clmontada.h \
     clmount.h \
+    clmv.h \
+    clrecovery.h \
+    clrem.h \
+    clren.h \
     clreportes.h \
     clrmdisk.h \
     clrmgrp.h \

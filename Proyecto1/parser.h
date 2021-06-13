@@ -50,71 +50,77 @@ extern int yydebug;
     cadena = 260,
     filen = 261,
     idp = 262,
-    ruta = 263,
-    mkdisk = 264,
-    rmdisk = 265,
-    fdisk = 266,
-    mount = 267,
-    unmount = 268,
-    mkfs = 269,
-    login = 270,
-    logout = 271,
-    mkgrp = 272,
-    rmgrp = 273,
-    mkusr = 274,
-    rmusr = 275,
-    mkfile = 276,
-    mkdirr = 277,
-    cat = 278,
-    rem = 279,
-    edit = 280,
-    ren = 281,
-    cp = 282,
-    mv = 283,
-    find = 284,
-    chownn = 285,
-    chgrp = 286,
-    execc = 287,
-    pausee = 288,
-    comentario = 289,
-    rep = 290,
-    igual = 291,
-    dividido = 292,
-    interrogacion = 293,
-    multiplicacion = 294,
-    negativo = 295,
-    sizee = 296,
-    f = 297,
-    u = 298,
-    pathh = 299,
-    typee = 300,
-    deletee = 301,
-    namee = 302,
-    addd = 303,
-    id = 304,
-    fs = 305,
-    usr = 306,
-    pwd = 307,
-    grp = 308,
-    ugo = 309,
-    rr = 310,
-    cont = 311,
-    filenn = 312,
-    dest = 313,
-    p = 314,
-    BF = 315,
-    FF = 316,
-    WF = 317,
-    K = 318,
-    M = 319,
-    B = 320,
-    PP = 321,
-    E = 322,
-    L = 323,
-    FAST = 324,
-    FULL = 325,
-    FS2 = 326,
-    FS3 = 327
+    rutaelim = 263,
+    rutaarch = 264,
+    rutacat = 265,
+    ruta = 266,
+    mkdisk = 267,
+    rmdisk = 268,
+    fdisk = 269,
+    mount = 270,
+    unmount = 271,
+    mkfs = 272,
+    login = 273,
+    logout = 274,
+    mkgrp = 275,
+    rmgrp = 276,
+    mkusr = 277,
+    rmusr = 278,
+    chmoddd = 279,
+    mkfile = 280,
+    cat = 281,
+    rem = 282,
+    edit = 283,
+    ren = 284,
+    mkdirr = 285,
+    cp = 286,
+    mv = 287,
+    find = 288,
+    chownn = 289,
+    chgrp = 290,
+    execc = 291,
+    pausee = 292,
+    comentario = 293,
+    rep = 294,
+    recovery = 295,
+    loss = 296,
+    igual = 297,
+    dividido = 298,
+    interrogacion = 299,
+    multiplicacion = 300,
+    negativo = 301,
+    sizee = 302,
+    f = 303,
+    u = 304,
+    pathh = 305,
+    typee = 306,
+    deletee = 307,
+    namee = 308,
+    addd = 309,
+    id = 310,
+    fs = 311,
+    usr = 312,
+    pwd = 313,
+    grp = 314,
+    ugo = 315,
+    rr = 316,
+    cont = 317,
+    dest = 318,
+    p = 319,
+    file = 320,
+    BF = 321,
+    FF = 322,
+    WF = 323,
+    K = 324,
+    M = 325,
+    B = 326,
+    PP = 327,
+    E = 328,
+    L = 329,
+    FAST = 330,
+    FULL = 331,
+    FS2 = 332,
+    FS3 = 333
   };
 #endif
 
@@ -123,7 +129,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 47 "sintactico.y" /* yacc.c:1909  */
+#line 80 "sintactico.y" /* yacc.c:1909  */
 
     char TEXT[500];
     class clmkdisk *mdisk;
@@ -139,10 +145,25 @@ union YYSTYPE
     class clmkuser *cmkuser;
     class clrmuser *crmuser;
 
+    class clchmmod *cchmmod;
+    class clmkfile *cmkfile;
+    class clcat *ccat;
+    class clrem *crem;
+    class cledit *cedit;
+    class clRen *cren;
+    class clmkdir *cmkdir;
+    class clcp *ccp;
+    class clmv *cmv;
+    class clfind *cfind;
+    class clchown *cchown;
+    class clchgrp *cchgrp;
+
     class clexec *archexec;
     class clReportes *creporte;
+    class clrecovery *crecup;
+    class clloss *cperd;
 
-#line 146 "parser.h" /* yacc.c:1909  */
+#line 167 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
