@@ -123,7 +123,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 35 "sintactico.y" /* yacc.c:1909  */
+#line 47 "sintactico.y" /* yacc.c:1909  */
 
     char TEXT[500];
     class clmkdisk *mdisk;
@@ -132,10 +132,17 @@ union YYSTYPE
     class clmount *modiskk;
     class clunmount *unmdiskk;
     class clmkfs *mkdiskk;
+
+    class cllogin *clogin;
+    class clmkgrp *cmkgrp;
+    class clrmgrp *crmgrp;
+    class clmkuser *cmkuser;
+    class clrmuser *crmuser;
+
     class clexec *archexec;
     class clReportes *creporte;
 
-#line 139 "parser.h" /* yacc.c:1909  */
+#line 146 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

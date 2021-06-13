@@ -44,7 +44,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                 disco->type="full";
             }
             if(disco->fs!=""){
-                disco->fs="ext2";
+                disco->fs="2fs";
             }
 
             for(int x=4;x<(direcciones.length()-1);x++){
@@ -99,59 +99,60 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
             //ENCONTRAR PARTICION A FORMATEAR
             if(nombre1 == nombreP){
-                //REALIZAR FORMATEO
-                if(disco->type.toLower() == "fast"){
-
-                }else if(disco->type.toLower() == "full"){
-
-                }
                 //ASIGNAR ESTRUCTURA EXT2 O EXT3
                 if(disco->fs.toLower() == "2fs"){
 
                 }else if(disco->fs.toLower() == "3fs"){
+
+                }
+                //REALIZAR FORMATEO
+                if(disco->type.toLower() == "fast"){
+
+                }else if(disco->type.toLower() == "full"){
 
                 }
             }else if(nombre2 == nombreP){
-                //REALIZAR FORMATEO
-                if(disco->type.toLower() == "fast"){
-
-                }else if(disco->type.toLower() == "full"){
-
-                }
                 //ASIGNAR ESTRUCTURA EXT2 O EXT3
                 if(disco->fs.toLower() == "2fs"){
 
                 }else if(disco->fs.toLower() == "3fs"){
+
+                }
+                //REALIZAR FORMATEO
+                if(disco->type.toLower() == "fast"){
+
+                }else if(disco->type.toLower() == "full"){
 
                 }
             }else if(nombre3 == nombreP){
-                //REALIZAR FORMATEO
-                if(disco->type.toLower() == "fast"){
-
-                }else if(disco->type.toLower() == "full"){
-
-                }
                 //ASIGNAR ESTRUCTURA EXT2 O EXT3
                 if(disco->fs.toLower() == "2fs"){
 
                 }else if(disco->fs.toLower() == "3fs"){
+
+                }
+                //REALIZAR FORMATEO
+                if(disco->type.toLower() == "fast"){
+
+                }else if(disco->type.toLower() == "full"){
 
                 }
             }else if(nombre4 == nombreP){
-                //REALIZAR FORMATEO
-                if(disco->type.toLower() == "fast"){
-
-                }else if(disco->type.toLower() == "full"){
-
-                }
                 //ASIGNAR ESTRUCTURA EXT2 O EXT3
                 if(disco->fs.toLower() == "2fs"){
 
                 }else if(disco->fs.toLower() == "3fs"){
+
+                }
+                //REALIZAR FORMATEO
+                if(disco->type.toLower() == "fast"){
+
+                }else if(disco->type.toLower() == "full"){
 
                 }
             }else{
                 EBR ebr;
+                EBR siguiente;
                 if(extP == "1"){
                     FILE* Debr=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Debr,part1.part_start,SEEK_SET);
@@ -159,44 +160,46 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     fseek(Debr,0,SEEK_SET);
                     fclose(Debr);
 
-                    int partOcupado = 0;
-                    int nuevoinicio = part1.part_start;
-                    int tam_Particion = part1.part_size;
-                    int tam_ebr = sizeof (ebr);
-                    bool encontrado = false;
-                    while(ebr.part_next != -1){
+                    siguiente = ebr;
+                    bool nombreR = false;
+                    while(siguiente.part_next != -1){
+                        ebr = siguiente;
                         Debr=fopen(ruta.toStdString().c_str(),"rb+");
-                        fseek(Debr,nuevoinicio,SEEK_SET);
-                        fread(&ebr,sizeof(EBR),1,Debr);
+                        fseek(Debr,siguiente.part_next,SEEK_SET);
+                        fread(&siguiente,sizeof(EBR),1,Debr);
                         fseek(Debr,0,SEEK_SET);
                         fclose(Debr);
+                        QString nombreChar(siguiente.part_name);
+                        if(nombreP == nombreChar){
+                            cout<<"Configurando Sistema De Archivos Para: "<<nombreP.toStdString().c_str()<<endl;
+                            //ASIGNAR ESTRUCTURA EXT2 O EXT3
+                            if(disco->fs.toLower() == "2fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT2 SOBRE PARTICION EBR
 
-                        QString NombreEbr(ebr.part_name);
-                        if(NombreEbr == nombre1){
-                            encontrado = true;
+                                cout<<"Sistema De Archivos Ext2 Creado Con Exito: "<<endl;
+                            }else if(disco->fs.toLower() == "3fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT3 SOBRE PARTICION EBR
+
+                                cout<<"Sistema De Archivos Ext3 Creado Con Exito: "<<endl;
+                            }
+                            //REALIZAR FORMATEO
+                            if(disco->type.toLower() == "fast"){
+                                //VOLVER A INGRESAR SUPER BLOQUE VOLVER A 0 LOS BITMAPS
+
+                                cout<<"Formateo Fast Realizado Con Exito: "<<endl;
+                            }else if(disco->type.toLower() == "full"){
+                                //LLENAR DE 0 TODOS LOS STRUCT DE INODOS, BLOQUES Y BITMAPS
+
+                                cout<<"Formateo Full Realizado Con Exito: "<<endl;
+                            }
+                            nombreR = true;
                             break;
-                        }
-
-                        if(ebr.part_next != -1){
-                            nuevoinicio = ebr.part_next;
-                            partOcupado = partOcupado + tam_ebr + ebr.part_size;
-                        }
-                        if(partOcupado >= tam_Particion){break;}
-                    }
-
-                    if(encontrado){
-                        //IMPORTANTE NO VOLARSE EL EBR, SUMAR EL TAMAÑO DE EBR AL DELETE
-                        //REALIZAR FORMATEO
-                        if(disco->type.toLower() == "fast"){
-
-                        }else if(disco->type.toLower() == "full"){
-
-                        }
-                        //ASIGNAR ESTRUCTURA EXT2 O EXT3
-                        if(disco->fs.toLower() == "2fs"){
-
-                        }else if(disco->fs.toLower() == "3fs"){
-
+                        }else{
+                            Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Debr,siguiente.part_next,SEEK_SET);
+                            fread(&siguiente,sizeof(EBR),1,Debr);
+                            fseek(Debr,0,SEEK_SET);
+                            fclose(Debr);
                         }
                     }
                 }else if(extP == "2"){
@@ -206,44 +209,46 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     fseek(Debr,0,SEEK_SET);
                     fclose(Debr);
 
-                    int partOcupado = 0;
-                    int nuevoinicio = part2.part_start;
-                    int tam_Particion = part2.part_size;
-                    int tam_ebr = sizeof (ebr);
-                    bool encontrado = false;
-                    while(ebr.part_next != -1){
+                    siguiente = ebr;
+                    bool nombreR = false;
+                    while(siguiente.part_next != -1){
+                        ebr = siguiente;
                         Debr=fopen(ruta.toStdString().c_str(),"rb+");
-                        fseek(Debr,nuevoinicio,SEEK_SET);
-                        fread(&ebr,sizeof(EBR),1,Debr);
+                        fseek(Debr,siguiente.part_next,SEEK_SET);
+                        fread(&siguiente,sizeof(EBR),1,Debr);
                         fseek(Debr,0,SEEK_SET);
                         fclose(Debr);
+                        QString nombreChar(siguiente.part_name);
+                        if(nombreP == nombreChar){
+                            cout<<"Configurando Sistema De Archivos Para: "<<nombreP.toStdString().c_str()<<endl;
+                            //ASIGNAR ESTRUCTURA EXT2 O EXT3
+                            if(disco->fs.toLower() == "2fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT2 SOBRE PARTICION EBR
 
-                        QString NombreEbr(ebr.part_name);
-                        if(NombreEbr == nombre1){
-                            encontrado = true;
+                                cout<<"Sistema De Archivos Ext2 Creado Con Exito: "<<endl;
+                            }else if(disco->fs.toLower() == "3fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT3 SOBRE PARTICION EBR
+
+                                cout<<"Sistema De Archivos Ext3 Creado Con Exito: "<<endl;
+                            }
+                            //REALIZAR FORMATEO
+                            if(disco->type.toLower() == "fast"){
+                                //VOLVER A INGRESAR SUPER BLOQUE VOLVER A 0 LOS BITMAPS
+
+                                cout<<"Formateo Fast Realizado Con Exito: "<<endl;
+                            }else if(disco->type.toLower() == "full"){
+                                //LLENAR DE 0 TODOS LOS STRUCT DE INODOS, BLOQUES Y BITMAPS
+
+                                cout<<"Formateo Full Realizado Con Exito: "<<endl;
+                            }
+                            nombreR = true;
                             break;
-                        }
-
-                        if(ebr.part_next != -1){
-                            nuevoinicio = ebr.part_next;
-                            partOcupado = partOcupado + tam_ebr + ebr.part_size;
-                        }
-                        if(partOcupado >= tam_Particion){break;}
-                    }
-
-                    if(encontrado){
-                        //IMPORTANTE NO VOLARSE EL EBR, SUMAR EL TAMAÑO DE EBR AL DELETE
-                        //REALIZAR FORMATEO
-                        if(disco->type.toLower() == "fast"){
-
-                        }else if(disco->type.toLower() == "full"){
-
-                        }
-                        //ASIGNAR ESTRUCTURA EXT2 O EXT3
-                        if(disco->fs.toLower() == "2fs"){
-
-                        }else if(disco->fs.toLower() == "3fs"){
-
+                        }else{
+                            Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Debr,siguiente.part_next,SEEK_SET);
+                            fread(&siguiente,sizeof(EBR),1,Debr);
+                            fseek(Debr,0,SEEK_SET);
+                            fclose(Debr);
                         }
                     }
                 }else if(extP == "3"){
@@ -253,44 +258,46 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     fseek(Debr,0,SEEK_SET);
                     fclose(Debr);
 
-                    int partOcupado = 0;
-                    int nuevoinicio = part3.part_start;
-                    int tam_Particion = part3.part_size;
-                    int tam_ebr = sizeof (ebr);
-                    bool encontrado = false;
-                    while(ebr.part_next != -1){
+                    siguiente = ebr;
+                    bool nombreR = false;
+                    while(siguiente.part_next != -1){
+                        ebr = siguiente;
                         Debr=fopen(ruta.toStdString().c_str(),"rb+");
-                        fseek(Debr,nuevoinicio,SEEK_SET);
-                        fread(&ebr,sizeof(EBR),1,Debr);
+                        fseek(Debr,siguiente.part_next,SEEK_SET);
+                        fread(&siguiente,sizeof(EBR),1,Debr);
                         fseek(Debr,0,SEEK_SET);
                         fclose(Debr);
+                        QString nombreChar(siguiente.part_name);
+                        if(nombreP == nombreChar){
+                            cout<<"Configurando Sistema De Archivos Para: "<<nombreP.toStdString().c_str()<<endl;
+                            //ASIGNAR ESTRUCTURA EXT2 O EXT3
+                            if(disco->fs.toLower() == "2fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT2 SOBRE PARTICION EBR
 
-                        QString NombreEbr(ebr.part_name);
-                        if(NombreEbr == nombre1){
-                            encontrado = true;
+                                cout<<"Sistema De Archivos Ext2 Creado Con Exito: "<<endl;
+                            }else if(disco->fs.toLower() == "3fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT3 SOBRE PARTICION EBR
+
+                                cout<<"Sistema De Archivos Ext3 Creado Con Exito: "<<endl;
+                            }
+                            //REALIZAR FORMATEO
+                            if(disco->type.toLower() == "fast"){
+                                //VOLVER A INGRESAR SUPER BLOQUE VOLVER A 0 LOS BITMAPS
+
+                                cout<<"Formateo Fast Realizado Con Exito: "<<endl;
+                            }else if(disco->type.toLower() == "full"){
+                                //LLENAR DE 0 TODOS LOS STRUCT DE INODOS, BLOQUES Y BITMAPS
+
+                                cout<<"Formateo Full Realizado Con Exito: "<<endl;
+                            }
+                            nombreR = true;
                             break;
-                        }
-
-                        if(ebr.part_next != -1){
-                            nuevoinicio = ebr.part_next;
-                            partOcupado = partOcupado + tam_ebr + ebr.part_size;
-                        }
-                        if(partOcupado >= tam_Particion){break;}
-                    }
-
-                    if(encontrado){
-                        //IMPORTANTE NO VOLARSE EL EBR, SUMAR EL TAMAÑO DE EBR AL DELETE
-                        //REALIZAR FORMATEO
-                        if(disco->type.toLower() == "fast"){
-
-                        }else if(disco->type.toLower() == "full"){
-
-                        }
-                        //ASIGNAR ESTRUCTURA EXT2 O EXT3
-                        if(disco->fs.toLower() == "2fs"){
-
-                        }else if(disco->fs.toLower() == "3fs"){
-
+                        }else{
+                            Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Debr,siguiente.part_next,SEEK_SET);
+                            fread(&siguiente,sizeof(EBR),1,Debr);
+                            fseek(Debr,0,SEEK_SET);
+                            fclose(Debr);
                         }
                     }
                 }else if(extP == "4"){
@@ -300,44 +307,46 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     fseek(Debr,0,SEEK_SET);
                     fclose(Debr);
 
-                    int partOcupado = 0;
-                    int nuevoinicio = part4.part_start;
-                    int tam_Particion = part4.part_size;
-                    int tam_ebr = sizeof (ebr);
-                    bool encontrado = false;
-                    while(ebr.part_next != -1){
+                    siguiente = ebr;
+                    bool nombreR = false;
+                    while(siguiente.part_next != -1){
+                        ebr = siguiente;
                         Debr=fopen(ruta.toStdString().c_str(),"rb+");
-                        fseek(Debr,nuevoinicio,SEEK_SET);
-                        fread(&ebr,sizeof(EBR),1,Debr);
+                        fseek(Debr,siguiente.part_next,SEEK_SET);
+                        fread(&siguiente,sizeof(EBR),1,Debr);
                         fseek(Debr,0,SEEK_SET);
                         fclose(Debr);
+                        QString nombreChar(siguiente.part_name);
+                        if(nombreP == nombreChar){
+                            cout<<"Configurando Sistema De Archivos Para: "<<nombreP.toStdString().c_str()<<endl;
+                            //ASIGNAR ESTRUCTURA EXT2 O EXT3
+                            if(disco->fs.toLower() == "2fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT2 SOBRE PARTICION EBR
 
-                        QString NombreEbr(ebr.part_name);
-                        if(NombreEbr == nombre1){
-                            encontrado = true;
+                                cout<<"Sistema De Archivos Ext2 Creado Con Exito: "<<endl;
+                            }else if(disco->fs.toLower() == "3fs"){
+                                //SOBRE ESCRIBIR SITEMA EXT3 SOBRE PARTICION EBR
+
+                                cout<<"Sistema De Archivos Ext3 Creado Con Exito: "<<endl;
+                            }
+                            //REALIZAR FORMATEO
+                            if(disco->type.toLower() == "fast"){
+                                //VOLVER A INGRESAR SUPER BLOQUE VOLVER A 0 LOS BITMAPS
+
+                                cout<<"Formateo Fast Realizado Con Exito: "<<endl;
+                            }else if(disco->type.toLower() == "full"){
+                                //LLENAR DE 0 TODOS LOS STRUCT DE INODOS, BLOQUES Y BITMAPS
+
+                                cout<<"Formateo Full Realizado Con Exito: "<<endl;
+                            }
+                            nombreR = true;
                             break;
-                        }
-
-                        if(ebr.part_next != -1){
-                            nuevoinicio = ebr.part_next;
-                            partOcupado = partOcupado + tam_ebr + ebr.part_size;
-                        }
-                        if(partOcupado >= tam_Particion){break;}
-                    }
-
-                    if(encontrado){
-                        //IMPORTANTE NO VOLARSE EL EBR, SUMAR EL TAMAÑO DE EBR AL DELETE
-                        //REALIZAR FORMATEO
-                        if(disco->type.toLower() == "fast"){
-
-                        }else if(disco->type.toLower() == "full"){
-
-                        }
-                        //ASIGNAR ESTRUCTURA EXT2 O EXT3
-                        if(disco->fs.toLower() == "2fs"){
-
-                        }else if(disco->fs.toLower() == "3fs"){
-
+                        }else{
+                            Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Debr,siguiente.part_next,SEEK_SET);
+                            fread(&siguiente,sizeof(EBR),1,Debr);
+                            fseek(Debr,0,SEEK_SET);
+                            fclose(Debr);
                         }
                     }
                 }

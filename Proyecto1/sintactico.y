@@ -10,6 +10,11 @@
     #include "clmkfs.h"
     #include "clexec.h"
     #include "clreportes.h"
+    #include "cllogin.h"
+    #include "clmkgrp.h"
+    #include "clrmgrp.h"
+    #include "clmkuser.h"
+    #include "clrmuser.h"
 
 
     extern int yylex(void);
@@ -20,6 +25,13 @@
     clmount *modisco = new clmount();
     clunmount *unmdisco = new clunmount();
     clmkfs *mkfsdisco = new clmkfs();
+
+    cllogin *loginn = new cllogin();
+    clmkgrp *mkgrpp = new clmkgrp();
+    clrmgrp *rmgrpp = new clrmgrp();
+    clmkuser *mkuserr = new clmkuser();
+    clrmuser *rmuserr = new clrmuser();
+
     clexec *script = new clexec();
     clReportes *reporte = new clReportes();
 
@@ -40,6 +52,13 @@
     class clmount *modiskk;
     class clunmount *unmdiskk;
     class clmkfs *mkdiskk;
+
+    class cllogin *clogin;
+    class clmkgrp *cmkgrp;
+    class clrmgrp *crmgrp;
+    class clmkuser *cmkuser;
+    class clrmuser *crmuser;
+
     class clexec *archexec;
     class clReportes *creporte;
 }
@@ -58,7 +77,7 @@
 %token <TEXT> unmount
 %token <TEXT> mkfs
 %token <TEXT> login
-%token <TEXT> logout
+%token <clogin> logout
 %token <TEXT> mkgrp
 %token <TEXT> rmgrp
 %token <TEXT> mkusr
@@ -125,6 +144,13 @@
 %type <modiskk>     COMMOUNT;
 %type <unmdiskk>    COMUNMOUNT;
 %type <mkdiskk>     COMFSDISK;
+
+%type <clogin>      COMLOGIN;
+%type <cmkgrp>      COMMKGRP;
+%type <crmgrp>      COMRMGRP;
+%type <cmkuser>     COMMKUSER;
+%type <crmuser>     COMRMUSER;
+
 %type <archexec>    COMEXEC;
 %type <creporte>    COMREPORTE;
 
@@ -139,8 +165,16 @@ COMANDOS:   mkdisk COMMKDISK                        {$2->mostrarDatos($2); cout<
             |mount COMMOUNT                         {$2->mostrarDatos($2); cout<<"Comando MOUNT"<<endl;};
             |unmount COMUNMOUNT                     {$2->mostrarDatos($2); cout<<"Comando UNMOUNT"<<endl;};
             |mkfs COMFSDISK                         {$2->mostrarDatos($2); cout<<"Comando MKFS"<<endl;};
+
+            |login COMLOGIN                         {$2->logear($2);       cout<<"Comando LOGIN"<<endl;};
+            |mkgrp COMMKGRP                         {$2->mostrarDatos($2); cout<<"Comando MKGRP"<<endl;};
+            |rmgrp COMRMGRP                         {$2->mostrarDatos($2); cout<<"Comando RMGRP"<<endl;};
+            |mkusr COMMKUSER                        {$2->mostrarDatos($2); cout<<"Comando MKUSER"<<endl;};
+            |rmusr COMRMUSER                        {$2->mostrarDatos($2); cout<<"Comando RMUSER"<<endl;};
+
             |execc COMEXEC                          {$2->mostrarDatos($2); cout<<"Comando EXEC"<<endl;};
             |rep COMREPORTE                         {$2->mostrarDatos($2); cout<<"Comando REPORTE"<<endl;};
+            |logout                                 {$1->salir();          cout<<"Comando LOGOUT"<<endl;};
             |pausee                                 {cout<<"Ingrese una tecla para continuar"<<endl; cin.get();};
             |comentario                             {};
 
@@ -241,5 +275,49 @@ COMREPORTE: pathh igual cadena COMREPORTE           {if(reporte->path==""){repor
             |namee igual cadena                     {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
             |namee igual ident                      {if(reporte->namee==""){reporte->namee=$3;} $$=reporte;};
             |id igual idp                           {if(reporte->id==""){reporte->id=$3;} $$=reporte;};
+
+COMLOGIN:   usr igual cadena COMLOGIN               {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
+            |usr igual ident COMLOGIN               {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
+            |pwd igual cadena COMLOGIN              {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
+            |pwd igual ident COMLOGIN               {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
+            |pwd igual digito COMLOGIN              {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
+            |id igual idp COMLOGIN                  {if(loginn->id==""){loginn->id=$3;} $$=loginn;};
+            |usr igual cadena                       {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
+            |usr igual ident                        {if(loginn->usr==""){loginn->usr=$3;} $$=loginn;};
+            |pwd igual cadena                       {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
+            |pwd igual ident                        {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
+            |pwd igual digito                       {if(loginn->pwd==""){loginn->pwd=$3;} $$=loginn;};
+            |id igual idp                           {if(loginn->id==""){loginn->id=$3;} $$=loginn;};
+
+COMMKGRP:   namee igual cadena COMMKGRP             {if(mkgrpp->name==""){mkgrpp->name=$3;} $$=mkgrpp;};
+            |namee igual ident COMMKGRP             {if(mkgrpp->name==""){mkgrpp->name=$3;} $$=mkgrpp;};
+            |namee igual cadena                     {if(mkgrpp->name==""){mkgrpp->name=$3;} $$=mkgrpp;};
+            |namee igual ident                      {if(mkgrpp->name==""){mkgrpp->name=$3;} $$=mkgrpp;};
+
+COMRMGRP:   namee igual cadena COMRMGRP             {if(rmgrpp->name==""){rmgrpp->name=$3;} $$=rmgrpp;};
+            |namee igual ident COMRMGRP             {if(rmgrpp->name==""){rmgrpp->name=$3;} $$=rmgrpp;};
+            |namee igual cadena                     {if(rmgrpp->name==""){rmgrpp->name=$3;} $$=rmgrpp;};
+            |namee igual ident                      {if(rmgrpp->name==""){rmgrpp->name=$3;} $$=rmgrpp;};
+
+COMMKUSER:  usr igual cadena COMMKUSER              {if(mkuserr->usr==""){mkuserr->usr=$3;} $$=mkuserr;};
+            |usr igual ident COMMKUSER              {if(mkuserr->usr==""){mkuserr->usr=$3;} $$=mkuserr;};
+            |pwd igual cadena COMMKUSER             {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |pwd igual ident COMMKUSER              {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |pwd igual digito COMMKUSER             {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |grp igual cadena COMMKUSER             {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |grp igual ident COMMKUSER              {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |usr igual cadena                       {if(mkuserr->usr==""){mkuserr->usr=$3;} $$=mkuserr;};
+            |usr igual ident                        {if(mkuserr->usr==""){mkuserr->usr=$3;} $$=mkuserr;};
+            |pwd igual cadena                       {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |pwd igual ident                        {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |pwd igual digito                        {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |grp igual cadena                       {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+            |grp igual ident                        {if(mkuserr->pwd==""){mkuserr->pwd=$3;} $$=mkuserr;};
+
+COMRMUSER:  usr igual cadena COMRMUSER              {if(rmuserr->usr==""){rmuserr->usr=$3;} $$=rmuserr;};
+            |usr igual ident COMRMUSER              {if(rmuserr->usr==""){rmuserr->usr=$3;} $$=rmuserr;};
+            |usr igual cadena                       {if(rmuserr->usr==""){rmuserr->usr=$3;} $$=rmuserr;};
+            |usr igual ident                        {if(rmuserr->usr==""){rmuserr->usr=$3;} $$=rmuserr;};
+
 
 %%
