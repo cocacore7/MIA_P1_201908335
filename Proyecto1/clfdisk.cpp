@@ -2145,70 +2145,109 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                 QString nombre3(part3.part_name);
                                 QString nombre4(part4.part_name);
                                 if(disco->namee == nombre1){
-                                    part1.part_fit = '.';
-                                    memset(part1.part_name,0,16);
-                                    part1.part_status = '.';
-                                    part1.part_type ='.';
-                                    part1.part_size = 0;
-                                    part1.part_start = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part1.part_fit = '.';
+                                        memset(part1.part_name,0,16);
+                                        part1.part_status = '.';
+                                        part1.part_type ='.';
+                                        part1.part_size = 0;
+                                        part1.part_start = 0;
 
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre1.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_1 = part1;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre1.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
+                                    }
                                 }else if(disco->namee == nombre2){
-                                    part2.part_fit = '.';
-                                    memset(part2.part_name,0,16);
-                                    part2.part_status = '.';
-                                    part2.part_type ='.';
-                                    part2.part_size = 0;
-                                    part2.part_start = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part2.part_fit = '.';
+                                        memset(part2.part_name,0,16);
+                                        part2.part_status = '.';
+                                        part2.part_type ='.';
+                                        part2.part_size = 0;
+                                        part2.part_start = 0;
 
-
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_2 = part2;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre2.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_2 = part2;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre2.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
+                                    }
                                 }else if(disco->namee == nombre3){
-                                    part3.part_fit = '.';
-                                    memset(part3.part_name,0,16);
-                                    part3.part_status = '.';
-                                    part3.part_type ='.';
-                                    part3.part_size = 0;
-                                    part3.part_start = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part3.part_fit = '.';
+                                        memset(part3.part_name,0,16);
+                                        part3.part_status = '.';
+                                        part3.part_type ='.';
+                                        part3.part_size = 0;
+                                        part3.part_start = 0;
 
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_3 = part3;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre3.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_3 = part3;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre3.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
+                                    }
                                 }else if(disco->namee == nombre4){
-                                    part4.part_fit = '.';
-                                    memset(part4.part_name,0,16);
-                                    part4.part_status = '.';
-                                    part4.part_type ='.';
-                                    part4.part_size = 0;
-                                    part4.part_start = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part4.part_fit = '.';
+                                        memset(part4.part_name,0,16);
+                                        part4.part_status = '.';
+                                        part4.part_type ='.';
+                                        part4.part_size = 0;
+                                        part4.part_start = 0;
 
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_4 = part4;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre4.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_4 = part4;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre4.toStdString().c_str()<<" Se a Eliminado FAST :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
+                                    }
                                 }else{
                                     if(part1.part_type == 'e' || part1.part_type == 'E'){
                                         EBR siguiente;
@@ -2229,36 +2268,56 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");
@@ -2293,36 +2352,56 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");
@@ -2357,36 +2436,56 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");
@@ -2421,36 +2520,56 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");
@@ -2533,105 +2652,145 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                 QString nombre3(part3.part_name);
                                 QString nombre4(part4.part_name);
                                 if(disco->namee == nombre1){
-                                    part1.part_fit = '.';
-                                    memset(part1.part_name,0,16);
-                                    part1.part_status = '.';
-                                    part1.part_type ='.';
-                                    part1.part_start = 0;
-                                    part1.part_size = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part1.part_fit = '.';
+                                        memset(part1.part_name,0,16);
+                                        part1.part_status = '.';
+                                        part1.part_type ='.';
+                                        part1.part_start = 0;
+                                        part1.part_size = 0;
 
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_1 = part1;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    //RELLENAR DE VACIOS
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,part1.part_start,SEEK_SET);
-                                    char vacio = '\0';
-                                    for(int x =0;x<part1.part_size;x++){
-                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_1 = part1;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        //RELLENAR DE VACIOS
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part1.part_start,SEEK_SET);
+                                        char vacio = '\0';
+                                        for(int x =0;x<part1.part_size;x++){
+                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                        }
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre1.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
                                     }
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre1.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
                                 }else if(disco->namee == nombre2){
-                                    part2.part_fit = '.';
-                                    memset(part2.part_name,0,16);
-                                    part2.part_status = '.';
-                                    part2.part_type ='.';
-                                    part2.part_start = 0;
-                                    part2.part_size = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part2.part_fit = '.';
+                                        memset(part2.part_name,0,16);
+                                        part2.part_status = '.';
+                                        part2.part_type ='.';
+                                        part2.part_start = 0;
+                                        part2.part_size = 0;
 
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_2 = part2;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    //RELLENAR DE VACIOS
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,part2.part_start,SEEK_SET);
-                                    char vacio = '\0';
-                                    for(int x =0;x<part2.part_size;x++){
-                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_2 = part2;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        //RELLENAR DE VACIOS
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part2.part_start,SEEK_SET);
+                                        char vacio = '\0';
+                                        for(int x =0;x<part2.part_size;x++){
+                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                        }
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre2.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
                                     }
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre2.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
                                 }else if(disco->namee == nombre3){
-                                    part3.part_fit = '.';
-                                    memset(part3.part_name,0,16);
-                                    part3.part_status = '.';
-                                    part3.part_type ='.';
-                                    part3.part_start = 0;
-                                    part3.part_size = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part3.part_fit = '.';
+                                        memset(part3.part_name,0,16);
+                                        part3.part_status = '.';
+                                        part3.part_type ='.';
+                                        part3.part_start = 0;
+                                        part3.part_size = 0;
 
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_3 = part3;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    //RELLENAR DE VACIOS
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,part3.part_start,SEEK_SET);
-                                    char vacio = '\0';
-                                    for(int x =0;x<part3.part_size;x++){
-                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_3 = part3;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        //RELLENAR DE VACIOS
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part3.part_start,SEEK_SET);
+                                        char vacio = '\0';
+                                        for(int x =0;x<part3.part_size;x++){
+                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                        }
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre3.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
                                     }
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre3.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
                                 }else if(disco->namee == nombre4){
-                                    part4.part_fit = '.';
-                                    memset(part4.part_name,0,16);
-                                    part4.part_status = '.';
-                                    part4.part_type ='.';
-                                    part4.part_start = 0;
-                                    part4.part_size = 0;
+                                    cout<<"Desea Eliminar La Particion?"<<endl;
+                                    char entrada;
+                                    printf(">> [S/N] ");
+                                    cin>>entrada;
+                                    if(entrada == 'S' || entrada == 's'){
+                                        part4.part_fit = '.';
+                                        memset(part4.part_name,0,16);
+                                        part4.part_status = '.';
+                                        part4.part_type ='.';
+                                        part4.part_start = 0;
+                                        part4.part_size = 0;
 
-                                    //Guardamos MBR
-                                    mbr.mbr_partition_4 = part4;
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fwrite(&mbr,sizeof (MBR),1,Discoo);
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    //RELLENAR DE VACIOS
-                                    Discoo=fopen(com,"rb+");
-                                    fseek(Discoo,part4.part_start,SEEK_SET);
-                                    char vacio = '\0';
-                                    for(int x =0;x<part4.part_size;x++){
-                                        fwrite(&vacio,sizeof (char),1,Discoo);
+                                        //Guardamos MBR
+                                        mbr.mbr_partition_4 = part4;
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fwrite(&mbr,sizeof (MBR),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        //RELLENAR DE VACIOS
+                                        Discoo=fopen(com,"rb+");
+                                        fseek(Discoo,part4.part_start,SEEK_SET);
+                                        char vacio = '\0';
+                                        for(int x =0;x<part4.part_size;x++){
+                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                        }
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                        cout<<"Particion: "<<nombre4.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
+                                    }else if(entrada == 'n' || entrada == 'N'){
+                                        cout<<"No se Elimino La Particion"<<endl;
+                                    }else{
+                                        cout<<"Opcion Incorrecta"<<endl;
                                     }
-                                    fseek(Discoo,0,SEEK_SET);
-                                    fclose(Discoo);
-                                    cout<<"Particion: "<<nombre4.toStdString().c_str()<<" Se a Eliminado FULL :D"<<endl;
                                 }else{
                                     if(part1.part_type == 'e' || part1.part_type == 'E'){
                                         EBR siguiente;
@@ -2652,57 +2811,77 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
 
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");
@@ -2737,57 +2916,77 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
 
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");
@@ -2822,57 +3021,77 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
 
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");
@@ -2907,57 +3126,77 @@ void clfdisk::mostrarDatos(clfdisk *disco){
                                             fclose(Discoo);
                                             QString nombreChar(siguiente.part_name);
                                             if(disco->namee == nombreChar){
-                                                if(siguiente.part_next != -1){
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
+                                                cout<<"Desea Eliminar La Particion?"<<endl;
+                                                char entrada;
+                                                printf(">> [S/N] ");
+                                                cin>>entrada;
+                                                if(entrada == 'S' || entrada == 's'){
+                                                    if(siguiente.part_next != -1){
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
 
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        ebr.part_next = siguiente.part_start;
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }else{
+                                                        ebr.part_next = -1;
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,ebr.part_start,SEEK_SET);
+                                                        fwrite(&ebr,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        //RELLENAR DE VACIOS
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_start,SEEK_SET);
+                                                        char vacio = '\0';
+                                                        for(int x =0;x<siguiente.part_size;x++){
+                                                            fwrite(&vacio,sizeof (char),1,Discoo);
+                                                        }
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+
+                                                        Discoo=fopen(com,"rb+");
+                                                        fseek(Discoo,siguiente.part_next,SEEK_SET);
+                                                        fread(&siguiente,sizeof(EBR),1,Discoo);
+                                                        fseek(Discoo,0,SEEK_SET);
+                                                        fclose(Discoo);
+                                                        nombreR = true;
+                                                        break;
+                                                    }
+                                                }else if(entrada == 'n' || entrada == 'N'){
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-
-                                                    ebr.part_next = siguiente.part_start;
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"No se Elimino La Particion"<<endl;
                                                 }else{
-                                                    ebr.part_next = -1;
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,ebr.part_start,SEEK_SET);
-                                                    fwrite(&ebr,sizeof(EBR),1,Discoo);
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
-                                                    //RELLENAR DE VACIOS
-                                                    Discoo=fopen(com,"rb+");
-                                                    fseek(Discoo,siguiente.part_start,SEEK_SET);
-                                                    char vacio = '\0';
-                                                    for(int x =0;x<siguiente.part_size;x++){
-                                                        fwrite(&vacio,sizeof (char),1,Discoo);
-                                                    }
-                                                    fseek(Discoo,0,SEEK_SET);
-                                                    fclose(Discoo);
-
                                                     Discoo=fopen(com,"rb+");
                                                     fseek(Discoo,siguiente.part_next,SEEK_SET);
                                                     fread(&siguiente,sizeof(EBR),1,Discoo);
                                                     fseek(Discoo,0,SEEK_SET);
                                                     fclose(Discoo);
-                                                    nombreR = true;
-                                                    break;
+                                                    cout<<"Opcion Incorrecta"<<endl;
                                                 }
                                             }else{
                                                 Discoo=fopen(com,"rb+");

@@ -22,7 +22,8 @@ SOURCES += \
         main.cpp \
         mbrstruct.cpp \
         parser.cpp \
-        scanner.cpp
+        scanner.cpp \
+        spstruct.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -45,4 +46,5 @@ HEADERS += \
     mbrstruct.h \
     parser.h \
     scanner.h \
-    sintactico.y
+    sintactico.y \
+    spstruct.h
