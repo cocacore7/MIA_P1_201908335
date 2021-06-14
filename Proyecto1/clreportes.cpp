@@ -1692,7 +1692,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
 
                 QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
                 system(comando.toStdString().c_str());
-                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+                cout<<"El Reporte Journaling Se Creo Exitosamente :D"<<endl;
             }else{
                 cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
             }
@@ -1831,7 +1831,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
 
                 QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
                 system(comando.toStdString().c_str());
-                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+                cout<<"El Reporte Inode Se Creo Exitosamente :D"<<endl;
             }else{
                 cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
             }
@@ -2026,7 +2026,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
 
                 QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
                 system(comando.toStdString().c_str());
-                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+                cout<<"El Reporte Block Se Creo Exitosamente :D"<<endl;
             }else{
                 cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
             }
@@ -2054,16 +2054,48 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 inicio+=sizeof(bit);
             }
 
-            //AQUI CREAMOS ARCHIVO TXT
-            QString rutatxt = "/home/oscar/archivos/bm_inodos.txt";
-            ofstream txt;
-            txt.open(rutatxt.toStdString().c_str(),ios::out);
-            if(txt.fail()){
-                cout<<"No Se Creo El Archivo .dot"<<endl;
+            QStringList direccionReporte = reporte->path.split("/");
+            QString rutaR = "";
+            bool primera = false;
+            if(direccionReporte[1] == "home" && direccionReporte[2] == "archivos"){
+                rutaR = "/home/oscar/archivos";
+                for(int x=3;x<(direccionReporte.length()-1);x++){
+                    if(primera){
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + direccionReporte[x] + "/";
+                    }else{
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + "/" + direccionReporte[x] + "/";
+                        primera = true;
+                    }
+                }
             }
-            txt<<StringReporte.toStdString().c_str();
-            txt.close();
-            cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+
+            QString aux =direccionReporte[direccionReporte.length()-1];
+            QStringList extensionReporte = aux.split(".");
+            QString rutadot = rutaR;
+            if(extensionReporte[1].toLower() == "txt"){
+                //AQUI CREAMOS ARCHIVO FISICO
+                if(primera){
+                    rutaR = rutaR + aux;
+                }else{
+                    rutaR = rutaR + "/" + aux;
+                }
+                //EJECUTAR COMANDO GRAPVHIZ
+                rutadot = rutadot + "/" + extensionReporte[0] + ".txt";
+                ofstream dot;
+                dot.open(rutadot.toStdString().c_str(),ios::out);
+                if(dot.fail()){
+                    cout<<"No Se Creo El Archivo .dot"<<endl;
+                }
+                dot<<StringReporte.toStdString().c_str();
+                dot.close();
+                cout<<"El Reporte Bm_Inode Se Creo Exitosamente :D"<<endl;
+            }else{
+                cout<<"Extension de Reporte incorrecta, no es .txt"<<endl;
+            }
 
         }else if(reporte->namee.toLower() == "bm_block"){
             cout<<"-----------------------ReporteBM_BLOCK---------------------"<<endl;
@@ -2089,18 +2121,340 @@ void clReportes::mostrarDatos(clReportes *reporte){
             }
 
             //AQUI CREAMOS ARCHIVO TXT
-            QString rutatxt = "/home/oscar/archivos/bm_bloques.txt";
-            ofstream txt;
-            txt.open(rutatxt.toStdString().c_str(),ios::out);
-            if(txt.fail()){
-                cout<<"No Se Creo El Archivo .dot"<<endl;
+            QStringList direccionReporte = reporte->path.split("/");
+            QString rutaR = "";
+            bool primera = false;
+            if(direccionReporte[1] == "home" && direccionReporte[2] == "archivos"){
+                rutaR = "/home/oscar/archivos";
+                for(int x=3;x<(direccionReporte.length()-1);x++){
+                    if(primera){
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + direccionReporte[x] + "/";
+                    }else{
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + "/" + direccionReporte[x] + "/";
+                        primera = true;
+                    }
+                }
             }
-            txt<<StringReporte.toStdString().c_str();
-            txt.close();
-            cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+
+            QString aux =direccionReporte[direccionReporte.length()-1];
+            QStringList extensionReporte = aux.split(".");
+            QString rutadot = rutaR;
+            if(extensionReporte[1].toLower() == "txt"){
+                //AQUI CREAMOS ARCHIVO FISICO
+                if(primera){
+                    rutaR = rutaR + aux;
+                }else{
+                    rutaR = rutaR + "/" + aux;
+                }
+                //EJECUTAR COMANDO GRAPVHIZ
+                rutadot = rutadot + "/" + extensionReporte[0] + ".txt";
+                ofstream dot;
+                dot.open(rutadot.toStdString().c_str(),ios::out);
+                if(dot.fail()){
+                    cout<<"No Se Creo El Archivo .dot"<<endl;
+                }
+                dot<<StringReporte.toStdString().c_str();
+                dot.close();
+                cout<<"El Reporte Bm_Block Se Creo Exitosamente :D"<<endl;
+            }else{
+                cout<<"Extension de Reporte incorrecta, no es .txt"<<endl;
+            }
 
         }else if(reporte->namee.toLower() == "tree"){
             cout<<"-----------------------ReporteTREE---------------------"<<endl;
+            StringReporte = "digraph G { bgcolor=\"yellow:purple\"\n";
+
+            QStringList posINodos;
+            char bit = 'a';
+            int inicio = sb.s_bm_inode_start;
+            int contador = 0;
+            while (inicio < (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&bit,sizeof(bit),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                if(bit == '1'){
+                    QString num = QStringLiteral("%1").arg(contador);
+                    posINodos.append(num);
+                }
+                contador++;
+                inicio+=sizeof(bit);
+            }
+
+            QStringList posBloques;
+            bit = 'a';
+            inicio = sb.s_bm_block_start;
+            contador = 0;
+            while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&bit,sizeof(bit),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                if(bit == '1'){
+                    QString num = QStringLiteral("%1").arg(contador);
+                    posBloques.append(num);
+                }
+                contador++;
+                inicio+=sizeof(bit);
+            }
+
+            TablaInodos inodoT;
+            inicio = sb.s_inode_start;
+            FILE *Particion;
+            int cantInodos = 0;
+            int cantBloques = 0;
+            BloquesApuntadores apuntador;
+            BloquesArchivos archivo;
+            BloquesCarpetas carpeta;
+            QStringList nodos;
+            while (inicio < sb.s_block_start) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&inodoT,sizeof(inodoT),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                inicio+=sizeof(inodoT);
+                if(inodoT.i_type == '\0'){break;}
+
+                //CREAMOS BLOQUE INODO
+                StringReporte += "i" + posINodos[cantInodos] + " [shape=record,label=\"{ Inodo " + posINodos[cantInodos] + " |";
+
+                QString uid = QStringLiteral("%1").arg(inodoT.i_uid);
+                StringReporte += "{i_uid | " + uid + "}|";
+                QString gid = QStringLiteral("%1").arg(inodoT.i_gid);
+                StringReporte += "{i_gid | " + gid + "}|";
+                QString zise = QStringLiteral("%1").arg(inodoT.i_size);
+                StringReporte += "{i_zise | " + zise + "}|";
+                struct tm *tm;
+                tm=localtime(&inodoT.i_atime);
+                QString dia = QStringLiteral("%1").arg(tm->tm_mday);
+                QString mes = QStringLiteral("%1").arg(tm->tm_mon);
+                QString anio = QStringLiteral("%1").arg(tm->tm_year);
+                QString hora = QStringLiteral("%1").arg(tm->tm_hour);
+                QString min = QStringLiteral("%1").arg(tm->tm_min);
+                QString seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "{i_atime | "+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +" }|";
+                tm=localtime(&inodoT.i_ctime);
+                dia = QStringLiteral("%1").arg(tm->tm_mday);
+                mes = QStringLiteral("%1").arg(tm->tm_mon);
+                anio = QStringLiteral("%1").arg(tm->tm_year);
+                hora = QStringLiteral("%1").arg(tm->tm_hour);
+                min = QStringLiteral("%1").arg(tm->tm_min);
+                seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "{i_ctime | "+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +" }|";
+                tm=localtime(&inodoT.i_mtime);
+                dia = QStringLiteral("%1").arg(tm->tm_mday);
+                mes = QStringLiteral("%1").arg(tm->tm_mon);
+                anio = QStringLiteral("%1").arg(tm->tm_year);
+                hora = QStringLiteral("%1").arg(tm->tm_hour);
+                min = QStringLiteral("%1").arg(tm->tm_min);
+                seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "{i_mtime | "+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +" }|";
+                for(int x=0;x<15;x++){
+                    QString numblock = QStringLiteral("%1").arg(x);
+                    QString puntblock = QStringLiteral("%1").arg(inodoT.i_block[x]);
+                    StringReporte += "{i_block " + numblock + " | " + puntblock + "}|";
+                }
+                QString tipo(inodoT.i_type);
+                StringReporte += "{i_type | " + tipo + "}|";
+                QString perm = QStringLiteral("%1").arg(inodoT.i_perm);
+                StringReporte += "{i_perm | " + perm + "}|";
+
+                StringReporte += " }\"];\n";
+                nodos.append("i"+posINodos[cantInodos]);
+                cantInodos++;
+
+                //CREAMOS LOS BLOQUES CONECTADOS AL INODO
+                for(int x = 0;x<15;x++){
+                    if(inodoT.i_block[x] != -1){
+                        for(int x=0;x<4;x++){
+                            carpeta.b_content[x].b_inodo = -1;
+                            memset(carpeta.b_content[x].b_name,0,12);
+                        }
+                        memset(archivo.b_content,0,64);
+                        for(int x=0;x<16;x++){
+                            apuntador.b_pointers[x] = -1;
+                        }
+                        if(x == 14){
+                            //Apuntador triple
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                            fread(&apuntador,sizeof(apuntador),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            nodos.append("b"+posBloques[cantBloques]);
+                            StringReporte += "b" + posBloques[cantBloques] + " [shape=record,label=\"{ Bloque Puntero " + posBloques[cantBloques] + " |";
+                            for(int x=0;x<16;x++){
+                                QString numP = QStringLiteral("%1").arg(x);
+                                QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
+                                StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";
+                                if(apuntador.b_pointers[x] != -1){
+                                    nodos.append("b"+posBloques[cantBloques]+"b"+apuntador.b_pointers[x]);
+                                }
+                            }
+                            StringReporte += " }\"];\n";
+                            cantBloques++;
+                        }else if(x==13){
+                            //Apuntador doble
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                            fread(&apuntador,sizeof(apuntador),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            nodos.append("b"+posBloques[cantBloques]);
+                            StringReporte += "b" + posBloques[cantBloques] + " [shape=record,label=\"{ Bloque Puntero " + posBloques[cantBloques] + " |";
+                            for(int x=0;x<16;x++){
+                                QString numP = QStringLiteral("%1").arg(x);
+                                QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
+                                StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";if(apuntador.b_pointers[x] != -1){
+                                    nodos.append("b"+posBloques[cantBloques]+"b"+apuntador.b_pointers[x]);
+                                }
+                            }
+                            StringReporte += " }\"];\n";
+                            cantBloques++;
+                        }else if(x==12){
+                            //Apuntador simple
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                            fread(&apuntador,sizeof(apuntador),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            nodos.append("b"+posBloques[cantBloques]);
+                            StringReporte += "b" + posBloques[cantBloques] + " [shape=record,label=\"{ Bloque Puntero " + posBloques[cantBloques] + " |";
+                            for(int x=0;x<16;x++){
+                                QString numP = QStringLiteral("%1").arg(x);
+                                QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
+                                StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";
+                                if(apuntador.b_pointers[x] != -1){
+                                    nodos.append("b"+posBloques[cantBloques]+"b"+apuntador.b_pointers[x]);
+                                }
+                            }
+                            StringReporte += " }\"];\n";
+                            cantBloques++;
+                        }else{
+                            if(inodoT.i_type == '0'){
+                                //Carpeta
+                                //donde empiezan bloques + (intapuntador * 64)
+                                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                                fread(&carpeta,sizeof(carpeta),1,Particion);
+                                fseek(Particion,0,SEEK_SET);
+                                fclose(Particion);
+
+                                StringReporte += "b" + posBloques[cantBloques] + " [shape=record,label=\"{ Bloque Carpeta " + posBloques[cantBloques] + " |";
+                                nodos.append("b"+posBloques[cantBloques]);
+                                for(int x=0;x<4;x++){
+                                    QString nombreC_A(carpeta.b_content[x].b_name);
+                                    QString Puntero = QStringLiteral("%1").arg(carpeta.b_content[x].b_inodo);
+                                    StringReporte += "{ " + nombreC_A + " | " + Puntero + "}|";
+                                    if(carpeta.b_content[x].b_inodo != -1){
+                                        nodos.append("b"+posBloques[cantBloques]+"i"+posINodos[cantInodos]);
+                                    }
+                                }
+                                StringReporte += " }\"];\n";
+
+                                cantBloques++;
+                            }else{
+                                //Archivo
+                                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                                fread(&archivo,sizeof(archivo),1,Particion);
+                                fseek(Particion,0,SEEK_SET);
+                                fclose(Particion);
+
+                                QString contenido(archivo.b_content);
+                                StringReporte += "b" + posBloques[cantBloques] + " [shape=record,label=\"{Bloque Archivo " + posBloques[cantBloques] + " |" + contenido + " }\"];\n";
+                                nodos.append("b"+posBloques[cantBloques]);
+                                cantBloques++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            QString pivote = "";
+            for(int x = 1;x<nodos.length();x++){
+                QString numnodo = nodos[x];
+                QString numnodo2 = nodos[x-1];
+                if(numnodo.length() == 4){
+                    QChar letra = numnodo[0];
+                    QChar letra2 = numnodo[1];
+                    QString bloquelet(letra);
+                    QString bloquenum(letra2);
+                    QString bloque = bloquelet+bloquenum;
+
+                    QChar letr3 = numnodo[2];
+                    QChar letra4 = numnodo[3];
+                    QString inodolet(letr3);
+                    QString inodonum(letra4);
+                    QString inodo = inodolet+inodonum;
+                    StringReporte += bloque + " -> " + inodo + " \n";
+                }else {
+                    if(numnodo2.length() == 2){
+                        if(numnodo2[0] == 'i'){
+                            pivote = numnodo2;
+                        }
+                        StringReporte += pivote + " -> " + numnodo + " \n";
+                    }
+                }
+            }
+
+            StringReporte += "}\n";
+
+            QStringList direccionReporte = reporte->path.split("/");
+            QString rutaR = "";
+            bool primera = false;
+            if(direccionReporte[1] == "home" && direccionReporte[2] == "archivos"){
+                rutaR = "/home/oscar/archivos";
+                for(int x=3;x<(direccionReporte.length()-1);x++){
+                    if(primera){
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + direccionReporte[x] + "/";
+                    }else{
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + "/" + direccionReporte[x] + "/";
+                        primera = true;
+                    }
+                }
+            }
+
+            QString aux =direccionReporte[direccionReporte.length()-1];
+            QStringList extensionReporte = aux.split(".");
+            QString rutadot = rutaR;
+            if(extensionReporte[1].toLower() == "jpg"){
+                //AQUI CREAMOS ARCHIVO FISICO
+                if(primera){
+                    rutaR = rutaR + aux;
+                }else{
+                    rutaR = rutaR + "/" + aux;
+                }
+                //EJECUTAR COMANDO GRAPVHIZ
+                rutadot = rutadot + "/" + extensionReporte[0] + ".dot";
+                ofstream dot;
+                dot.open(rutadot.toStdString().c_str(),ios::out);
+                if(dot.fail()){
+                    cout<<"No Se Creo El Archivo .dot"<<endl;
+                }
+                dot<<StringReporte.toStdString().c_str();
+                dot.close();
+
+                QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
+                system(comando.toStdString().c_str());
+                cout<<"El Reporte Block Se Creo Exitosamente :D"<<endl;
+            }else{
+                cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
+            }
 
         }else if(reporte->namee.toLower() == "sb"){
             cout<<"-----------------------ReporteSB---------------------"<<endl;
@@ -2360,7 +2714,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
 
                 QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
                 system(comando.toStdString().c_str());
-                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+                cout<<"El Reporte SupberBloque Se Creo Exitosamente :D"<<endl;
             }else{
                 cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
             }
