@@ -5,6 +5,14 @@
 #include <fstream>
 #include <mbrstruct.h>
 #include <ebrstruct.h>
+//ESTRUCTURAS --------------
+#include <sbstruct.h>
+#include <journalingstruct.h>
+#include <tinodosstruct.h>
+#include <bloquesapstruct.h>
+#include <bloquesarstruct.h>
+#include <bloquescastruct.h>
+//-------------------------------------------
 //Necesario Para Usar Montada --------------
 #include <clmontada.h>
 #include <cabeceramontadas.h>
@@ -74,6 +82,7 @@ void clmount::mostrarDatos(clmount *disco){
                         QString nombre2(part2.part_name);
                         QString nombre3(part3.part_name);
                         QString nombre4(part4.part_name);
+                        SuperBloque sb;
                         if(disco->namee == nombre1){
                             //GENERAR ID Y MONTAR PARTICION 1
                             QString nombreP(part1.part_name);
@@ -84,6 +93,24 @@ void clmount::mostrarDatos(clmount *disco){
 
                             part1.part_status = 'A';
                             mbr.mbr_partition_1 = part1;
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part1.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_mnt_count++;
+                                sb.s_mtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
+
                             Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                             fseek(Discoo,0,SEEK_SET);
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
@@ -99,6 +126,24 @@ void clmount::mostrarDatos(clmount *disco){
 
                             part2.part_status = 'A';
                             mbr.mbr_partition_2 = part2;
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part2.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_mnt_count++;
+                                sb.s_mtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part2.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
+
                             Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                             fseek(Discoo,0,SEEK_SET);
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
@@ -114,6 +159,24 @@ void clmount::mostrarDatos(clmount *disco){
 
                             part3.part_status = 'A';
                             mbr.mbr_partition_3 = part3;
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part3.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_mnt_count++;
+                                sb.s_mtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part3.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
+
                             Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                             fseek(Discoo,0,SEEK_SET);
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
@@ -129,6 +192,24 @@ void clmount::mostrarDatos(clmount *disco){
 
                             part4.part_status = 'A';
                             mbr.mbr_partition_4 = part4;
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part4.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_mnt_count++;
+                                sb.s_mtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part4.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
+
                             Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                             fseek(Discoo,0,SEEK_SET);
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
@@ -181,6 +262,24 @@ void clmount::mostrarDatos(clmount *disco){
                                     lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P1","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_mnt_count++;
+                                        sb.s_mtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
+
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                                     fseek(Discoo,ebr.part_start,SEEK_SET);
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);
@@ -237,6 +336,24 @@ void clmount::mostrarDatos(clmount *disco){
                                     lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P2","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_mnt_count++;
+                                        sb.s_mtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
+
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                                     fseek(Discoo,ebr.part_start,SEEK_SET);
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);
@@ -292,6 +409,24 @@ void clmount::mostrarDatos(clmount *disco){
                                     lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P3","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_mnt_count++;
+                                        sb.s_mtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
+
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                                     fseek(Discoo,ebr.part_start,SEEK_SET);
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);
@@ -347,6 +482,24 @@ void clmount::mostrarDatos(clmount *disco){
                                     lista.insertarNodo(lista.lista,id,nombreP,discofisico[0],ruta,"P4","L",fit,"A",ebr.part_start,ebr.part_size,ebr.part_next);
 
                                     ebr.part_status = 'A';
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_mnt_count++;
+                                        sb.s_mtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
+
                                     Discoo=fopen(ruta.toStdString().c_str(),"rb+");
                                     fseek(Discoo,ebr.part_start,SEEK_SET);
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);

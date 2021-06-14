@@ -120,8 +120,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 2;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -146,8 +146,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 3;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -261,8 +261,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                 //Archivo USERS
                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                 fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                fwrite(&nuevo,sizeof(nuevo),1,Particion);
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
 
@@ -305,8 +311,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 2;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -331,8 +337,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 3;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -446,8 +452,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                 //Archivo USERS
                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                 fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                fwrite(&nuevo,sizeof(nuevo),1,Particion);
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
 
@@ -490,8 +502,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 2;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -516,8 +528,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 3;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -631,8 +643,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                 //Archivo USERS
                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                 fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                fwrite(&nuevo,sizeof(nuevo),1,Particion);
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
 
@@ -675,8 +693,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 2;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -701,8 +719,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_filesystem_type = 3;
                     sb.s_inodes_count = n;
                     sb.s_blocks_count = n*3;
-                    sb.s_free_blocks_count = n*3;
-                    sb.s_free_inodes_count = n;
+                    sb.s_free_blocks_count = (n*3)-2;
+                    sb.s_free_inodes_count = n-2;
                     sb.s_mtime = time(NULL);
                     sb.s_umtime = time(NULL);
                     sb.s_mnt_count = 1;
@@ -816,8 +834,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                 //Archivo USERS
                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                 fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                fwrite(&nuevo,sizeof(nuevo),1,Particion);
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
 
@@ -881,8 +905,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 2;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -909,8 +933,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 3;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -1025,8 +1049,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                             //Archivo USERS
                             Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                            fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                            fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                             fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                            fwrite(&nuevo,sizeof(nuevo),1,Particion);
                             fseek(Particion,0,SEEK_SET);
                             fclose(Particion);
 
@@ -1096,8 +1126,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 2;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -1124,8 +1154,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 3;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -1240,8 +1270,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                             //Archivo USERS
                             Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                            fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                            fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                             fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                            fwrite(&nuevo,sizeof(nuevo),1,Particion);
                             fseek(Particion,0,SEEK_SET);
                             fclose(Particion);
 
@@ -1311,8 +1347,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 2;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -1339,8 +1375,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 3;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -1455,8 +1491,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                             //Archivo USERS
                             Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                            fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                            fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                             fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                            fwrite(&nuevo,sizeof(nuevo),1,Particion);
                             fseek(Particion,0,SEEK_SET);
                             fclose(Particion);
 
@@ -1526,8 +1568,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 2;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -1554,8 +1596,8 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_filesystem_type = 3;
                                 sb.s_inodes_count = n;
                                 sb.s_blocks_count = n*3;
-                                sb.s_free_blocks_count = n*3;
-                                sb.s_free_inodes_count = n;
+                                sb.s_free_blocks_count = (n*3)-2;
+                                sb.s_free_inodes_count = n-2;
                                 sb.s_mtime = time(NULL);
                                 sb.s_umtime = time(NULL);
                                 sb.s_mnt_count = 1;
@@ -1670,8 +1712,14 @@ void clmkfs::mostrarDatos(clmkfs *disco){
 
                             //Archivo USERS
                             Particion=fopen(ruta.toStdString().c_str(),"rb+");
-                            fseek(Particion,sb.s_bm_inode_start,SEEK_SET);
+                            fseek(Particion,sb.s_bm_inode_start + sizeof (nuevo),SEEK_SET);
                             fwrite(&nuevo,sizeof(nuevo) + sizeof(nuevo),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_bm_block_start + sizeof (nuevo),SEEK_SET);
+                            fwrite(&nuevo,sizeof(nuevo),1,Particion);
                             fseek(Particion,0,SEEK_SET);
                             fclose(Particion);
 

@@ -5,6 +5,14 @@
 #include <QStringList>
 #include <mbrstruct.h>
 #include <ebrstruct.h>
+//ESTRUCTURAS --------------
+#include <sbstruct.h>
+#include <journalingstruct.h>
+#include <tinodosstruct.h>
+#include <bloquesapstruct.h>
+#include <bloquesarstruct.h>
+#include <bloquescastruct.h>
+//-------------------------------------------
 //Necesario Para Usar Montada --------------
 #include <clmontada.h>
 #include <cabeceramontadas.h>
@@ -24,9 +32,7 @@ void clunmount::mostrarDatos(clunmount *disco){
         QStringList eliminar = retorno.split(",");
         if(eliminar[0] != ""){
             QStringList direcciones = eliminar[0].split("/");
-            QString tip = eliminar[1];
             QString part = eliminar[2];
-            QString nombreebr = eliminar[4];
             QString ruta = "";
             bool NoCarpeta = false;
             if(direcciones[1] == "home" && direcciones[2] == "oscar"){
@@ -72,6 +78,7 @@ void clunmount::mostrarDatos(clunmount *disco){
                         part2 = mbr.mbr_partition_2;
                         part3 = mbr.mbr_partition_3;
                         part4 = mbr.mbr_partition_4;
+                        SuperBloque sb;
                         if(part == "P1"){
                             //CAMBIAR ESTADO MBR A "N"
                             part1.part_status = 'N';
@@ -81,6 +88,23 @@ void clunmount::mostrarDatos(clunmount *disco){
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
                             fseek(Discoo,0,SEEK_SET);
                             fclose(Discoo);
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part1.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_umtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part1.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
+
                         }else if(part == "P2"){
                             //CAMBIAR ESTADO MBR A "N"
                             part2.part_status = 'N';
@@ -90,6 +114,22 @@ void clunmount::mostrarDatos(clunmount *disco){
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
                             fseek(Discoo,0,SEEK_SET);
                             fclose(Discoo);
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part2.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_umtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part2.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
                         }else if(part == "P3"){
                             //CAMBIAR ESTADO MBR A "N"
                             part3.part_status = 'N';
@@ -99,6 +139,22 @@ void clunmount::mostrarDatos(clunmount *disco){
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
                             fseek(Discoo,0,SEEK_SET);
                             fclose(Discoo);
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part3.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_umtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part3.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
                         }else if(part == "P4"){
                             //CAMBIAR ESTADO MBR A "N"
                             part4.part_status = 'N';
@@ -108,6 +164,22 @@ void clunmount::mostrarDatos(clunmount *disco){
                             fwrite(&mbr,sizeof(MBR),1,Discoo);
                             fseek(Discoo,0,SEEK_SET);
                             fclose(Discoo);
+
+                            //LEER SUPER BLOQUE
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part4.part_start,SEEK_SET);
+                            fread(&sb,sizeof(sb),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                sb.s_umtime = time(NULL);
+                                Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Discoo,part4.part_start,SEEK_SET);
+                                fwrite(&sb,sizeof(sb),1,Discoo);
+                                fseek(Discoo,0,SEEK_SET);
+                                fclose(Discoo);
+                            }
                         }else{
                             if(part1.part_type == 'e' || part1.part_type == 'E'){
                                 Discoo=fopen(com,"rb+");
@@ -156,6 +228,22 @@ void clunmount::mostrarDatos(clunmount *disco){
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_umtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }
@@ -206,6 +294,22 @@ void clunmount::mostrarDatos(clunmount *disco){
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_umtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }
@@ -255,6 +359,22 @@ void clunmount::mostrarDatos(clunmount *disco){
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_umtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }
@@ -304,6 +424,22 @@ void clunmount::mostrarDatos(clunmount *disco){
                                     fwrite(&ebr,sizeof(EBR),1,Discoo);
                                     fseek(Discoo,0,SEEK_SET);
                                     fclose(Discoo);
+
+                                    //LEER SUPER BLOQUE
+                                    Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Discoo);
+                                    fseek(Discoo,0,SEEK_SET);
+                                    fclose(Discoo);
+
+                                    if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                                        sb.s_umtime = time(NULL);
+                                        Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                                        fseek(Discoo,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                        fwrite(&sb,sizeof(sb),1,Discoo);
+                                        fseek(Discoo,0,SEEK_SET);
+                                        fclose(Discoo);
+                                    }
                                 }else{
                                     cout<<"El nombre No Existe En Ninguna Particion"<<endl;
                                 }

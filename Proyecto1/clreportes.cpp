@@ -7,6 +7,14 @@
 #include <ebrstruct.h>
 #include <time.h>
 #include <fstream>
+//ESTRUCTURAS --------------
+#include <sbstruct.h>
+#include <journalingstruct.h>
+#include <tinodosstruct.h>
+#include <bloquesapstruct.h>
+#include <bloquesarstruct.h>
+#include <bloquescastruct.h>
+//-------------------------------------------
 //Necesario Para Usar Montada --------------
 #include <clmontada.h>
 #include <cabeceramontadas.h>
@@ -19,8 +27,8 @@ clReportes::clReportes()
 void clReportes::mostrarDatos(clReportes *reporte){
     if(lista.comprobarId(lista.lista,reporte->id)){
         reporte->path.remove(QChar('"'), Qt::CaseInsensitive);
-        ListaM aux = lista.obtenerNodo(lista.lista,reporte->id);
-        QStringList direcciones = aux->ruta.split("/");
+        ListaM Listaaux = lista.obtenerNodo(lista.lista,reporte->id);
+        QStringList direcciones = Listaaux->ruta.split("/");
         QString ruta = "/home/oscar/archivos";
         QString StringReporte ="";
         bool NoCarpeta = false;
@@ -30,6 +38,15 @@ void clReportes::mostrarDatos(clReportes *reporte){
         struct particion part2;
         struct particion part3;
         struct particion part4;
+
+        SuperBloque sb;
+
+        FILE* Debr;
+        FILE* Particion;
+        EBR siguiente;
+        EBR ebr;
+        int iniciojour = 0;
+        int tamP = 0;
 
         for(int x=4;x<(direcciones.length()-1);x++){
             ruta = ruta + "/" + direcciones[x];
@@ -64,6 +81,196 @@ void clReportes::mostrarDatos(clReportes *reporte){
                     part2 = mbr.mbr_partition_2;
                     part3 = mbr.mbr_partition_3;
                     part4 = mbr.mbr_partition_4;
+                    QString nombre1(part1.part_name);
+                    QString nombre2(part2.part_name);
+                    QString nombre3(part3.part_name);
+                    QString nombre4(part4.part_name);
+
+                    if(Listaaux->nombreP == nombre1){
+                        //LEER SUPER BLOQUE
+                        Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                        fseek(Particion,part1.part_start,SEEK_SET);
+                        fread(&sb,sizeof(sb),1,Particion);
+                        fseek(Particion,0,SEEK_SET);
+                        fclose(Particion);
+                        iniciojour = part1.part_start + sizeof (SuperBloque);
+                        tamP = part1.part_size;
+
+                    }else if(Listaaux->nombreP == nombre2){
+                        //LEER SUPER BLOQUE
+                        Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                        fseek(Particion,part2.part_start,SEEK_SET);
+                        fread(&sb,sizeof(sb),1,Particion);
+                        fseek(Particion,0,SEEK_SET);
+                        fclose(Particion);
+                        iniciojour = part2.part_start + sizeof (SuperBloque);
+                        tamP = part2.part_size;
+
+                    }else if(Listaaux->nombreP == nombre3){
+                        //LEER SUPER BLOQUE
+                        Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                        fseek(Particion,part3.part_start,SEEK_SET);
+                        fread(&sb,sizeof(sb),1,Particion);
+                        fseek(Particion,0,SEEK_SET);
+                        fclose(Particion);
+                        iniciojour = part3.part_start + sizeof (SuperBloque);
+                        tamP = part3.part_size;
+
+                    }else if(Listaaux->nombreP == nombre4){
+                        //LEER SUPER BLOQUE
+                        Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                        fseek(Particion,part4.part_start,SEEK_SET);
+                        fread(&sb,sizeof(sb),1,Particion);
+                        fseek(Particion,0,SEEK_SET);
+                        fclose(Particion);
+                        iniciojour = part4.part_start + sizeof (SuperBloque);
+                        tamP = part4.part_size;
+
+                    }else{
+                        if(part1.part_type == 'e' || part1.part_type == 'E'){
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part1.part_start,SEEK_SET);
+                            fread(&ebr,sizeof(EBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            siguiente = ebr;
+                            while(siguiente.part_next != -1){
+                                ebr = siguiente;
+                                Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Debr,siguiente.part_next,SEEK_SET);
+                                fread(&siguiente,sizeof(EBR),1,Debr);
+                                fseek(Debr,0,SEEK_SET);
+                                fclose(Debr);
+                                QString nombreChar(ebr.part_name);
+                                if(Listaaux->nombreP == nombreChar){
+                                    //LEER SUPER BLOQUE
+                                    Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Particion,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Particion);
+                                    fseek(Particion,0,SEEK_SET);
+                                    fclose(Particion);
+                                    iniciojour = ebr.part_start + sizeof (ebr) + sizeof (SuperBloque);
+                                    tamP = ebr.part_size;
+
+                                    break;
+                                }else{
+                                    Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Debr,siguiente.part_next,SEEK_SET);
+                                    fread(&siguiente,sizeof(EBR),1,Debr);
+                                    fseek(Debr,0,SEEK_SET);
+                                    fclose(Debr);
+                                }
+                            }
+                        }else if(part2.part_type == 'e' || part2.part_type == 'E'){
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part2.part_start,SEEK_SET);
+                            fread(&ebr,sizeof(EBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            siguiente = ebr;
+                            while(siguiente.part_next != -1){
+                                ebr = siguiente;
+                                Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Debr,siguiente.part_next,SEEK_SET);
+                                fread(&siguiente,sizeof(EBR),1,Debr);
+                                fseek(Debr,0,SEEK_SET);
+                                fclose(Debr);
+                                QString nombreChar(ebr.part_name);
+                                if(Listaaux->nombreP == nombreChar){
+                                    //LEER SUPER BLOQUE
+                                    Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Particion,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Particion);
+                                    fseek(Particion,0,SEEK_SET);
+                                    fclose(Particion);
+                                    iniciojour = ebr.part_start + sizeof (ebr) + sizeof (SuperBloque);
+                                    tamP = ebr.part_size;
+
+                                    break;
+                                }else{
+                                    Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Debr,siguiente.part_next,SEEK_SET);
+                                    fread(&siguiente,sizeof(EBR),1,Debr);
+                                    fseek(Debr,0,SEEK_SET);
+                                    fclose(Debr);
+                                }
+                            }
+                        }else if(part3.part_type == 'e' || part3.part_type == 'E'){
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part3.part_start,SEEK_SET);
+                            fread(&ebr,sizeof(EBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            siguiente = ebr;
+                            while(siguiente.part_next != -1){
+                                ebr = siguiente;
+                                Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Debr,siguiente.part_next,SEEK_SET);
+                                fread(&siguiente,sizeof(EBR),1,Debr);
+                                fseek(Debr,0,SEEK_SET);
+                                fclose(Debr);
+                                QString nombreChar(ebr.part_name);
+                                if(Listaaux->nombreP == nombreChar){
+                                    //LEER SUPER BLOQUE
+                                    Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Particion,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Particion);
+                                    fseek(Particion,0,SEEK_SET);
+                                    fclose(Particion);
+                                    iniciojour = ebr.part_start + sizeof (ebr) + sizeof (SuperBloque);
+                                    tamP = ebr.part_size;
+
+                                    break;
+                                }else{
+                                    Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Debr,siguiente.part_next,SEEK_SET);
+                                    fread(&siguiente,sizeof(EBR),1,Debr);
+                                    fseek(Debr,0,SEEK_SET);
+                                    fclose(Debr);
+                                }
+                            }
+                        }else if(part4.part_type == 'e' || part4.part_type == 'E'){
+                            Discoo=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Discoo,part4.part_start,SEEK_SET);
+                            fread(&ebr,sizeof(EBR),1,Discoo);
+                            fseek(Discoo,0,SEEK_SET);
+                            fclose(Discoo);
+
+                            siguiente = ebr;
+                            while(siguiente.part_next != -1){
+                                ebr = siguiente;
+                                Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Debr,siguiente.part_next,SEEK_SET);
+                                fread(&siguiente,sizeof(EBR),1,Debr);
+                                fseek(Debr,0,SEEK_SET);
+                                fclose(Debr);
+                                QString nombreChar(ebr.part_name);
+                                if(Listaaux->nombreP == nombreChar){
+                                    //LEER SUPER BLOQUE
+                                    Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Particion,ebr.part_start + sizeof (ebr),SEEK_SET);
+                                    fread(&sb,sizeof(sb),1,Particion);
+                                    fseek(Particion,0,SEEK_SET);
+                                    fclose(Particion);
+                                    iniciojour = ebr.part_start + sizeof (ebr) + sizeof (SuperBloque);
+                                    tamP = ebr.part_size;
+
+                                    break;
+                                }else{
+                                    Debr=fopen(ruta.toStdString().c_str(),"rb+");
+                                    fseek(Debr,siguiente.part_next,SEEK_SET);
+                                    fread(&siguiente,sizeof(EBR),1,Debr);
+                                    fseek(Debr,0,SEEK_SET);
+                                    fclose(Debr);
+                                }
+                            }
+                        }else{
+                            cout<<"La particion Que Desea Montar No Existe"<<endl;
+                        }
+                    }
                 }else{
                     cout<<"Extension de Disco incorrecta, no es .dk"<<endl;
                 }
@@ -680,6 +887,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
             int contN = 1;
             int nuevoinicio = 0;
             int tam_Particion = 0;
+            bool final = false;
             QString n = QStringLiteral("%1").arg(contN);
             QString bytes;
             EBR ebr;
@@ -746,6 +954,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         bytes = QStringLiteral("%1").arg(part4.part_start - sizeof (mbr));
                     }else{
                         bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
+                        final = true;
                     }
                     StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
@@ -807,6 +1016,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
                         bytes = QStringLiteral("%1").arg(part4.part_start - sizeof (mbr));
                     }else{
                         bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
+                        final = true;
                     }
                     StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
                     contN++;
@@ -891,9 +1101,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
                         }
                     }
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
+                    if(!final){
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                        final = true;
+                    }
 
                     for(int x = iniN;x<contN;x++){
                         QString n1 = QStringLiteral("%1").arg(x);
@@ -962,9 +1175,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
                         }
                     }
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
+                    if(!final){
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                        final=true;
+                    }
 
                     for(int x = iniN;x<contN;x++){
                         QString n1 = QStringLiteral("%1").arg(x);
@@ -1045,9 +1261,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
                         }
                     }
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
+                    if(!final){
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                        final=true;
+                    }
 
                     for(int x = iniN;x<contN;x++){
                         QString n1 = QStringLiteral("%1").arg(x);
@@ -1116,9 +1335,12 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
                         }
                     }
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
+                    if(!final){
+                        final=true;
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                    }
 
                     for(int x = iniN;x<contN;x++){
                         QString n1 = QStringLiteral("%1").arg(x);
@@ -1181,26 +1403,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }
-                }/*else{
-                    if(part3.part_start != 0){
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part3.part_start - part3.part_size);
-                    }else if(part2.part_start != 0){
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part2.part_start - part2.part_size);
-                    }else if(part1.part_start != 0){
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part1.part_start - part1.part_size);
-                    }else{
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
-                    }
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
-
-                    for(int x = iniN;x<contN;x++){
-                        QString n1 = QStringLiteral("%1").arg(x);
-                        QString n2 = QStringLiteral("%1").arg(x + 1);
-                        StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
-                    }
-                }*/
+                }
             }else{
                 iniN = contN;
                 if(part4.part_fit != '.'){
@@ -1244,54 +1447,37 @@ void clReportes::mostrarDatos(clReportes *reporte){
                             StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
                         }
                     }
-                }/*else{
-                    if(part3.part_start != 0){
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part3.part_start - part3.part_size);
-                    }else if(part2.part_start != 0){
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part2.part_start - part2.part_size);
-                    }else if(part1.part_start != 0){
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part1.part_start - part1.part_size);
-                    }else{
-                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
-                    }
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
-
-                    for(int x = iniN;x<contN;x++){
-                        QString n1 = QStringLiteral("%1").arg(x);
-                        QString n2 = QStringLiteral("%1").arg(x + 1);
-                        StringReporte += "n" + n1 + " -> n" + n2 + ";\n";
-                    }
-                }*/
+                }
             }
 
-            if((mbr.mbr_tam - part4.part_start - part4.part_size) != 0){
-                if(part4.part_start != 0){
-                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part4.part_start - part4.part_size);
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
-                }else if(part3.part_start != 0){
-                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part3.part_start - part3.part_size);
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
-                }else if(part2.part_start != 0){
-                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part2.part_start - part2.part_size);
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
-                }else if(part1.part_start != 0){
-                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part1.part_start - part1.part_size);
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
-                }else{
-                    bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
-                    StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
-                    contN++;
-                    n = QStringLiteral("%1").arg(contN);
+            if(!final){
+                if((mbr.mbr_tam - part4.part_start - part4.part_size) != 0){
+                    if(part4.part_start != 0){
+                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part4.part_start - part4.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                    }else if(part3.part_start != 0){
+                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part3.part_start - part3.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                    }else if(part2.part_start != 0){
+                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part2.part_start - part2.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                    }else if(part1.part_start != 0){
+                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - part1.part_start - part1.part_size);
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                    }else{
+                        bytes = QStringLiteral("%1").arg(mbr.mbr_tam - sizeof (mbr));
+                        StringReporte += "n" + n + " [shape=record,color=red,label=\"LIBRE | " + bytes + "\"];\n";
+                        contN++;
+                        n = QStringLiteral("%1").arg(contN);
+                    }
                 }
             }
 
@@ -1430,26 +1616,681 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
             }
 
-        }else if(reporte->namee.toLower() == "inode"){
-            cout<<"-----------------------ReporteINODE---------------------"<<endl;
-
         }else if(reporte->namee.toLower() == "journaling"){
             cout<<"-----------------------ReporteJOURNALING---------------------"<<endl;
+            StringReporte = "digraph G { bgcolor=\"yellow:purple\"\n";
+            StringReporte += "node [shape=filled];\n";
+            StringReporte += "a0 [label=<\n";
+            StringReporte += "<TABLE border=\"10\" cellspacing=\"10\" cellpadding=\"10\" style=\"rounded\" bgcolor=\"green:red\" gradientangle=\"315\">\n";
+            StringReporte += "<TR>\n";
+            StringReporte += "<TD border=\"3\"  bgcolor=\"gray\">NOMBRE</TD>\n";
+            StringReporte += "<TD border=\"3\"  bgcolor=\"gray\">VALOR</TD>\n";
+            StringReporte += "</TR>\n";
 
+            if(sb.s_filesystem_type == 3){
+                int inicio = iniciojour;
+                FILE *Particion;
+                Journaling vitacora;
+                while (iniciojour <= (sb.s_bm_inode_start - inicio)) {
+                    Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                    fseek(Particion,iniciojour,SEEK_SET);
+                    fread(&vitacora,sizeof(Journaling),1,Particion);
+                    fseek(Particion,0,SEEK_SET);
+                    fclose(Particion);
+                    iniciojour += sizeof (Journaling);
+                    QString linea(vitacora.Comando);
+                    StringReporte += "<TR>\n";
+                    StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">Comando</TD>\n";
+                    StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+linea+"</TD>\n";
+                    StringReporte += "</TR>\n";
+                }
+            }else{
+                cout<<"La Particion No Tiene Formato EXT3"<<endl;
+            }
+
+            StringReporte += "</TABLE>>];\n";
+            StringReporte += "}\n";
+
+            QStringList direccionReporte = reporte->path.split("/");
+            QString rutaR = "";
+            bool primera = false;
+            if(direccionReporte[1] == "home" && direccionReporte[2] == "archivos"){
+                rutaR = "/home/oscar/archivos";
+                for(int x=3;x<(direccionReporte.length()-1);x++){
+                    if(primera){
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + direccionReporte[x] + "/";
+                    }else{
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + "/" + direccionReporte[x] + "/";
+                        primera = true;
+                    }
+                }
+            }
+
+            QString aux =direccionReporte[direccionReporte.length()-1];
+            QStringList extensionReporte = aux.split(".");
+            QString rutadot = rutaR;
+            if(extensionReporte[1].toLower() == "jpg"){
+                //AQUI CREAMOS ARCHIVO FISICO
+                if(primera){
+                    rutaR = rutaR + aux;
+                }else{
+                    rutaR = rutaR + "/" + aux;
+                }
+                //EJECUTAR COMANDO GRAPVHIZ
+                rutadot = rutadot + "/" + extensionReporte[0] + ".dot";
+                ofstream dot;
+                dot.open(rutadot.toStdString().c_str(),ios::out);
+                if(dot.fail()){
+                    cout<<"No Se Creo El Archivo .dot"<<endl;
+                }
+                dot<<StringReporte.toStdString().c_str();
+                dot.close();
+
+                QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
+                system(comando.toStdString().c_str());
+                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+            }else{
+                cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
+            }
+
+        }else if(reporte->namee.toLower() == "inode"){
+            cout<<"-----------------------ReporteINODE---------------------"<<endl;
+            StringReporte = "digraph G { bgcolor=\"yellow:purple\"\n";
+
+            QStringList posNodos;
+            char bit = 'a';
+            int inicio = sb.s_bm_inode_start;
+            int contador = 0;
+            while (inicio < (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&bit,sizeof(bit),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                if(bit == '1'){
+                    QString num(contador);
+                    posNodos.append(num);
+                }
+                contador++;
+                inicio+=sizeof(bit);
+            }
+
+            TablaInodos inodoT;
+            inicio = sb.s_inode_start;
+            FILE *Particion;
+            QStringList nodos;
+            int cantnodos = 0;
+            while (inicio < sb.s_block_start) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&inodoT,sizeof(inodoT),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                inicio+=sizeof(64);
+                if(inodoT.i_atime == 0){break;}
+
+                QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                StringReporte += "n" + numnodo + " [shape=record,label=\"{ Inodo " + posNodos[cantnodos] + " |";
+
+                QString uid = QStringLiteral("%1").arg(inodoT.i_uid);
+                StringReporte += "{i_uid | " + uid + "}|";
+                QString gid = QStringLiteral("%1").arg(inodoT.i_gid);
+                StringReporte += "{i_gid | " + gid + "}|";
+                QString zise = QStringLiteral("%1").arg(inodoT.i_size);
+                StringReporte += "{i_zise | " + zise + "}|";
+                struct tm *tm;
+                tm=localtime(&inodoT.i_atime);
+                QString dia = QStringLiteral("%1").arg(tm->tm_mday);
+                QString mes = QStringLiteral("%1").arg(tm->tm_mon);
+                QString anio = QStringLiteral("%1").arg(tm->tm_year);
+                QString hora = QStringLiteral("%1").arg(tm->tm_hour);
+                QString min = QStringLiteral("%1").arg(tm->tm_min);
+                QString seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "{i_atime | "+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +" }|";
+                tm=localtime(&inodoT.i_ctime);
+                dia = QStringLiteral("%1").arg(tm->tm_mday);
+                mes = QStringLiteral("%1").arg(tm->tm_mon);
+                anio = QStringLiteral("%1").arg(tm->tm_year);
+                hora = QStringLiteral("%1").arg(tm->tm_hour);
+                min = QStringLiteral("%1").arg(tm->tm_min);
+                seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "{i_ctime | "+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +" }|";
+                tm=localtime(&inodoT.i_mtime);
+                dia = QStringLiteral("%1").arg(tm->tm_mday);
+                mes = QStringLiteral("%1").arg(tm->tm_mon);
+                anio = QStringLiteral("%1").arg(tm->tm_year);
+                hora = QStringLiteral("%1").arg(tm->tm_hour);
+                min = QStringLiteral("%1").arg(tm->tm_min);
+                seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "{i_mtime | "+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +" }|";
+                for(int x=0;x<15;x++){
+                    QString numblock = QStringLiteral("%1").arg(x);
+                    QString puntblock = QStringLiteral("%1").arg(inodoT.i_block[x]);
+                    StringReporte += "{i_block " + numblock + " | " + puntblock + "}|";
+                }
+                QString tipo(inodoT.i_type);
+                StringReporte += "{i_type | " + tipo + "}|";
+                QString perm = QStringLiteral("%1").arg(inodoT.i_perm);
+                StringReporte += "{i_perm | " + perm + "}|";
+
+                StringReporte += " }\"];\n";
+                nodos.append("n"+numnodo);
+                cantnodos++;
+            }
+
+            for(int x = 1;x<cantnodos;x++){
+                QString numnodo = QStringLiteral("%1").arg(x);
+                QString numnodo2 = QStringLiteral("%1").arg(x-1);
+                StringReporte += "n" + numnodo2 + " -> n" + numnodo + " \n";
+            }
+
+            StringReporte += "}\n";
+
+            QStringList direccionReporte = reporte->path.split("/");
+            QString rutaR = "";
+            bool primera = false;
+            if(direccionReporte[1] == "home" && direccionReporte[2] == "archivos"){
+                rutaR = "/home/oscar/archivos";
+                for(int x=3;x<(direccionReporte.length()-1);x++){
+                    if(primera){
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + direccionReporte[x] + "/";
+                    }else{
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + "/" + direccionReporte[x] + "/";
+                        primera = true;
+                    }
+                }
+            }
+
+            QString aux =direccionReporte[direccionReporte.length()-1];
+            QStringList extensionReporte = aux.split(".");
+            QString rutadot = rutaR;
+            if(extensionReporte[1].toLower() == "jpg"){
+                //AQUI CREAMOS ARCHIVO FISICO
+                if(primera){
+                    rutaR = rutaR + aux;
+                }else{
+                    rutaR = rutaR + "/" + aux;
+                }
+                //EJECUTAR COMANDO GRAPVHIZ
+                rutadot = rutadot + "/" + extensionReporte[0] + ".dot";
+                ofstream dot;
+                dot.open(rutadot.toStdString().c_str(),ios::out);
+                if(dot.fail()){
+                    cout<<"No Se Creo El Archivo .dot"<<endl;
+                }
+                dot<<StringReporte.toStdString().c_str();
+                dot.close();
+
+                QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
+                system(comando.toStdString().c_str());
+                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+            }else{
+                cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
+            }
         }else if(reporte->namee.toLower() == "block"){
             cout<<"-----------------------ReporteBLOCK---------------------"<<endl;
+            StringReporte = "digraph G { bgcolor=\"yellow:purple\"\n";
+
+            QStringList posNodos;
+            char bit = 'a';
+            int inicio = sb.s_bm_block_start;
+            int contador = 0;
+            while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&bit,sizeof(bit),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                if(bit == '1'){
+                    QString num(contador);
+                    posNodos.append(num);
+                }
+                contador++;
+                inicio+=sizeof(bit);
+            }
+
+            BloquesApuntadores apuntador;
+            BloquesArchivos archivo;
+            BloquesCarpetas carpeta;
+            inicio = sb.s_block_start;
+            FILE *Particion;
+            QStringList nodos;
+            int cantnodos = 0;
+            while (inicio <= tamP) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&apuntador,sizeof(apuntador),1,Particion);
+                fread(&archivo,sizeof(archivo),1,Particion);
+                fread(&carpeta,sizeof(carpeta),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                inicio+=sizeof(64);
+                if(apuntador.b_pointers[0] != 0){
+                    QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                    StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Puntero " + posNodos[cantnodos] + " |";
+                    for(int x=0;x<16;x++){
+                        QString numP = QStringLiteral("%1").arg(x);
+                        QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
+                        StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";
+                    }
+                    StringReporte += " }\"];\n";
+                    nodos.append("n"+numnodo);
+                    cantnodos++;
+                }else if(archivo.b_content[0] != '\0'){
+                    QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                    QString contenido(archivo.b_content);
+                    StringReporte += "n" + numnodo + " [shape=record,label=\"{Bloque Archivo " + posNodos[cantnodos] + " |" + contenido + " }\"];\n";
+                    nodos.append("n"+numnodo);
+                    cantnodos++;
+                }else if(carpeta.b_content[0].b_inodo != 0){
+                    QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                    StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Carpeta " + posNodos[cantnodos] + " |";
+                    for(int x=0;x<4;x++){
+                        QString nombreC_A(carpeta.b_content[x].b_name);
+                        QString Puntero = QStringLiteral("%1").arg(carpeta.b_content[x].b_inodo);
+                        StringReporte += "{ " + nombreC_A + " | " + Puntero + "}|";
+                    }
+                    StringReporte += " }\"];\n";
+                    nodos.append("n"+numnodo);
+                    cantnodos++;
+                }
+            }
+
+            for(int x = 1;x<cantnodos;x++){
+                QString numnodo = QStringLiteral("%1").arg(x);
+                QString numnodo2 = QStringLiteral("%1").arg(x-1);
+                StringReporte += "n" + numnodo2 + " -> n" + numnodo + " \n";
+            }
+
+            StringReporte += "}\n";
+
+            QStringList direccionReporte = reporte->path.split("/");
+            QString rutaR = "";
+            bool primera = false;
+            if(direccionReporte[1] == "home" && direccionReporte[2] == "archivos"){
+                rutaR = "/home/oscar/archivos";
+                for(int x=3;x<(direccionReporte.length()-1);x++){
+                    if(primera){
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + direccionReporte[x] + "/";
+                    }else{
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + "/" + direccionReporte[x] + "/";
+                        primera = true;
+                    }
+                }
+            }
+
+            QString aux =direccionReporte[direccionReporte.length()-1];
+            QStringList extensionReporte = aux.split(".");
+            QString rutadot = rutaR;
+            if(extensionReporte[1].toLower() == "jpg"){
+                //AQUI CREAMOS ARCHIVO FISICO
+                if(primera){
+                    rutaR = rutaR + aux;
+                }else{
+                    rutaR = rutaR + "/" + aux;
+                }
+                //EJECUTAR COMANDO GRAPVHIZ
+                rutadot = rutadot + "/" + extensionReporte[0] + ".dot";
+                ofstream dot;
+                dot.open(rutadot.toStdString().c_str(),ios::out);
+                if(dot.fail()){
+                    cout<<"No Se Creo El Archivo .dot"<<endl;
+                }
+                dot<<StringReporte.toStdString().c_str();
+                dot.close();
+
+                QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
+                system(comando.toStdString().c_str());
+                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+            }else{
+                cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
+            }
 
         }else if(reporte->namee.toLower() == "bm_inode"){
             cout<<"-----------------------ReporteBM_INODE---------------------"<<endl;
+            char bit = 'a';
+            int inicio = sb.s_bm_inode_start;
+            int contador = 0;
+            FILE *Particion;
+            while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&bit,sizeof(bit),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                if(bit=='1'){StringReporte += "[";
+                    StringReporte += bit;
+                    StringReporte += "]";
+                }else{
+                    StringReporte += "[0]";
+                }
+                contador++;
+                if(contador == 20){StringReporte += '\n'; contador = 0;}
+                inicio+=sizeof(bit);
+            }
+
+            //AQUI CREAMOS ARCHIVO TXT
+            QString rutatxt = "/home/oscar/archivos/bm_inodos.txt";
+            ofstream txt;
+            txt.open(rutatxt.toStdString().c_str(),ios::out);
+            if(txt.fail()){
+                cout<<"No Se Creo El Archivo .dot"<<endl;
+            }
+            txt<<StringReporte.toStdString().c_str();
+            txt.close();
+            cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
 
         }else if(reporte->namee.toLower() == "bm_block"){
             cout<<"-----------------------ReporteBM_BLOCK---------------------"<<endl;
+            char bit = 'a';
+            int inicio = sb.s_bm_block_start;
+            int contador = 0;
+            FILE *Particion;
+            while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                fseek(Particion,inicio,SEEK_SET);
+                fread(&bit,sizeof(bit),1,Particion);
+                fseek(Particion,0,SEEK_SET);
+                fclose(Particion);
+                if(bit=='1'){StringReporte += "[";
+                    StringReporte += bit;
+                    StringReporte += "]";
+                }else{
+                    StringReporte += "[0]";
+                }
+                contador++;
+                if(contador == 20){StringReporte += '\n'; contador = 0;}
+                inicio+=sizeof(bit);
+            }
+
+            //AQUI CREAMOS ARCHIVO TXT
+            QString rutatxt = "/home/oscar/archivos/bm_bloques.txt";
+            ofstream txt;
+            txt.open(rutatxt.toStdString().c_str(),ios::out);
+            if(txt.fail()){
+                cout<<"No Se Creo El Archivo .dot"<<endl;
+            }
+            txt<<StringReporte.toStdString().c_str();
+            txt.close();
+            cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
 
         }else if(reporte->namee.toLower() == "tree"){
             cout<<"-----------------------ReporteTREE---------------------"<<endl;
 
         }else if(reporte->namee.toLower() == "sb"){
             cout<<"-----------------------ReporteSB---------------------"<<endl;
+            StringReporte = "digraph G { bgcolor=\"yellow:purple\"\n";
+            StringReporte += "node [shape=filled];\n";
+            StringReporte += "a0 [label=<\n";
+            StringReporte += "<TABLE border=\"10\" cellspacing=\"10\" cellpadding=\"10\" style=\"rounded\" bgcolor=\"green:red\" gradientangle=\"315\">\n";
+            StringReporte += "<TR>\n";
+            StringReporte += "<TD border=\"3\"  bgcolor=\"gray\">NOMBRE</TD>\n";
+            StringReporte += "<TD border=\"3\"  bgcolor=\"gray\">VALOR</TD>\n";
+            StringReporte += "</TR>\n";
+
+
+
+            if(sb.s_filesystem_type == 2 || sb.s_filesystem_type == 3){
+                QString filesystem = QStringLiteral("%1").arg(sb.s_filesystem_type);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_filesystem_type</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+filesystem+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString inodescount = QStringLiteral("%1").arg(sb.s_inodes_count);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_inodes_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+inodescount+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString blockcount = QStringLiteral("%1").arg(sb.s_blocks_count);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_blocks_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+blockcount+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString finodecount = QStringLiteral("%1").arg(sb.s_free_inodes_count);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_free_inodes_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+finodecount+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString fblockcount = QStringLiteral("%1").arg(sb.s_free_blocks_count);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_free_blocks_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+fblockcount+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                struct tm *tm;
+                tm=localtime(&sb.s_mtime);
+                QString dia = QStringLiteral("%1").arg(tm->tm_mday);
+                QString mes = QStringLiteral("%1").arg(tm->tm_mon);
+                QString anio = QStringLiteral("%1").arg(tm->tm_year);
+                QString hora = QStringLiteral("%1").arg(tm->tm_hour);
+                QString min = QStringLiteral("%1").arg(tm->tm_min);
+                QString seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_mtime</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                tm=localtime(&sb.s_umtime);
+                dia = QStringLiteral("%1").arg(tm->tm_mday);
+                mes = QStringLiteral("%1").arg(tm->tm_mon);
+                anio = QStringLiteral("%1").arg(tm->tm_year);
+                hora = QStringLiteral("%1").arg(tm->tm_hour);
+                min = QStringLiteral("%1").arg(tm->tm_min);
+                seg = QStringLiteral("%1").arg(tm->tm_sec);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_umtime</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+ dia + "/" + mes + "/" + anio + "/ " + hora + ":" + min + ":" + seg +"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString mntcount = QStringLiteral("%1").arg(sb.s_mnt_count);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_mnt_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+mntcount+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_magic</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">0xEF53</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString inodesize = QStringLiteral("%1").arg(sb.s_inode_size);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_inode_size</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+inodesize+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString blocksize = QStringLiteral("%1").arg(sb.s_block_size);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_block_size</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+blocksize+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString firstino = QStringLiteral("%1").arg(sb.s_first_ino);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_first_ino</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+firstino+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString fistblock = QStringLiteral("%1").arg(sb.s_first_blo);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_first_blo</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+fistblock+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString mbinodestart = QStringLiteral("%1").arg(sb.s_bm_inode_start);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_bm_inode_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+mbinodestart+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString bmblockstart = QStringLiteral("%1").arg(sb.s_bm_block_start);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_bm_block_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+bmblockstart+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString inodestart = QStringLiteral("%1").arg(sb.s_inode_start);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_inode_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+inodestart+"</TD>\n";
+                StringReporte += "</TR>\n";
+
+                QString blockstart = QStringLiteral("%1").arg(sb.s_block_start);
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_block_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+blockstart+"</TD>\n";
+                StringReporte += "</TR>\n";
+            }else{
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_filesystem_type</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_inodes_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_blocks_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_free_inodes_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_free_blocks_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_mtime</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_umtime</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_mnt_count</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_magic</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_inode_size</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_block_size</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_first_ino</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_first_blo</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_bm_inode_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_bm_block_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_inode_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+
+                StringReporte += "<TR>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">s_block_start</TD>\n";
+                StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">.</TD>\n";
+                StringReporte += "</TR>\n";
+            }
+
+            StringReporte += "</TABLE>>];\n";
+            StringReporte += "}\n";
+
+            QStringList direccionReporte = reporte->path.split("/");
+            QString rutaR = "";
+            bool primera = false;
+            if(direccionReporte[1] == "home" && direccionReporte[2] == "archivos"){
+                rutaR = "/home/oscar/archivos";
+                for(int x=3;x<(direccionReporte.length()-1);x++){
+                    if(primera){
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + direccionReporte[x] + "/";
+                    }else{
+                        QDir direc(rutaR);
+                        direc.mkdir(direccionReporte[x]);
+                        rutaR = rutaR + "/" + direccionReporte[x] + "/";
+                        primera = true;
+                    }
+                }
+            }
+
+            QString aux =direccionReporte[direccionReporte.length()-1];
+            QStringList extensionReporte = aux.split(".");
+            QString rutadot = rutaR;
+            if(extensionReporte[1].toLower() == "jpg"){
+                //AQUI CREAMOS ARCHIVO FISICO
+                if(primera){
+                    rutaR = rutaR + aux;
+                }else{
+                    rutaR = rutaR + "/" + aux;
+                }
+                //EJECUTAR COMANDO GRAPVHIZ
+                rutadot = rutadot + "/" + extensionReporte[0] + ".dot";
+                ofstream dot;
+                dot.open(rutadot.toStdString().c_str(),ios::out);
+                if(dot.fail()){
+                    cout<<"No Se Creo El Archivo .dot"<<endl;
+                }
+                dot<<StringReporte.toStdString().c_str();
+                dot.close();
+
+                QString comando = "dot -Tjpg " + rutadot + " -o " + rutaR;
+                system(comando.toStdString().c_str());
+                cout<<"El Reporte MBR Se Creo Exitosamente :D"<<endl;
+            }else{
+                cout<<"Extension de Reporte incorrecta, no es .jpg"<<endl;
+            }
 
         }else if(reporte->namee.toLower() == "file"){
             cout<<"-----------------------ReporteFILE---------------------"<<endl;
