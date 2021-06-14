@@ -250,6 +250,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                 BloquesCarpetas nuevaC;
                 for(int x=0; x<4;x++){
                     strcpy(nuevaC.b_content[x].b_name,".");
+                    nuevaC.b_content[x].b_inodo = -1;
                 }
                 strcpy(nuevaC.b_content[0].b_name,"users.txt");
                 nuevaC.b_content[0].b_inodo = 1;
@@ -441,6 +442,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                 BloquesCarpetas nuevaC;
                 for(int x=0; x<4;x++){
                     strcpy(nuevaC.b_content[x].b_name,".");
+                    nuevaC.b_content[x].b_inodo = -1;
                 }
                 strcpy(nuevaC.b_content[0].b_name,"users.txt");
                 nuevaC.b_content[0].b_inodo = 1;
@@ -632,6 +634,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                 BloquesCarpetas nuevaC;
                 for(int x=0; x<4;x++){
                     strcpy(nuevaC.b_content[x].b_name,".");
+                    nuevaC.b_content[x].b_inodo = -1;
                 }
                 strcpy(nuevaC.b_content[0].b_name,"users.txt");
                 nuevaC.b_content[0].b_inodo = 1;
@@ -823,6 +826,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                 BloquesCarpetas nuevaC;
                 for(int x=0; x<4;x++){
                     strcpy(nuevaC.b_content[x].b_name,".");
+                    nuevaC.b_content[x].b_inodo = -1;
                 }
                 strcpy(nuevaC.b_content[0].b_name,"users.txt");
                 nuevaC.b_content[0].b_inodo = 1;
@@ -1038,6 +1042,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                             BloquesCarpetas nuevaC;
                             for(int x=0; x<4;x++){
                                 strcpy(nuevaC.b_content[x].b_name,".");
+                                nuevaC.b_content[x].b_inodo = -1;
                             }
                             strcpy(nuevaC.b_content[0].b_name,"users.txt");
                             nuevaC.b_content[0].b_inodo = 1;
@@ -1259,6 +1264,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                             BloquesCarpetas nuevaC;
                             for(int x=0; x<4;x++){
                                 strcpy(nuevaC.b_content[x].b_name,".");
+                                nuevaC.b_content[x].b_inodo = -1;
                             }
                             strcpy(nuevaC.b_content[0].b_name,"users.txt");
                             nuevaC.b_content[0].b_inodo = 1;
@@ -1480,6 +1486,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                             BloquesCarpetas nuevaC;
                             for(int x=0; x<4;x++){
                                 strcpy(nuevaC.b_content[x].b_name,".");
+                                nuevaC.b_content[x].b_inodo = -1;
                             }
                             strcpy(nuevaC.b_content[0].b_name,"users.txt");
                             nuevaC.b_content[0].b_inodo = 1;
@@ -1701,6 +1708,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                             BloquesCarpetas nuevaC;
                             for(int x=0; x<4;x++){
                                 strcpy(nuevaC.b_content[x].b_name,".");
+                                nuevaC.b_content[x].b_inodo = -1;
                             }
                             strcpy(nuevaC.b_content[0].b_name,"users.txt");
                             nuevaC.b_content[0].b_inodo = 1;

@@ -1712,7 +1712,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
                 if(bit == '1'){
-                    QString num(contador);
+                    QString num = QStringLiteral("%1").arg(contador);
                     posNodos.append(num);
                 }
                 contador++;
@@ -1730,8 +1730,8 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 fread(&inodoT,sizeof(inodoT),1,Particion);
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
-                inicio+=sizeof(64);
-                if(inodoT.i_atime == 0){break;}
+                inicio+=sizeof(inodoT);
+                if(inodoT.i_type == '\0'){break;}
 
                 QString numnodo = QStringLiteral("%1").arg(cantnodos);
                 StringReporte += "n" + numnodo + " [shape=record,label=\"{ Inodo " + posNodos[cantnodos] + " |";
@@ -1839,6 +1839,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
             cout<<"-----------------------ReporteBLOCK---------------------"<<endl;
             StringReporte = "digraph G { bgcolor=\"yellow:purple\"\n";
 
+
             QStringList posNodos;
             char bit = 'a';
             int inicio = sb.s_bm_block_start;
@@ -1850,57 +1851,129 @@ void clReportes::mostrarDatos(clReportes *reporte){
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
                 if(bit == '1'){
-                    QString num(contador);
+                    QString num = QStringLiteral("%1").arg(contador);
                     posNodos.append(num);
                 }
                 contador++;
                 inicio+=sizeof(bit);
             }
 
+            TablaInodos inodoT;
+            inicio = sb.s_inode_start;
+            FILE *Particion;
+            int cantnodos = 0;
             BloquesApuntadores apuntador;
             BloquesArchivos archivo;
             BloquesCarpetas carpeta;
-            inicio = sb.s_block_start;
-            FILE *Particion;
             QStringList nodos;
-            int cantnodos = 0;
-            while (inicio <= tamP) {
+            while (inicio < sb.s_block_start) {
                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                 fseek(Particion,inicio,SEEK_SET);
-                fread(&apuntador,sizeof(apuntador),1,Particion);
-                fread(&archivo,sizeof(archivo),1,Particion);
-                fread(&carpeta,sizeof(carpeta),1,Particion);
+                fread(&inodoT,sizeof(inodoT),1,Particion);
                 fseek(Particion,0,SEEK_SET);
                 fclose(Particion);
-                inicio+=sizeof(64);
-                if(apuntador.b_pointers[0] != 0){
-                    QString numnodo = QStringLiteral("%1").arg(cantnodos);
-                    StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Puntero " + posNodos[cantnodos] + " |";
-                    for(int x=0;x<16;x++){
-                        QString numP = QStringLiteral("%1").arg(x);
-                        QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
-                        StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";
+                inicio+=sizeof(inodoT);
+                if(inodoT.i_type == '\0'){break;}
+                for(int x = 0;x<15;x++){
+                    if(inodoT.i_block[x] != -1){
+                        for(int x=0;x<4;x++){
+                            carpeta.b_content[x].b_inodo = -1;
+                            memset(carpeta.b_content[x].b_name,0,12);
+                        }
+                        memset(archivo.b_content,0,64);
+                        for(int x=0;x<16;x++){
+                            apuntador.b_pointers[x] = -1;
+                        }
+                        if(x == 14){
+                            //Apuntador triple
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                            fread(&apuntador,sizeof(apuntador),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                            StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Puntero " + posNodos[cantnodos] + " |";
+                            for(int x=0;x<16;x++){
+                                QString numP = QStringLiteral("%1").arg(x);
+                                QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
+                                StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";
+                            }
+                            StringReporte += " }\"];\n";
+                            nodos.append("n"+numnodo);
+                            cantnodos++;
+                        }else if(x==13){
+                            //Apuntador doble
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                            fread(&apuntador,sizeof(apuntador),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                            StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Puntero " + posNodos[cantnodos] + " |";
+                            for(int x=0;x<16;x++){
+                                QString numP = QStringLiteral("%1").arg(x);
+                                QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
+                                StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";
+                            }
+                            StringReporte += " }\"];\n";
+                            nodos.append("n"+numnodo);
+                            cantnodos++;
+                        }else if(x==12){
+                            //Apuntador simple
+                            Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                            fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                            fread(&apuntador,sizeof(apuntador),1,Particion);
+                            fseek(Particion,0,SEEK_SET);
+                            fclose(Particion);
+
+                            QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                            StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Puntero " + posNodos[cantnodos] + " |";
+                            for(int x=0;x<16;x++){
+                                QString numP = QStringLiteral("%1").arg(x);
+                                QString Puntero = QStringLiteral("%1").arg(apuntador.b_pointers[x]);
+                                StringReporte += "{Puntero" + numP + " | " + Puntero + "}|";
+                            }
+                            StringReporte += " }\"];\n";
+                            nodos.append("n"+numnodo);
+                            cantnodos++;
+                        }else{
+                            if(inodoT.i_type == '0'){
+                                //Carpeta
+                                //donde empiezan bloques + (intapuntador * 64)
+                                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                                fread(&carpeta,sizeof(carpeta),1,Particion);
+                                fseek(Particion,0,SEEK_SET);
+                                fclose(Particion);
+
+                                QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                                StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Carpeta " + posNodos[cantnodos] + " |";
+                                for(int x=0;x<4;x++){
+                                    QString nombreC_A(carpeta.b_content[x].b_name);
+                                    QString Puntero = QStringLiteral("%1").arg(carpeta.b_content[x].b_inodo);
+                                    StringReporte += "{ " + nombreC_A + " | " + Puntero + "}|";
+                                }
+                                StringReporte += " }\"];\n";
+                                nodos.append("n"+numnodo);
+                                cantnodos++;
+                            }else{
+                                //Archivo
+                                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                fseek(Particion,sb.s_block_start + (inodoT.i_block[x]*64),SEEK_SET);
+                                fread(&archivo,sizeof(archivo),1,Particion);
+                                fseek(Particion,0,SEEK_SET);
+                                fclose(Particion);
+
+                                QString numnodo = QStringLiteral("%1").arg(cantnodos);
+                                QString contenido(archivo.b_content);
+                                StringReporte += "n" + numnodo + " [shape=record,label=\"{Bloque Archivo " + posNodos[cantnodos] + " |" + contenido + " }\"];\n";
+                                nodos.append("n"+numnodo);
+                                cantnodos++;
+                            }
+                        }
                     }
-                    StringReporte += " }\"];\n";
-                    nodos.append("n"+numnodo);
-                    cantnodos++;
-                }else if(archivo.b_content[0] != '\0'){
-                    QString numnodo = QStringLiteral("%1").arg(cantnodos);
-                    QString contenido(archivo.b_content);
-                    StringReporte += "n" + numnodo + " [shape=record,label=\"{Bloque Archivo " + posNodos[cantnodos] + " |" + contenido + " }\"];\n";
-                    nodos.append("n"+numnodo);
-                    cantnodos++;
-                }else if(carpeta.b_content[0].b_inodo != 0){
-                    QString numnodo = QStringLiteral("%1").arg(cantnodos);
-                    StringReporte += "n" + numnodo + " [shape=record,label=\"{ Bloque Carpeta " + posNodos[cantnodos] + " |";
-                    for(int x=0;x<4;x++){
-                        QString nombreC_A(carpeta.b_content[x].b_name);
-                        QString Puntero = QStringLiteral("%1").arg(carpeta.b_content[x].b_inodo);
-                        StringReporte += "{ " + nombreC_A + " | " + Puntero + "}|";
-                    }
-                    StringReporte += " }\"];\n";
-                    nodos.append("n"+numnodo);
-                    cantnodos++;
                 }
             }
 
