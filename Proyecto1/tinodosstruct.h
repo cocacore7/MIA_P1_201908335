@@ -9,7 +9,7 @@ typedef struct{
     time_t              i_atime;
     time_t              i_ctime;
     time_t              i_mtime;
-    int                 i_block;
+    int                 i_block[15];
     char                i_type;
     int                 i_perm;
 } TablaInodos;

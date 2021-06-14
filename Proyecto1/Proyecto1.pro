@@ -42,6 +42,7 @@ SOURCES += \
         clsesion.cpp \
         clunmount.cpp \
         ebrstruct.cpp \
+        journalingstruct.cpp \
         main.cpp \
         mbrstruct.cpp \
         parser.cpp \
@@ -90,6 +91,7 @@ HEADERS += \
     clsesion.h \
     clunmount.h \
     ebrstruct.h \
+    journalingstruct.h \
     lexico.l \
     mbrstruct.h \
     parser.h \
