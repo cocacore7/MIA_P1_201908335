@@ -129,7 +129,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part1.part_start + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part1.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part1.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part1.part_start + sizeof (sb);
                     sb.s_bm_block_start = part1.part_start + sizeof (sb) + n;
                     sb.s_inode_start = part1.part_start + sizeof (sb) + n + (n*3);
@@ -155,7 +155,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part1.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part1.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part1.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part1.part_start + sizeof (sb) + (n* sizeof (vitacora));
                     sb.s_bm_block_start = part1.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n;
                     sb.s_inode_start = part1.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
@@ -321,7 +321,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part2.part_start + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part2.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part2.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part2.part_start + sizeof (sb);
                     sb.s_bm_block_start = part2.part_start + sizeof (sb) + n;
                     sb.s_inode_start = part2.part_start + sizeof (sb) + n + (n*3);
@@ -347,7 +347,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part2.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part2.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part2.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part2.part_start + sizeof (sb) + (n* sizeof (vitacora));
                     sb.s_bm_block_start = part2.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n;
                     sb.s_inode_start = part2.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
@@ -513,7 +513,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part3.part_start + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part3.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part3.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part3.part_start + sizeof (sb);
                     sb.s_bm_block_start = part3.part_start + sizeof (sb) + n;
                     sb.s_inode_start = part3.part_start + sizeof (sb) + n + (n*3);
@@ -539,7 +539,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part3.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part3.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part3.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part3.part_start + sizeof (sb) + (n* sizeof (vitacora));
                     sb.s_bm_block_start = part3.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n;
                     sb.s_inode_start = part3.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
@@ -705,7 +705,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part4.part_start + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part4.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part4.part_start + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part4.part_start + sizeof (sb);
                     sb.s_bm_block_start = part4.part_start + sizeof (sb) + n;
                     sb.s_inode_start = part4.part_start + sizeof (sb) + n + (n*3);
@@ -731,7 +731,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                     sb.s_inode_size = sizeof (inodoT);
                     sb.s_block_size = 64;
                     sb.s_first_ino = part4.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                    sb.s_first_blo = part4.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                    sb.s_first_blo = part4.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                     sb.s_bm_inode_start = part4.part_start + sizeof (sb) + (n* sizeof (vitacora));
                     sb.s_bm_block_start = part4.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n;
                     sb.s_inode_start = part4.part_start + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
@@ -918,7 +918,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb);
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + n + (n*3);
@@ -946,7 +946,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora));
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
@@ -1140,7 +1140,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb);
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + n + (n*3);
@@ -1168,7 +1168,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora));
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
@@ -1362,7 +1362,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb);
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + n + (n*3);
@@ -1390,7 +1390,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora));
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
@@ -1584,7 +1584,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb);
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + n + (n*3);
@@ -1612,7 +1612,7 @@ void clmkfs::mostrarDatos(clmkfs *disco){
                                 sb.s_inode_size = sizeof (inodoT);
                                 sb.s_block_size = 64;
                                 sb.s_first_ino = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + sizeof (TablaInodos) + sizeof (TablaInodos);
-                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + n + 128;
+                                sb.s_first_blo = ebr.part_start + sizeof (ebr) + sizeof (sb) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3) + (n*sizeof (inodoT)) + 128;
                                 sb.s_bm_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora));
                                 sb.s_bm_block_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n;
                                 sb.s_inode_start = ebr.part_start + sizeof (ebr) + sizeof (sb) + (n* sizeof (vitacora)) + n + (n*3);
