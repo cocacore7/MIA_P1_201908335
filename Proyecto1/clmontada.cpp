@@ -34,6 +34,7 @@ void clMontada::insertarNodo(ListaM &lista, QString id, QString nombreP, QString
         t->sig = q;
     }
     cout<<"Particion: "<<id.toStdString().c_str()<<" Montada :D"<<endl;
+    imprimirLista(lista);
 }
 
 QString clMontada::eliminarNodo(ListaM &lista, QString id){

@@ -2077,7 +2077,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
             QString aux =direccionReporte[direccionReporte.length()-1];
             QStringList extensionReporte = aux.split(".");
             QString rutadot = rutaR;
-            if(extensionReporte[1].toLower() == "txt"){
+            if(extensionReporte[1].toLower() == "jpg"){
                 //AQUI CREAMOS ARCHIVO FISICO
                 if(primera){
                     rutaR = rutaR + aux;
@@ -2144,7 +2144,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
             QString aux =direccionReporte[direccionReporte.length()-1];
             QStringList extensionReporte = aux.split(".");
             QString rutadot = rutaR;
-            if(extensionReporte[1].toLower() == "txt"){
+            if(extensionReporte[1].toLower() == "jpg"){
                 //AQUI CREAMOS ARCHIVO FISICO
                 if(primera){
                     rutaR = rutaR + aux;

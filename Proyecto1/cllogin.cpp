@@ -597,6 +597,7 @@ void cllogin::logear(cllogin *solicitud){
                                             if(usr_grp.length() == 5){
                                                 if(usr_grp[3] == solicitud->usr && usr_grp[4] == solicitud->pwd){
                                                     sesion.usuario = usr_grp[3]; sesion.activaP = listaAux; encontrado = true;
+                                                    sesion.uid = usr_grp[0].toInt(); sesion.gid = 1; sesion.perm = 777;
                                                     cout<<"Sesion Iniciada Con Exito"<<endl;
                                                 }
                                             }
