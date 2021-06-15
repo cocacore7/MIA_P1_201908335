@@ -339,6 +339,11 @@ void clmkdir::mostrarDatos(clmkdir *carpeta){
                                                 sb.s_first_ino += sizeof (TablaInodos);
                                                 sb.s_free_blocks_count -=1;
                                                 sb.s_free_inodes_count -=1;
+                                                Particion=fopen(ruta.toStdString().c_str(),"rb+");
+                                                fseek(Particion,part1.part_start,SEEK_SET);
+                                                fwrite(&sb,sizeof(sb),1,Particion);
+                                                fseek(Particion,0,SEEK_SET);
+                                                fclose(Particion);
                                                 strcpy(carpeta.b_content[y].b_name,caminoC[caminoC.length() - 1].toStdString().c_str());
                                                 cout<<"Carpeta Ingresada Con Exito :D"<<endl;
                                                 ingresado = true;
