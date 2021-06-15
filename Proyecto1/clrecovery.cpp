@@ -35,8 +35,8 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
     cout<<"----------------------RecuperarInformacion--------------------------"<<endl;
     cout<<"-El Id Es: "<<recuperar->id.toStdString().c_str()<<endl;
     if(recuperar->id != ""){
-        if(sesion.usuario != ""){
-            ListaM aux = sesion.activaP;
+        if(lista.comprobarId(lista.lista,recuperar->id)){
+            ListaM aux = lista.obtenerNodo(lista.lista,recuperar->id);
             QString nombreP = aux->nombreP;
             QStringList direcciones = aux->ruta.split("/");
             QString ruta = "/home/oscar/archivos";
@@ -126,6 +126,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                         fseek(Particion,0,SEEK_SET);
                         fclose(Particion);
                         QString linea(vitacora.Comando);
+                        if(linea == ""){break;}
                         if(linea == "RaizYUsers.txt"){
                             //CARPETA RAIZ
                             char nuevo = '1';
@@ -246,6 +247,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                         fseek(Particion,0,SEEK_SET);
                         fclose(Particion);
                         QString linea(vitacora.Comando);
+                        if(linea == ""){break;}
                         if(linea == "RaizYUsers.txt"){
                             //CARPETA RAIZ
                             char nuevo = '1';
@@ -366,6 +368,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                         fseek(Particion,0,SEEK_SET);
                         fclose(Particion);
                         QString linea(vitacora.Comando);
+                        if(linea == ""){break;}
                         if(linea == "RaizYUsers.txt"){
                             //CARPETA RAIZ
                             char nuevo = '1';
@@ -486,6 +489,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                         fseek(Particion,0,SEEK_SET);
                         fclose(Particion);
                         QString linea(vitacora.Comando);
+                        if(linea == ""){break;}
                         if(linea == "RaizYUsers.txt"){
                             //CARPETA RAIZ
                             char nuevo = '1';
@@ -625,6 +629,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                                     fseek(Particion,0,SEEK_SET);
                                     fclose(Particion);
                                     QString linea(vitacora.Comando);
+                                    if(linea == ""){break;}
                                     if(linea == "RaizYUsers.txt"){
                                         //CARPETA RAIZ
                                         char nuevo = '1';
@@ -770,6 +775,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                                     fseek(Particion,0,SEEK_SET);
                                     fclose(Particion);
                                     QString linea(vitacora.Comando);
+                                    if(linea == ""){break;}
                                     if(linea == "RaizYUsers.txt"){
                                         //CARPETA RAIZ
                                         char nuevo = '1';
@@ -915,6 +921,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                                     fseek(Particion,0,SEEK_SET);
                                     fclose(Particion);
                                     QString linea(vitacora.Comando);
+                                    if(linea == ""){break;}
                                     if(linea == "RaizYUsers.txt"){
                                         //CARPETA RAIZ
                                         char nuevo = '1';
@@ -1060,6 +1067,7 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                                     fseek(Particion,0,SEEK_SET);
                                     fclose(Particion);
                                     QString linea(vitacora.Comando);
+                                    if(linea == ""){break;}
                                     if(linea == "RaizYUsers.txt"){
                                         //CARPETA RAIZ
                                         char nuevo = '1';
@@ -1170,9 +1178,8 @@ void clrecovery::mostrarDatos(clrecovery *recuperar){
                     }
                 }
             }
-
         }else{
-            cout<<"No Se Puede Realizar La Operacion, No Hay Una Sesion Iniciada"<<endl;
+            cout<<"No Se Encuentra Montada Una Particion Con El Id Especificado"<<endl;
         }
     }else{
         cout<<"Identificador Vacio"<<endl;

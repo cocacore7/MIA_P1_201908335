@@ -1639,6 +1639,7 @@ void clReportes::mostrarDatos(clReportes *reporte){
                     fclose(Particion);
                     iniciojour += sizeof (Journaling);
                     QString linea(vitacora.Comando);
+                    if(linea == ""){break;}
                     StringReporte += "<TR>\n";
                     StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">Comando</TD>\n";
                     StringReporte += "<TD border=\"3\"  bgcolor=\"red:yellow\">"+linea+"</TD>\n";

@@ -45,10 +45,10 @@ void clmkfs::mostrarDatos(clmkfs *disco){
             struct particion part4;
             QString extP = "";
 
-            if(disco->type!=""){
+            if(disco->type==""){
                 disco->type="full";
             }
-            if(disco->fs!=""){
+            if(disco->fs==""){
                 disco->fs="2fs";
             }
 

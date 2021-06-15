@@ -33,8 +33,8 @@ void clloss::mostrarDatos(clloss *perdida){
     cout<<"----------------------PerdidaInformacion--------------------------"<<endl;
     cout<<"-El Id Es: "<<perdida->id.toStdString().c_str()<<endl;
     if(perdida->id != ""){
-        if(sesion.usuario != ""){
-            ListaM aux = sesion.activaP;
+        if(lista.comprobarId(lista.lista,perdida->id)){
+            ListaM aux = lista.obtenerNodo(lista.lista,perdida->id);
             QString nombreP = aux->nombreP;
             QStringList direcciones = aux->ruta.split("/");
             QString ruta = "/home/oscar/archivos";
@@ -115,8 +115,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                 //PERDER INFORMACION
                 char vacio = '\0';
-                int inicio = sb.s_inode_start;
-                while (inicio < sb.s_block_start) {
+                int inicio = sb.s_block_start;
+                while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -135,7 +135,7 @@ void clloss::mostrarDatos(clloss *perdida){
                 }
                 char vacio2 = '0';
                 inicio = sb.s_bm_inode_start;
-                while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                while (inicio <= sb.s_bm_block_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -144,7 +144,7 @@ void clloss::mostrarDatos(clloss *perdida){
                     inicio+=sizeof(vacio2);
                 }
                 inicio = sb.s_bm_block_start;
-                while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                while (inicio <= sb.s_inode_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -165,8 +165,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                 //PERDER INFORMACION
                 char vacio = '\0';
-                int inicio = sb.s_inode_start;
-                while (inicio < sb.s_block_start) {
+                int inicio = sb.s_block_start;
+                while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -185,7 +185,7 @@ void clloss::mostrarDatos(clloss *perdida){
                 }
                 char vacio2 = '0';
                 inicio = sb.s_bm_inode_start;
-                while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                while (inicio <= sb.s_bm_block_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -194,7 +194,7 @@ void clloss::mostrarDatos(clloss *perdida){
                     inicio+=sizeof(vacio2);
                 }
                 inicio = sb.s_bm_block_start;
-                while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                while (inicio <= sb.s_inode_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -215,8 +215,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                 //PERDER INFORMACION
                 char vacio = '\0';
-                int inicio = sb.s_inode_start;
-                while (inicio < sb.s_block_start) {
+                int inicio = sb.s_block_start;
+                while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -235,7 +235,7 @@ void clloss::mostrarDatos(clloss *perdida){
                 }
                 char vacio2 = '0';
                 inicio = sb.s_bm_inode_start;
-                while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                while (inicio <= sb.s_bm_block_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -244,7 +244,7 @@ void clloss::mostrarDatos(clloss *perdida){
                     inicio+=sizeof(vacio2);
                 }
                 inicio = sb.s_bm_block_start;
-                while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                while (inicio <= sb.s_inode_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -265,8 +265,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                 //PERDER INFORMACION
                 char vacio = '\0';
-                int inicio = sb.s_inode_start;
-                while (inicio < sb.s_block_start) {
+                int inicio = sb.s_block_start;
+                while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -285,7 +285,7 @@ void clloss::mostrarDatos(clloss *perdida){
                 }
                 char vacio2 = '0';
                 inicio = sb.s_bm_inode_start;
-                while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                while (inicio <= sb.s_bm_block_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -294,7 +294,7 @@ void clloss::mostrarDatos(clloss *perdida){
                     inicio+=sizeof(vacio2);
                 }
                 inicio = sb.s_bm_block_start;
-                while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                while (inicio <= sb.s_inode_start) {
                     Particion=fopen(ruta.toStdString().c_str(),"rb+");
                     fseek(Particion,inicio,SEEK_SET);
                     fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -334,8 +334,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                             //PERDER INFORMACION
                             char vacio = '\0';
-                            int inicio = sb.s_inode_start;
-                            while (inicio < sb.s_block_start) {
+                            int inicio = sb.s_block_start;
+                            while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -354,7 +354,7 @@ void clloss::mostrarDatos(clloss *perdida){
                             }
                             char vacio2 = '0';
                             inicio = sb.s_bm_inode_start;
-                            while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                            while (inicio <= sb.s_bm_block_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -363,7 +363,7 @@ void clloss::mostrarDatos(clloss *perdida){
                                 inicio+=sizeof(vacio2);
                             }
                             inicio = sb.s_bm_block_start;
-                            while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                            while (inicio <= sb.s_inode_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -409,8 +409,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                             //PERDER INFORMACION
                             char vacio = '\0';
-                            int inicio = sb.s_inode_start;
-                            while (inicio < sb.s_block_start) {
+                            int inicio = sb.s_block_start;
+                            while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -429,7 +429,7 @@ void clloss::mostrarDatos(clloss *perdida){
                             }
                             char vacio2 = '0';
                             inicio = sb.s_bm_inode_start;
-                            while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                            while (inicio <= sb.s_bm_block_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -438,7 +438,7 @@ void clloss::mostrarDatos(clloss *perdida){
                                 inicio+=sizeof(vacio2);
                             }
                             inicio = sb.s_bm_block_start;
-                            while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                            while (inicio <= sb.s_inode_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -484,8 +484,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                             //PERDER INFORMACION
                             char vacio = '\0';
-                            int inicio = sb.s_inode_start;
-                            while (inicio < sb.s_block_start) {
+                            int inicio = sb.s_block_start;
+                            while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -504,7 +504,7 @@ void clloss::mostrarDatos(clloss *perdida){
                             }
                             char vacio2 = '0';
                             inicio = sb.s_bm_inode_start;
-                            while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                            while (inicio <= sb.s_bm_block_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -513,7 +513,7 @@ void clloss::mostrarDatos(clloss *perdida){
                                 inicio+=sizeof(vacio2);
                             }
                             inicio = sb.s_bm_block_start;
-                            while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                            while (inicio <= sb.s_inode_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -559,8 +559,8 @@ void clloss::mostrarDatos(clloss *perdida){
 
                             //PERDER INFORMACION
                             char vacio = '\0';
-                            int inicio = sb.s_inode_start;
-                            while (inicio < sb.s_block_start) {
+                            int inicio = sb.s_block_start;
+                            while (inicio < (sb.s_block_start + sb.s_blocks_count)) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio,sizeof(vacio),1,Particion);
@@ -579,7 +579,7 @@ void clloss::mostrarDatos(clloss *perdida){
                             }
                             char vacio2 = '0';
                             inicio = sb.s_bm_inode_start;
-                            while (inicio <= (sb.s_bm_inode_start + sb.s_inodes_count)) {
+                            while (inicio <= sb.s_bm_block_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -588,7 +588,7 @@ void clloss::mostrarDatos(clloss *perdida){
                                 inicio+=sizeof(vacio2);
                             }
                             inicio = sb.s_bm_block_start;
-                            while (inicio <= (sb.s_bm_block_start + sb.s_blocks_count)) {
+                            while (inicio <= sb.s_inode_start) {
                                 Particion=fopen(ruta.toStdString().c_str(),"rb+");
                                 fseek(Particion,inicio,SEEK_SET);
                                 fwrite(&vacio2,sizeof(vacio2),1,Particion);
@@ -608,9 +608,8 @@ void clloss::mostrarDatos(clloss *perdida){
                     }
                 }
             }
-
         }else{
-            cout<<"No Se Puede Realizar La Operacion, No Hay Una Sesion Iniciada"<<endl;
+            cout<<"No Se Encuentra Montada Una Particion Con El Id Especificado"<<endl;
         }
     }else{
         cout<<"Identificador Vacio"<<endl;
